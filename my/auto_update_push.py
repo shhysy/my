@@ -1,7 +1,7 @@
 import re
 import subprocess
 
-SCRIPT_FILE = "my.js"
+SCRIPT_FILE = "SlowDao.js"
 
 def bump_version(version):
     parts = version.split('.')
