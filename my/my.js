@@ -60,8 +60,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      MIT
-// @updateURL    https://github.com/shhysy/my/blob/main/my/my.js
-// @downloadURL  https://github.com/shhysy/my/blob/main/my/my.js
+// @updateURL    https://raw.githubusercontent.com/shhysy/my/main/my/my.js
+// @downloadURL  https://raw.githubusercontent.com/shhysy/my/main/my/my.js
 // @supportURL   https://github.com/shhysy/my/issues
 // ==/UserScript==
 
