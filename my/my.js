@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         my
+// @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.4
+// @version      47.1
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -5308,7 +5308,7 @@
                     } else {
                         console.log('未找到新对话按钮');
                     }
-                    
+
                 } else {
 
                     console.log(`未找到对话按钮，尝试下一个`);
@@ -5323,7 +5323,7 @@
                         }
                     }
                     await new Promise(resolve => setTimeout(resolve, 5000));
-                    
+
                     if (!allButtonsExist) {
                         // 点击Discover按钮
                         const discoverButton = await waitForElement('button[type="button"] svg path[d*="M12 5.75L12.6107"]', 20000);
@@ -5331,7 +5331,7 @@
                             discoverButton.closest('button').click();
                             console.log('成功点击Discover按钮');
                             await new Promise(resolve => setTimeout(resolve, 3000));
-    
+
                             // 定义目标Agent名称列表
                             const targetAgents = [
                                 'Token Analytics Agent',
@@ -5339,7 +5339,7 @@
                                 'Market Sentiment Radar',
                                 'Meme Coin Radar'
                             ];
-    
+
                             // 查找并点击目标Agent卡片
                             let agentFound = false;
                             for (const agentName of targetAgents) {
@@ -5357,7 +5357,7 @@
                                 }
                                 if (agentFound) break;
                             }
-    
+
                             if (!agentFound) {
                                 console.log('未找到目标Agent卡片，尝试重新点击Discover按钮');
                                 // 尝试重新点击Discover按钮
@@ -5366,7 +5366,7 @@
                                     retryDiscoverButton.closest('button').click();
                                     console.log('重新点击Discover按钮');
                                     await new Promise(resolve => setTimeout(resolve, 3000));
-    
+
                                     // 再次尝试查找目标Agent卡片
                                     for (const agentName of targetAgents) {
                                         const retryAgentCards = document.querySelectorAll('div.cursor-pointer.group.p-3.sm\\:p-4.rounded-xl');
@@ -5384,12 +5384,12 @@
                                     }
                                 }
                             }
-    
+
                             if (!agentFound) {
                                 console.log('仍然未找到目标Agent卡片，跳过当前对话');
                                 continue;
                             }
-    
+
                             // 点击Try Agent按钮
                             const tryAgentButton = await waitForElement('div[class*="relative z-10"] p.absolute', 20000);
                             if (tryAgentButton) {
@@ -5453,8 +5453,8 @@
 
                 // 等待一段时间让钱包连接完成
                 await new Promise(resolve => setTimeout(resolve, 13000));
-                
-                
+
+
             }
 
             await new Promise(resolve => setTimeout(resolve, 3000));
@@ -5531,7 +5531,7 @@
     const MetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.trim().includes('MetaMask') && 
+            if (button.textContent.trim().includes('MetaMask') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(MetaMask);
@@ -5925,7 +5925,7 @@
     const SIGN = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.trim().includes('SIGN') && 
+            if (button.textContent.trim().includes('SIGN') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(SIGN);
