@@ -7,8 +7,8 @@
 // @match        *://*/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/533777/SlowDao.user.js
-// @updateURL https://update.greasyfork.org/scripts/533777/SlowDao.meta.js
+// @downloadURL https://github.com/shhysy/test/blob/main/SlowDao.js
+// @updateURL https://github.com/shhysy/test/blob/main/SlowDao.meta.js
 // ==/UserScript==
 
 (function() {
