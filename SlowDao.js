@@ -1,11 +1,7 @@
 // ==UserScript==
 // @name         SlowDao
 // @namespace    http://tampermonkey.net/
-<<<<<<< HEAD
-// @version      1.0.0
-=======
-// @version      1.3
->>>>>>> 64f6f85 (首次提交)
+// @version      1.4
 // @description  Auto-updating userscript for SlowDao
 // @author       Your name
 // @match        *://*/*
@@ -16,14 +12,6 @@
 // ==/UserScript==
 
 (function() {
-    'use strict';
-<<<<<<< HEAD
-    
-    // Your existing code will go here
-    // Please paste your SlowDao.js code below this line
-    
-})(); 
-=======
     if (window.location.hostname !== 'chat.chainopera.ai') {
         return;
     }
@@ -1029,4 +1017,3 @@
     }, 5000);
     // Your code here...
 })();
->>>>>>> 64f6f85 (首次提交)
