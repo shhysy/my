@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         my
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      47.2
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
