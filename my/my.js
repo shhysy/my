@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         my
 // @namespace    http://tampermonkey.net/
-// @version      47.2
+// @version      47.3
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -60,8 +60,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      MIT
-// @updateURL    https://raw.githubusercontent.com/shhysy/my/main/my/my.js
-// @downloadURL  https://raw.githubusercontent.com/shhysy/my/main/my/my.js
+// @updateURL    https://raw.githubusercontent.com/shhysy//my.js
+// @downloadURL  https://raw.githubusercontent.com/shhysy//my.js
 // @supportURL   https://github.com/shhysy/my/issues
 // ==/UserScript==
 
