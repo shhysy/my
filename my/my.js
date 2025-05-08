@@ -60,8 +60,9 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/526285/my.user.js
-// @updateURL https://update.greasyfork.org/scripts/526285/my.meta.js
+// @updateURL    https://raw.githubusercontent.com/shhysy/my/main/my/my.js
+// @downloadURL  https://raw.githubusercontent.com/shhysy/my/main/my/my.js
+// @supportURL   https://github.com/shhysy/my/issues
 // ==/UserScript==
 
 
