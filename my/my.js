@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.12
+// @version      47.13
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -5545,7 +5545,6 @@
         element1_1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/button[1]' },
         element1_2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[1]' },
         element2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/button/div/div' },
-        element2_1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[2]' },
         inputBox: { css: 'input#amount' },
         element3: { css: 'button.bg-sky-600' },
         element3_1: {
@@ -5803,13 +5802,17 @@
         // 等待页面稳定
         await waitForPageStable();
 
+        const element2_1XPath = Math.random() < 0.5 ?
+            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[2]' :
+            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[5]';
+
         // 步骤1-5：点击元素1, 1-1, 1-2, 2, 2-1
         const steps = [
             { selector: selectors.element1, name: '元素1' },
             { selector: selectors.element1_1, name: '元素1-1' },
             { selector: selectors.element1_2, name: '元素1-2' },
             { selector: selectors.element2, name: '元素2' },
-            { selector: selectors.element2_1, name: '元素2-1' }
+            { selector: { xpath: element2_1XPath }, name: '元素2-1' }
         ];
 
         for (const step of steps) {
