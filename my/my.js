@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.13
+// @version      47.14
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -1196,6 +1196,77 @@
     if (window.location.hostname !== 'www.magicnewton.com') {
         return;
     }
+    var falg = false;
+
+    const rollNowInterval = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Roll now') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(rollNowInterval);
+            }
+        });
+    }, 2000);
+
+    const letsRollInterval = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes("Let's roll") &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(letsRollInterval);
+            }
+        });
+    }, 5000);
+
+    const Throw = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes("Throw Dice") &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Throw);
+            }
+        });
+    }, 5000);
+
+    const Return = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes("Return Home") &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                falg = true;
+                clearInterval(Return);
+            }
+        });
+    }, 5000);
+
+
+
+    const Play = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes("Play now") &&
+                !button.hasAttribute('disabled') && falg) {
+                button.click();
+                clearInterval(Play);
+            }
+        });
+    }, 10000);
+
+    const Continue = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes("Continue") &&
+                !button.hasAttribute('disabled') && falg) {
+                button.click();
+                clearInterval(Continue);
+            }
+        });
+    }, 5000);
+
         // 日志和状态管理
     const log = (message) => console.log(`[Magic Newton Automator ${new Date().toLocaleTimeString()}]: ${message}`);
     const state = {
