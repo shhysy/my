@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.14
+// @version      47.15
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -3991,7 +3991,7 @@
 
 (function() {
     'use strict';
-    if (window.location.hostname !== 'monadscore.xyz') {
+    if (window.location.hostname !== 'dashboard.monadscore.xyz') {
         return;
     }
     var url = 'https://signup.billions.network/'
@@ -4012,29 +4012,25 @@
             if (button.textContent.includes('Claim') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
-                clearInterval(clame)
-                setInterval(() => {
+                setTimeout(() => {
                     window.location.href=url
                 },30000);
             }
         });
     }, 5000);
-
-    const Claimed = setInterval(() => {
+    
+    //Check In按钮点击一次
+    const checkIn =setInterval(() => {
         const buttons = document.querySelectorAll('button');
-        let claimedCount = 0;
         buttons.forEach(button => {
-            if (button.textContent.trim() === 'Claimed') {
-                claimedCount++;
+            if (button.textContent.includes('Check-in') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(checkIn)
             }
         });
-
-        if (claimedCount >= 3) {
-            window.location.href=url
-        }
-
     }, 5000);
-
+    
     const login =setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
@@ -4080,114 +4076,13 @@
         const targetElement = document.querySelectorAll('span');
         targetElement.forEach(span => {
             if (span.textContent.trim().includes('Next Epoch')) {
-                window.location.href = 'https://monadscore.xyz/tasks';
+                window.location.href = 'https://dashboard.monadscore.xyz/tasks';
             }
         });
     }, 2000);
 })();
 
 
-
-(function() {
-    'use strict';
-    if (window.location.hostname !== 'www.parasail.network') {
-        console.log('此脚本仅适用于 klokapp.ai 域名，当前域名：' + window.location.hostname);
-        return;
-    }
-
-    const login =setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            // 检查按钮是否包含 "Continue with Google" 文本并且没有 disabled 属性
-            if (button.textContent.includes('Connect Wallet') &&
-                !button.hasAttribute('disabled')) {
-                console.log('找到可点击的按钮，正在点击...');
-                button.click();
-                clearInterval(login)
-            } else if (button.hasAttribute('disabled')) {
-                console.log('按钮不可点击，跳过');
-            }
-        });
-    }, 3000);
-
-    const MetaMask =setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            // 检查按钮是否包含 "Continue with Google" 文本并且没有 disabled 属性
-            if (button.textContent.includes('MetaMask') &&
-                !button.hasAttribute('disabled')) {
-                console.log('找到可点击的按钮，正在点击...');
-                button.click();
-                clearInterval(MetaMask)
-            } else if (button.hasAttribute('disabled')) {
-                console.log('按钮不可点击，跳过');
-            }
-        });
-    }, 2000);
-
-    const RunNode =setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            // 检查按钮是否包含 "Continue with Google" 文本并且没有 disabled 属性
-            if (button.textContent.includes('Run Node') &&
-                !button.hasAttribute('disabled')) {
-                console.log('找到可点击的按钮，正在点击...');
-                button.click();
-                clearInterval(RunNode)
-            } else if (button.hasAttribute('disabled')) {
-                console.log('按钮不可点击，跳过');
-            }
-        });
-    }, 20000);
-
-    const ActivateMyParasailNode =setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            // 检查按钮是否包含 "Continue with Google" 文本并且没有 disabled 属性
-            if (button.textContent.includes('Activate My Parasail Node') &&
-                !button.hasAttribute('disabled')) {
-                console.log('找到可点击的按钮，正在点击...');
-                button.click();
-                clearInterval(ActivateMyParasailNode)
-            } else if (button.hasAttribute('disabled')) {
-                console.log('按钮不可点击，跳过');
-            }
-        });
-    }, 2000);
-    var falg=false;
-    var falgurl = true;
-    setInterval(() => {
-        const Element = document.querySelectorAll('p');
-        Element.forEach(span => {
-            if (span.textContent.trim().includes('Expires in ') && falgurl) {
-                falgurl=false;
-                window.location.href = 'http://monadscore.xyz';
-            }
-        });
-
-        const targetElement = document.querySelectorAll('div');
-        targetElement.forEach(span => {
-            if (span.textContent.trim().includes('Your Parasail Node is Activated Successfully!')) {
-                falg=true;
-            }
-        });
-
-    }, 2000);
-    var i = 0;
-    const start = setInterval(() => {
-        const buttons = document.querySelectorAll('.MuiBox-root.css-i6tyva'); // 查找目标元素
-        buttons.forEach(button => {
-            if (button && !button.hasAttribute('disabled')) {
-                button.click();
-                i++
-                if(i>3){
-                    clearInterval(start);
-                }
-            }
-        });
-    }, 20000);
-
-})();
 
 (function() {
     'use strict';
@@ -4206,145 +4101,6 @@
             clearInterval(clame)
         });
     }, 5000);
-})();
-
-//bit77
-(function() {
-    'use strict';
-
-    // Delay the script execution by 5 seconds (5000 milliseconds)
-    setTimeout(() => {
-        // Check if the hostname matches
-        if (window.location.hostname !== 'bithub.77-bit.com') {
-            return;
-        }
-
-        // Interval to click "FREE" button on /shop page
-        const FREE = setInterval(() => {
-            const buttons = document.querySelectorAll('div');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('FREE') &&
-                    !button.hasAttribute('disabled') &&
-                    window.location.pathname === '/shop') {
-                    button.click();
-                    clearInterval(FREE);
-                }
-            });
-        }, 5000);
-
-        // Interval to handle "PURCHASE SUCCESS" or "SOLD OUT" on /shop page
-        const PURCHASE = setInterval(() => {
-            const buttons = document.querySelectorAll('div');
-            buttons.forEach(button => {
-                if (button.textContent.includes(' PURCHASE SUCCESS ') &&
-                    window.location.pathname === '/shop') {
-                    const targetElement = document.querySelector("#__nuxt > div.root.root--bg-unset > div.root__header > div > div.buttons.header__buttons > div.clip-container.common-button.button.buttons__home");
-                    if (targetElement) {
-                        targetElement.click();
-                        clearInterval(PURCHASE);
-                    }
-                } else {
-                    const buttons = document.querySelectorAll('div');
-                    buttons.forEach(button => {
-                        if (button.textContent.trim().includes('SOLD OUT') &&
-                            window.location.pathname === '/shop') {
-                            const targetElement = document.querySelector("#__nuxt > div.root.root--bg-unset > div.root__header > div > div.buttons.header__buttons > div.clip-container.common-button.button.buttons__home");
-                            if (targetElement) {
-                                targetElement.click();
-                                clearInterval(PURCHASE);
-                            }
-                        }
-                    });
-                }
-            });
-        }, 5000);
-
-        // Interval to click "START MINING" button (not on /shop or /daily)
-        const START = setInterval(() => {
-            const buttons = document.querySelectorAll('div');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('START MINING') &&
-                    !button.hasAttribute('disabled') &&
-                    window.location.pathname !== '/shop' &&
-                    window.location.pathname !== '/daily') {
-                    button.click();
-                    clearInterval(START);
-                }
-            });
-        }, 5000);
-
-        const CLAIMH = setInterval(() => {
-            const buttons = document.querySelectorAll('div');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('CLAIM') &&
-                    !button.hasAttribute('disabled') &&
-                    window.location.pathname !== '/shop' &&
-                    window.location.pathname !== '/daily') {
-                    button.click();
-                    clearInterval(CLAIMH );
-                }
-            });
-        }, 5000);
-
-        // Interval to click "DAILY REWARDS" button (not on /shop or /daily)
-        const DAILY = setInterval(() => {
-            const time = document.querySelector("#__nuxt > div.root > div.achievements > div.achievements__mining > div > div.clip-container.common-button.button.mining__button.mining-default-btn.mining-default-btn--disabled.mining-progress-btn.mining__button-custom > div > div.common-button__content > h1 > div > h1");
-            if (time) {
-                const buttons = document.querySelectorAll('div');
-                buttons.forEach(button => {
-                    if (button.textContent.trim().includes('DAILY REWARDS') &&
-                        !button.hasAttribute('disabled') &&
-                        window.location.pathname !== '/shop' &&
-                        window.location.pathname !== '/daily') {
-                        button.click();
-                        clearInterval(DAILY);
-                    }
-                });
-            }
-        }, 5000);
-
-        // Interval to click "CLAIM REWARD" button on /daily page
-        const CLAIM = setInterval(() => {
-            const buttons = document.querySelectorAll('div');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('CLAIM REWARD') &&
-                    window.location.pathname !== '/shop' &&
-                    window.location.pathname === '/daily') {
-
-                    // Find the parent button element (likely has class 'common-button')
-                    const parentButton = button.closest('div[class*="common-button"]');
-                    if (!parentButton) return; // If no parent button found, skip
-
-                    // Check if the button has the disabled class
-                    const isDisabled = parentButton.classList.contains('common-button--disabled');
-
-                    if (!isDisabled && !parentButton.hasAttribute('disabled')) {
-                        // If the button is not disabled, click it
-                        parentButton.click();
-                        clearInterval(CLAIM);
-                    } else {
-                        // If the button is disabled, redirect
-                        window.location.href = 'https://www.parasail.network/season';
-                        clearInterval(CLAIM); // Clear the interval after redirect
-                    }
-                }
-            });
-        }, 5000);
-
-        // Interval to handle "CLAIMED!" and redirect on /daily page
-        const CLAIMED = setInterval(() => {
-            const buttons = document.querySelectorAll('div');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('CLAIMED!') &&
-                    !button.hasAttribute('disabled') &&
-                    window.location.pathname === '/daily') {
-                     window.location.href = 'http://monadscore.xyz';
-                    clearInterval(CLAIMED); // Clear the interval after redirect
-                }
-            });
-        }, 5000);
-
-    }, 5000); // Delay of 5 seconds before the script starts
 })();
 
 
@@ -4457,7 +4213,7 @@
                                 if (!confirmButton.hasAttribute('disabled') && !confirmButton.classList.contains('is-disabled')) {
                                     confirmButton.click();
                                     setInterval(() => {
-                                        window.location.href = 'http://monadscore.xyz';
+                                        window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
                                     }, 5000);
                                     clearInterval(waitForButton);
                                 } else if (attempts >= 30) { // 3 秒（100ms * 30）
@@ -4466,7 +4222,7 @@
                                 }
                             }, 100); // 每 100ms 检查一次
                         } else {
-                            window.location.href = 'http://monadscore.xyz';
+                            window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
                         }
                     } else {
                         console.log('Dialog elements not found');
