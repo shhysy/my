@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.16
+// @version      47.17
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -1262,7 +1262,6 @@
             if (button.textContent.trim().includes("Continue") &&
                 !button.hasAttribute('disabled') && falg) {
                 button.click();
-                clearInterval(Continue);
             }
         });
     }, 5000);
