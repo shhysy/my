@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.18
+// @version      47.19
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -3993,6 +3993,7 @@
     if (window.location.hostname !== 'dashboard.monadscore.xyz') {
         return;
     }
+
     var url = 'https://signup.billions.network/'
     const Task =setInterval(() => {
         const buttons = document.querySelectorAll('button');
@@ -4003,6 +4004,11 @@
             }
         });
     }, 5000);
+
+    setInterval(() => {
+        window.location.href=url
+    }, 150000);
+
 
     const clame =setInterval(() => {
         const buttons = document.querySelectorAll('button');
