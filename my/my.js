@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.20
+// @version      47.21
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -1193,9 +1193,11 @@
 
 //newton
 (function() {
+    
     if (window.location.hostname !== 'www.magicnewton.com') {
         return;
     }
+
     var falg = false;
 
     const rollNowInterval = setInterval(() => {
@@ -1236,13 +1238,12 @@
         buttons.forEach(button => {
             if (button.textContent.trim().includes("Return Home") &&
                 !button.hasAttribute('disabled')) {
-                button.click();
                 falg = true;
                 window.location.href = 'https://sosovalue.com/ja/exp';
                 clearInterval(Return);
             }
         });
-    }, 5000);
+    }, 10000);
 
 
 
