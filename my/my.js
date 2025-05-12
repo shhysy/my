@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.19
+// @version      47.20
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -1238,6 +1238,7 @@
                 !button.hasAttribute('disabled')) {
                 button.click();
                 falg = true;
+                window.location.href = 'https://sosovalue.com/ja/exp';
                 clearInterval(Return);
             }
         });
@@ -1266,204 +1267,204 @@
         });
     }, 5000);
 
-        // 日志和状态管理
-    const log = (message) => console.log(`[Magic Newton Automator ${new Date().toLocaleTimeString()}]: ${message}`);
-    const state = {
-        runs: GM_getValue('runs', 0),
-        successfulClicks: GM_getValue('successfulClicks', 0),
-        failedClicks: GM_getValue('failedClicks', 0)
-    };
+    //     // 日志和状态管理
+    // const log = (message) => console.log(`[Magic Newton Automator ${new Date().toLocaleTimeString()}]: ${message}`);
+    // const state = {
+    //     runs: GM_getValue('runs', 0),
+    //     successfulClicks: GM_getValue('successfulClicks', 0),
+    //     failedClicks: GM_getValue('failedClicks', 0)
+    // };
 
-    // 工具函数（保持不变）
-    const randomDelay = (min, max) => new Promise(resolve =>
-        setTimeout(resolve, Math.floor(Math.random() * (max - min + 1) + min))
-    );
+    // // 工具函数（保持不变）
+    // const randomDelay = (min, max) => new Promise(resolve =>
+    //     setTimeout(resolve, Math.floor(Math.random() * (max - min + 1) + min))
+    // );
 
-    const waitForElement = async (selector, timeout = 20000) => {
-        const start = Date.now();
-        while (Date.now() - start < timeout) {
-            const element = document.querySelector(selector);
-            if (element && element.offsetParent !== null && getComputedStyle(element).display !== 'none') {
-                log(`找到元素: ${selector}`);
-                return element;
-            }
-            await randomDelay(300, 500);
-        }
-        log(`未找到元素: ${selector}`);
-        return null;
-    };
+    // const waitForElement = async (selector, timeout = 20000) => {
+    //     const start = Date.now();
+    //     while (Date.now() - start < timeout) {
+    //         const element = document.querySelector(selector);
+    //         if (element && element.offsetParent !== null && getComputedStyle(element).display !== 'none') {
+    //             log(`找到元素: ${selector}`);
+    //             return element;
+    //         }
+    //         await randomDelay(300, 500);
+    //     }
+    //     log(`未找到元素: ${selector}`);
+    //     return null;
+    // };
 
-    const clickElement = async (element, description, isElement7 = false) => {
-        if (!element) {
-            log(`${description} 未找到`);
-            state.failedClicks++;
-            return false;
-        }
+    // const clickElement = async (element, description, isElement7 = false) => {
+    //     if (!element) {
+    //         log(`${description} 未找到`);
+    //         state.failedClicks++;
+    //         return false;
+    //     }
 
-        let preClickState = isElement7 ? getElementState(element) : null;
+    //     let preClickState = isElement7 ? getElementState(element) : null;
 
-        element.click();
-        log(`${description} 点击触发`);
-        await randomDelay(500, 1000);
+    //     element.click();
+    //     log(`${description} 点击触发`);
+    //     await randomDelay(500, 1000);
 
-        if (isElement7) {
-            const postClickState = getElementState(element);
-            const stateChanged = hasStateChanged(preClickState, postClickState);
+    //     if (isElement7) {
+    //         const postClickState = getElementState(element);
+    //         const stateChanged = hasStateChanged(preClickState, postClickState);
 
-            if (stateChanged) {
-                log(`${description} 点击有效`);
-                state.successfulClicks++;
-                return true;
-            } else {
-                log(`${description} 点击无效`);
-                state.failedClicks++;
-                return false;
-            }
-        }
-        return true;
-    };
+    //         if (stateChanged) {
+    //             log(`${description} 点击有效`);
+    //             state.successfulClicks++;
+    //             return true;
+    //         } else {
+    //             log(`${description} 点击无效`);
+    //             state.failedClicks++;
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // };
 
-    const getElementState = (element) => ({
-        className: element.className,
-        color: getComputedStyle(element).color,
-        textContent: element.textContent.trim(),
-        backgroundColor: getComputedStyle(element).backgroundColor,
-        isVisible: element.offsetParent !== null
-    });
+    // const getElementState = (element) => ({
+    //     className: element.className,
+    //     color: getComputedStyle(element).color,
+    //     textContent: element.textContent.trim(),
+    //     backgroundColor: getComputedStyle(element).backgroundColor,
+    //     isVisible: element.offsetParent !== null
+    // });
 
-    const hasStateChanged = (pre, post) =>
-        pre.className !== post.className ||
-        pre.color !== post.color ||
-        pre.textContent !== post.textContent ||
-        pre.backgroundColor !== post.backgroundColor ||
-        pre.isVisible !== post.isVisible;
+    // const hasStateChanged = (pre, post) =>
+    //     pre.className !== post.className ||
+    //     pre.color !== post.color ||
+    //     pre.textContent !== post.textContent ||
+    //     pre.backgroundColor !== post.backgroundColor ||
+    //     pre.isVisible !== post.isVisible;
 
-    const filterElement7List = (elements) => {
-        return Array.from(elements).filter(element => {
-            const style = getComputedStyle(element);
-            const classList = element.className;
-            const text = element.textContent.trim();
+    // const filterElement7List = (elements) => {
+    //     return Array.from(elements).filter(element => {
+    //         const style = getComputedStyle(element);
+    //         const classList = element.className;
+    //         const text = element.textContent.trim();
 
-            const conditions = [
-                { check: style.backgroundColor === 'rgba(0, 0, 0, 0)' && style.border === 'none' && style.boxShadow === 'none' && style.color === 'rgb(255, 255, 255)', reason: '透明样式' },
-                { check: classList.includes('tile-changed') && style.color === 'rgb(167, 153, 255)' && text === '1', reason: '紫色 "1"' },
-                { check: classList.includes('tile-changed') && style.color === 'rgb(0, 204, 143)' && text === '2', reason: '绿色 "2"' },
-                { check: classList.includes('tile-changed') && style.color === 'rgb(255, 213, 148)' && text === '3', reason: '黄色 "3"' }
-            ];
+    //         const conditions = [
+    //             { check: style.backgroundColor === 'rgba(0, 0, 0, 0)' && style.border === 'none' && style.boxShadow === 'none' && style.color === 'rgb(255, 255, 255)', reason: '透明样式' },
+    //             { check: classList.includes('tile-changed') && style.color === 'rgb(167, 153, 255)' && text === '1', reason: '紫色 "1"' },
+    //             { check: classList.includes('tile-changed') && style.color === 'rgb(0, 204, 143)' && text === '2', reason: '绿色 "2"' },
+    //             { check: classList.includes('tile-changed') && style.color === 'rgb(255, 213, 148)' && text === '3', reason: '黄色 "3"' }
+    //         ];
 
-            const excluded = conditions.find(c => c.check);
-            if (excluded) {
-                log(`排除元素7: ${excluded.reason}`);
-                return false;
-            }
-            return true;
-        });
-    };
+    //         const excluded = conditions.find(c => c.check);
+    //         if (excluded) {
+    //             log(`排除元素7: ${excluded.reason}`);
+    //             return false;
+    //         }
+    //         return true;
+    //     });
+    // };
 
-    const checkElement2_1 = async (timeout = 10000) => {
-        const selector = 'p.gGRRlH.WrOCw.AEdnq.gTXAMX.gsjAMe';
-        const start = Date.now();
-        while (Date.now() - start < timeout) {
-            const elements = document.querySelectorAll(selector);
-            for (const el of elements) {
-                if (getComputedStyle(el).color === 'rgb(0, 0, 0)' && el.textContent.trim() === 'Return Home') {
-                    log(`找到元素2-1`);
-                    return el;
-                }
-            }
-            await randomDelay(300, 500);
-        }
-        return null;
-    };
+    // const checkElement2_1 = async (timeout = 10000) => {
+    //     const selector = 'p.gGRRlH.WrOCw.AEdnq.gTXAMX.gsjAMe';
+    //     const start = Date.now();
+    //     while (Date.now() - start < timeout) {
+    //         const elements = document.querySelectorAll(selector);
+    //         for (const el of elements) {
+    //             if (getComputedStyle(el).color === 'rgb(0, 0, 0)' && el.textContent.trim() === 'Return Home') {
+    //                 log(`找到元素2-1`);
+    //                 return el;
+    //             }
+    //         }
+    //         await randomDelay(300, 500);
+    //     }
+    //     return null;
+    // };
 
-    // 主执行函数
-    const executeScript = async () => {
-        try {
-            state.runs++;
-            log(`开始第 ${state.runs} 次运行`);
+    // // 主执行函数
+    // const executeScript = async () => {
+    //     try {
+    //         state.runs++;
+    //         log(`开始第 ${state.runs} 次运行`);
 
-            await randomDelay(2000, 5000);
+    //         await randomDelay(2000, 5000);
 
-            const selectors = {
-                element1: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div:nth-child(2) > div:nth-child(2) > div > div > div > div > div > button > div > p',
-                element2: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div:nth-child(1) > div.jsx-f1b6ce0373f41d79.info-tooltip-control > button > div > p',
-                element3: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div.jsx-f1b6ce0373f41d79.info-tooltip-control > button > div > p',
-                element4: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div:nth-child(1) > div:nth-child(2) > button > div > p',
-                element5: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div:nth-child(2) > div:nth-child(1) > div > div > div > div > div > button > div > p',
-                element6: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div.fPSBzf.bYPztT.bYPznK.hdAwi.fzoLlu.qbeer.kiKDyH.dnFyWD.kcKISj.VrCRh.icmKIQ > div:nth-child(2) > div.fPSBzf.cMGtQw.gEYBVn.hYZFkb.jweaqt.jTWvec.hlUslA.fOVJNr.jNyvxD > div > div > div.fPSBzf.bYPztT.bYPznK.pezuA.cMGtQw.pBppg.dMMuNs > button > div',
-                element7: 'div.tile.jetbrains',
-                element8: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div.fPSBzf.bYPztT.bYPznK.pezuA.cMGtQw.pBppg.dMMuNs > button:nth-child(1) > div' // 修复为正确的选择器
-            };
+    //         const selectors = {
+    //             element1: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div:nth-child(2) > div:nth-child(2) > div > div > div > div > div > button > div > p',
+    //             element2: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div:nth-child(1) > div.jsx-f1b6ce0373f41d79.info-tooltip-control > button > div > p',
+    //             element3: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div.jsx-f1b6ce0373f41d79.info-tooltip-control > button > div > p',
+    //             element4: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div:nth-child(1) > div:nth-child(2) > button > div > p',
+    //             element5: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div:nth-child(2) > div:nth-child(1) > div > div > div > div > div > button > div > p',
+    //             element6: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div.fPSBzf.bYPztT.bYPznK.hdAwi.fzoLlu.qbeer.kiKDyH.dnFyWD.kcKISj.VrCRh.icmKIQ > div:nth-child(2) > div.fPSBzf.cMGtQw.gEYBVn.hYZFkb.jweaqt.jTWvec.hlUslA.fOVJNr.jNyvxD > div > div > div.fPSBzf.bYPztT.bYPznK.pezuA.cMGtQw.pBppg.dMMuNs > button > div',
+    //             element7: 'div.tile.jetbrains',
+    //             element8: 'body > div.dMMuNs.kcKISj > div.fPSBzf.bYPztT.dKLBtz.iRgpoQ.container-page-loaded > div.fPSBzf.container-content > div > div.fPSBzf.bYPztT.bYPznK.pezuA.cMGtQw.pBppg.dMMuNs > button:nth-child(1) > div' // 修复为正确的选择器
+    //         };
 
-            // 执行点击序列
-            await clickElement(await waitForElement(selectors.element1), "元素1");
+    //         // 执行点击序列
+    //         await clickElement(await waitForElement(selectors.element1), "元素1");
 
-            const element2_1 = await checkElement2_1();
-            if (element2_1) {
-                await clickElement(element2_1, "元素2-1");
-            } else {
-                await clickElement(await waitForElement(selectors.element2), "元素2");
-                await clickElement(await waitForElement(selectors.element3), "元素3");
-                await clickElement(await waitForElement(selectors.element4), "元素4");
-            }
+    //         const element2_1 = await checkElement2_1();
+    //         if (element2_1) {
+    //             await clickElement(element2_1, "元素2-1");
+    //         } else {
+    //             await clickElement(await waitForElement(selectors.element2), "元素2");
+    //             await clickElement(await waitForElement(selectors.element3), "元素3");
+    //             await clickElement(await waitForElement(selectors.element4), "元素4");
+    //         }
 
-            await clickElement(await waitForElement(selectors.element5), "元素5");
-            await clickElement(await waitForElement(selectors.element6), "元素6");
+    //         await clickElement(await waitForElement(selectors.element5), "元素5");
+    //         await clickElement(await waitForElement(selectors.element6), "元素6");
 
-            // 元素7和8的循环
-            const maxAttempts = 3;
-            const maxFailures = 7;
-            let clickFailures = 0;
+    //         // 元素7和8的循环
+    //         const maxAttempts = 3;
+    //         const maxFailures = 7;
+    //         let clickFailures = 0;
 
-            for (let i = 0; i < maxAttempts && clickFailures < maxFailures; i++) {
-                log(`循环 ${i + 1}/${maxAttempts}`);
+    //         for (let i = 0; i < maxAttempts && clickFailures < maxFailures; i++) {
+    //             log(`循环 ${i + 1}/${maxAttempts}`);
 
-                while (clickFailures < maxFailures) {
-                    const element7List = filterElement7List(document.querySelectorAll(selectors.element7));
-                    if (!element7List.length) {
-                        log('无可用元素7');
-                        break;
-                    }
+    //             while (clickFailures < maxFailures) {
+    //                 const element7List = filterElement7List(document.querySelectorAll(selectors.element7));
+    //                 if (!element7List.length) {
+    //                     log('无可用元素7');
+    //                     break;
+    //                 }
 
-                    const element7 = element7List[Math.floor(Math.random() * element7List.length)];
-                    const success = await clickElement(element7, "元素7", true);
+    //                 const element7 = element7List[Math.floor(Math.random() * element7List.length)];
+    //                 const success = await clickElement(element7, "元素7", true);
 
-                    if (!success) {
-                        clickFailures++;
-                        log(`点击失败计数: ${clickFailures}/${maxFailures}`);
-                        continue;
-                    }
+    //                 if (!success) {
+    //                     clickFailures++;
+    //                     log(`点击失败计数: ${clickFailures}/${maxFailures}`);
+    //                     continue;
+    //                 }
 
-                    const element8 = await waitForElement(selectors.element8, 1000);
-                    if (element8) {
-                        await clickElement(element8, "元素8");
-                        break;
-                    }
-                    await randomDelay(1000, 2000);
-                }
-                await randomDelay(2000, 3000);
-            }
+    //                 const element8 = await waitForElement(selectors.element8, 1000);
+    //                 if (element8) {
+    //                     await clickElement(element8, "元素8");
+    //                     break;
+    //                 }
+    //                 await randomDelay(1000, 2000);
+    //             }
+    //             await randomDelay(2000, 3000);
+    //         }
 
-            // 保存状态
-            GM_setValue('runs', state.runs);
-            GM_setValue('successfulClicks', state.successfulClicks);
-            GM_setValue('failedClicks', state.failedClicks);
+    //         // 保存状态
+    //         GM_setValue('runs', state.runs);
+    //         GM_setValue('successfulClicks', state.successfulClicks);
+    //         GM_setValue('failedClicks', state.failedClicks);
 
-            log(`执行完成 - 总运行: ${state.runs}, 成功点击: ${state.successfulClicks}, 失败点击: ${state.failedClicks}`);
-            window.location.href = 'https://sosovalue.com/ja/exp';
-            await randomDelay(5000, 10000);
+    //         log(`执行完成 - 总运行: ${state.runs}, 成功点击: ${state.successfulClicks}, 失败点击: ${state.failedClicks}`);
+    //         window.location.href = 'https://sosovalue.com/ja/exp';
+    //         await randomDelay(5000, 10000);
 
-        } catch (error) {
-            log(`错误: ${error.message}`);
-            GM_setValue('runs', state.runs);
-            GM_setValue('successfulClicks', state.successfulClicks);
-            GM_setValue('failedClicks', state.failedClicks);
-            await randomDelay(5000, 10000);
-            window.location.href = 'https://sosovalue.com/ja/exp';
-        }
-    };
+    //     } catch (error) {
+    //         log(`错误: ${error.message}`);
+    //         GM_setValue('runs', state.runs);
+    //         GM_setValue('successfulClicks', state.successfulClicks);
+    //         GM_setValue('failedClicks', state.failedClicks);
+    //         await randomDelay(5000, 10000);
+    //         window.location.href = 'https://sosovalue.com/ja/exp';
+    //     }
+    // };
 
-       executeScript();
+    //    executeScript();
 
 })();
 
