@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.21
+// @version      47.22
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -2281,7 +2281,8 @@
     }
 
     setInterval(() => {
-        window.location.href = 'https://wallet.litas.io/login';
+        //window.location.href = 'https://wallet.litas.io/login';
+        window.location.href = 'https://app.olab.xyz/login';
     }, 50000);
     var s = 0;
     var c = true;
