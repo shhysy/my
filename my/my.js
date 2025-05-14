@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.22
+// @version      47.23
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -2323,11 +2323,11 @@
                             s++;
                         }else{
                             if(!c && !e){
-                                window.open('https://wallet.litas.io/miner', '_self')
+                                window.open('https://app.olab.xyz/login', '_self')
                             }
                         }
                         if(s>4){
-                            window.open('https://wallet.litas.io/miner', '_self');
+                            window.open('https://app.olab.xyz/login', '_self');
                         }
                     }
                 });
