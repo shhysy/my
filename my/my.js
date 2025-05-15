@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.26
+// @version      47.27
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -5438,6 +5438,16 @@
     if (window.location.href !== 'https://monad-test.kinza.finance/#/details/MON') {
         return;
     }
+
+    //检测<span>Supply cap is exceeded</span>如果出现跳转下一个网址
+    var SupplyCap = false;
+    const SupplyCap = setInterval(() => {
+        const span = document.querySelector('span');
+        if (span.textContent.trim() === 'Supply cap is exceeded' && !SupplyCap) {
+            window.location.href = 'https://www.360.com';
+            SupplyCap = true;
+        }
+    }, 1000);
 
     // 等待页面加载完成
     function waitForElement(selector, callback, maxAttempts = Infinity, interval = 3000) {
