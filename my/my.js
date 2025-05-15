@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.25
+// @version      47.26
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -5588,7 +5588,7 @@
                 button.click();
             }
         });
-    }, 15000);
+    }, 50000);
 
     // 启动脚本
     handleSupplyButton();
@@ -5911,7 +5911,7 @@
                     false
                 );
                 if (inputSuccess) {
-                    console.log("输入框处理完成，等待点击 Stake 按钮");
+                    console.log("输入框处理完成，等待点击 Stake 按钮"); 
                     await waitForStakeButton(inputElement);
                 }
             } else {
