@@ -5440,12 +5440,12 @@
     }
 
     //检测<span>Supply cap is exceeded</span>如果出现跳转下一个网址
-    var SupplyCap = false;
+    var Supply= false;
     const SupplyCap = setInterval(() => {
         const span = document.querySelector('span');
-        if (span.textContent.trim() === 'Supply cap is exceeded' && !SupplyCap) {
+        if (span.textContent.trim() === 'Supply cap is exceeded' && Supply == false) {
             window.location.href = 'https://www.360.com';
-            SupplyCap = true;
+            Supply = true;
         }
     }, 1000);
 
