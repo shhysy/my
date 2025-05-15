@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.28
+// @version      47.29
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -5440,12 +5440,12 @@
     }
 
     //检测<span>Supply cap is exceeded</span>如果出现跳转下一个网址
-    var Supply= false;
+    var Supplyfalg= false;
     const SupplyCap = setInterval(() => {
         const span = document.querySelector('span');
-        if (span.textContent.trim() === 'Supply cap is exceeded' && Supply == false) {
+        if (span.textContent.trim() === 'Supply cap is exceeded' && Supplyfalg == false) {
             window.location.href = 'https://www.360.com';
-            Supply = true;
+            Supplyfalg = true;
         }
     }, 1000);
 
