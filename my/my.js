@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.24
+// @version      47.25
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -5561,7 +5561,7 @@
                                         if (successElement.textContent.trim() === 'All Done!') {
                                             console.log('Operation completed successfully: All Done!');
                                             // 跳转到下一个 URL（请替换为实际目标 URL）
-                                            window.location.href = 'www.360.com';
+                                            window.location.href = 'https://www.360.com';
                                         } else {
                                             console.log('Did not find "All Done!". Retrying...');
                                             waitForElement('div._SuccessTitle_1542z_137', arguments.callee, Infinity, 5000);
@@ -5593,6 +5593,8 @@
     // 启动脚本
     handleSupplyButton();
 })();
+
+
 //MONAD
 (function() {
     if (window.location.hostname !== 'app.crystal.exchange') {
