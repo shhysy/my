@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.30
+// @version      47.31
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*.api.x.com/*
@@ -1801,6 +1801,8 @@
                     resolve(el);
                 } else if (Date.now() - start >= timeout) {
                     clearInterval(timer);
+                    // 增加调试信息
+                    console.error(`Timeout waiting for ${selector}. Current HTML:`, document.body.innerHTML.slice(0, 1000));
                     reject(new Error(`Timeout waiting for ${selector}`));
                 }
             }, 500);
