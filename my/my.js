@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.57
+// @version      47.58
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -168,12 +168,11 @@
         // 获取未访问过的网站列表
         const unvisitedSites = customSiteSequence.filter(site => !visitedSites[site]);
 
-        // 如果所有网站都已访问过，显示提示并返回
+        // 如果所有网站都已访问过，直接跳转到360
         if (unvisitedSites.length === 0) {
-            // 重置访问记录
-            //visitedSites = {};
-            //GM_setValue('visitedSites', visitedSites);
-            //alert('已重置访问记录，可以重新开始访问！');
+            console.log('所有网站已访问完成，准备跳转到360');
+            GM_setValue('isCompleted', true);
+            window.location.replace('https://www.360.com');
             return;
         }
 
