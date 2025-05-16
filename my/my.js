@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.56
+// @version      47.57
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -564,94 +564,106 @@
 
 //x.com
 (function() {
-    const observer = new MutationObserver(() => {
-        if (window.location.href.includes("x.com") || window.location.href.includes("twitter.com") || window.location.href.includes("discord.com") || window.location.href.includes("https://api.x.com/oauth/authorize")) {
-            'use strict';
-            const currentUrl = new URL(window.location.href);
-            const currentPath = currentUrl.pathname;
-            let xComIndex = "";
-            if(currentUrl.href.indexOf("x.com")){
-                xComIndex=currentUrl.href.indexOf("x.com")
-            }
-            if(currentUrl.href.indexOf("api.x.com")){
-                xComIndex=currentUrl.href.indexOf("api.x.com")
-            }
-            if(currentUrl.href.indexOf("discord.com")){
-                xComIndex=currentUrl.href.indexOf("discord.com")
-            }
-            const hasTwoSegments = xComIndex !== -1 && (currentUrl.href.slice(xComIndex + 5).split('/').length - 1) >= 2 || currentUrl.href.includes('?') || currentUrl.href.includes('&');
-            if(window.location.href.includes("x.com")){
-                const popup = document.querySelector('div[data-testid="confirmationSheetDialog"]');
-                if (popup) {
-                    try {
-                        const repostButton = Array.from(popup.querySelectorAll('*')).find(el => el.innerHTML.trim().includes('Repost') || el.innerHTML.trim().includes('Post'));
-                        if (repostButton) {
-                            setTimeout(() => {
-                                repostButton.click();
-                                setTimeout(() => {window.close();}, 6000);
-                            }, 2000);
-                        }
-                    } catch (error) {
-                        console.error("点击弹窗按钮时出错:", error);
-                    }
-                }
-
+    // 等待 body 元素可用
+    function setupObserver() {
+        const observer = new MutationObserver(() => {
+            if (window.location.href.includes("x.com") || window.location.href.includes("twitter.com") || window.location.href.includes("discord.com") || window.location.href.includes("https://api.x.com/oauth/authorize")) {
                 const allElements = Array.from(document.querySelectorAll('*'));
                 allElements.forEach(el => {
                     const buttonText = el.innerHTML.trim();
-                    if (['Repost', 'Authorize app', '授权', 'Post', 'Like', 'Follow'].includes(buttonText) && el.tagName === 'BUTTON') {
+                    if (['Authorize app'].includes(buttonText) && el.tagName === 'BUTTON') {
                         setTimeout(() => {
                             el.click();
-                            setTimeout(() => {window.close();}, 6000);
                         }, 2000);
                     }
                 });
-                const authorizeSpan = allElements.find(span => span.innerHTML.trim() === 'Authorize app' && span.tagName === 'SPAN');
-                if (authorizeSpan) {
-                    const button = authorizeSpan.closest('button');
-                    if (button) {
+                const currentUrl = new URL(window.location.href);
+                const currentPath = currentUrl.pathname;
+                let xComIndex = "";
+                if(currentUrl.href.indexOf("x.com")){
+                    xComIndex=currentUrl.href.indexOf("x.com")
+                }
+                if(currentUrl.href.indexOf("api.x.com")){
+                    xComIndex=currentUrl.href.indexOf("api.x.com")
+                }
+                if(currentUrl.href.indexOf("discord.com")){
+                    xComIndex=currentUrl.href.indexOf("discord.com")
+                }
+                const hasTwoSegments = xComIndex !== -1 && (currentUrl.href.slice(xComIndex + 5).split('/').length - 1) >= 2 || currentUrl.href.includes('?') || currentUrl.href.includes('&');
+                if(window.location.href.includes("x.com")){
+                    const popup = document.querySelector('div[data-testid="confirmationSheetDialog"]');
+                    if (popup) {
+                        try {
+                            const repostButton = Array.from(popup.querySelectorAll('*')).find(el => el.innerHTML.trim().includes('Repost') || el.innerHTML.trim().includes('Post'));
+                            if (repostButton) {
+                                setTimeout(() => {
+                                    repostButton.click();
+                                    setTimeout(() => {window.close();}, 6000);
+                                }, 2000);
+                            }
+                        } catch (error) {
+                            console.error("点击弹窗按钮时出错:", error);
+                        }
+                    }
+
+                    const authorizeSpan = allElements.find(span => span.innerHTML.trim() === 'Authorize app' && span.tagName === 'SPAN');
+                    if (authorizeSpan) {
+                        const button = authorizeSpan.closest('button');
+                        if (button) {
+                            setTimeout(() => {
+                                button.click();
+                                observer.disconnect();
+                                setTimeout(() => {window.close();}, 6000);
+                            }, 2000);
+                        }
+                    }
+                    const followButton = allElements.find(el =>['Follow', 'Authorize app', 'Repost', 'Post', 'Like'].some(text => el.innerHTML.trim().includes(text)) && el.tagName === 'BUTTON');
+                    if (followButton) {
                         setTimeout(() => {
-                            button.click();
+                            followButton.click();
+                            observer.disconnect();
+                            setTimeout(() => {window.close();}, 6000);
+                        }, 2000);
+                    }
+
+                    const followInput = allElements.find(input =>input.tagName === 'INPUT' && input.type === 'submit' && ['Follow', 'Authorize app', 'Repost', 'Post', 'Like'].includes(input.value.trim()));
+                    if (followButton) {
+                        setTimeout(() => {
+                            followButton.click();
+                            observer.disconnect();
+                            setTimeout(() => {window.close();}, 6000);
+                        }, 2000);
+                    }
+
+                    const specificInput = allElements.find(input => input.tagName === 'INPUT' && input.type === 'submit' && input.value === "Authorize app");
+                    if (specificInput) {
+                        setTimeout(() => {
+                            specificInput.click();
                             observer.disconnect();
                             setTimeout(() => {window.close();}, 6000);
                         }, 2000);
                     }
                 }
-                const followButton = allElements.find(el =>['Follow', 'Authorize app', 'Repost', 'Post', 'Like'].some(text => el.innerHTML.trim().includes(text)) && el.tagName === 'BUTTON');
-                if (followButton) {
-                    setTimeout(() => {
-                        followButton.click();
-                        observer.disconnect();
-                        setTimeout(() => {window.close();}, 6000);
-                    }, 2000);
-
-                }
-                const followInput = allElements.find(input =>input.tagName === 'INPUT' && input.type === 'submit' && ['Follow', 'Authorize app', 'Repost', 'Post', 'Like'].includes(input.value.trim()));
-                if (followButton) {
-                    setTimeout(() => {
-                        followButton.click();
-                        observer.disconnect();
-                        setTimeout(() => {window.close();}, 6000);
-                    }, 2000);
-                }
-
-                const specificInput = allElements.find(input => input.tagName === 'INPUT' && input.type === 'submit' && input.value === "Authorize app");
-                if (specificInput) {
-                    setTimeout(() => {
-                        specificInput.click();
-                        observer.disconnect();
-                        setTimeout(() => {window.close();}, 6000);
-                    }, 2000);
-                }
             }
+        });
+
+        if (document.body) {
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
         }
-    });
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-    // Your code here...
+    }
+
+    // 如果 body 已存在则立即设置
+    if (document.body) {
+        setupObserver();
+    } else {
+        // 如果 body 还不存在则等待 DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', setupObserver);
+    }
 })();
+
 
 (function() {
     'use strict';
