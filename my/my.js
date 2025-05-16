@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.61
+// @version      47.62
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6030,7 +6030,7 @@
         // 选中目标输入框（可根据 class 或 placeholder 选）
         const input = document.querySelector('input.bg-neutral[placeholder="0"]');
         if (input) {
-            if (!input.value || parseFloat(input.value) === 0) {
+            if (!input.value || parseFloat(input.value) === 0 || input.value==='') {
                 const min = 0.001, max = 0.003;
                 const randomValue = (Math.random() * (max - min) + min).toFixed(3);
 
@@ -6045,7 +6045,6 @@
                 input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
 
                 console.log('已向新输入框输入:', randomValue);
-                clearInterval(inputInterval2);
             }
         }
     }, 3000);
@@ -6077,6 +6076,7 @@
 })();
 //MONAD https://www.kuru.io/swap        待完善
 (function() {
+
     setInterval(() => {
         if (window.location.hostname !== 'www.kuru.io' || window.location.hostname !== 'shmonad.xyz' || window.location.hostname == 'stake.apr.io' || window.location.hostname == 'app.crystal.exchange' || window.location.hostname == 'monad-test.kinza.finance' || window.location.hostname == 'monad.ambient.finance'){
             if (document.body.style.zoom != '50%'){
@@ -6084,6 +6084,7 @@
             }
         }
     }, 3000);
+
     if (window.location.hostname !== 'www.kuru.io') {
             return;
     }
