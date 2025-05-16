@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.60
+// @version      47.61
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5829,6 +5829,15 @@
             }
         });
     }, 3000);
+
+    const clearInterval = setInterval(() => {
+        const input = document.querySelector('input#swap_sell_qty._tokenQuantityInput_ispvp_37');
+        if (input) {
+            input.value = '';
+            clearInterval(clearInterval);
+        }
+    }, 1000);
+
     //<button id="confirm_swap_button" aria-label="" tabindex="0" class="_button_zout7_1 _flat_zout7_18" style="text-transform: none;">Confirm</button>
     const Confirm = setInterval(() => {
         const buttons = document.querySelectorAll('button');
