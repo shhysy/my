@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.38
+// @version      47.39
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6026,9 +6026,12 @@
 
     //点击/html/body/div/div[1]/main/main/div/div[4]/div[2]/div/button并且判断文本 Stake
     const StakeButton = setInterval(() => {
-        const button = document.querySelector('button');
+        const xpath = '/html/body/div/div[1]/main/main/div/div[4]/div[2]/div/button';
+        const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+        const button = result.singleNodeValue;
         if (button && button.textContent.includes('Stake')) {
             button.click();
+            console.log('已点击Stake按钮');
             clearInterval(StakeButton);
         }
     }, 3000);
