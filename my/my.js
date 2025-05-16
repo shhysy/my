@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.54
+// @version      47.55
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -24,13 +24,16 @@
 (function() {
     'use strict';
     var falg = true
+    var isCompleted = GM_getValue('isCompleted', false);
+    
     //使用定时器
     const timer = setInterval(() => {
-        // 如果当前在360网站，清除进度条
-        if (currentUrl.includes('360.com') || currentUrl.includes('www.360.com') || currentUrl.includes('monad.talentum.id')) {
+        // 如果当前在360网站，且任务已完成，则清除进度条
+        if ((currentUrl.includes('360.com') || currentUrl.includes('www.360.com') || currentUrl.includes('monad.talentum.id')) && isCompleted) {
             visitedSites = {};
             GM_setValue('visitedSites', visitedSites);
-            return; // 清除后不执行后续代码
+            GM_setValue('isCompleted', false);
+            return; 
         }
     }, 100);
 
@@ -143,11 +146,12 @@
             `进度: ${visitedCount}/${totalSites} (${percent}%)`;
 
         // 如果进度为100%，直接跳转到360
-        if (percent === 100 && falg) {
+        if (percent === 100 && falg && !isCompleted) {
             console.log('进度达到100%，准备跳转到360');
             // 直接跳转，不重置进度
+            GM_setValue('isCompleted', true);
             window.location.replace('https://www.360.com');
-            falg = false
+            falg = false;
         }
     }
 
