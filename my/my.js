@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.59
+// @version      47.60
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5415,7 +5415,7 @@
     if (window.location.hostname !== 'app.crystal.exchange') {
         return;
     }
-
+    var swapfalg = 0
     const ConnectWalletwithwallet =setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
@@ -5513,9 +5513,17 @@
                 if (!button.disabled) {
                     // 模拟点击按钮
                     button.click();
+                    swapfalg++;
                     console.log('已点击 "Swap" 按钮');
                 } else {
                     console.log('按钮处于禁用状态，无法点击');
+                }
+            }
+            if (swapfalg == 3) {
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(nextSiteBtnA);
                 }
             }
         }, 30000);
