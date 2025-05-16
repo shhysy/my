@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.64
+// @version      47.65
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5323,21 +5323,23 @@
     // 处理输入框和质押按钮
     async function waitForInputAndStake() {
         const inputElement = await waitForElement(
-            'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]'
+            'input.mantine-Input-input.mantine-NumberInput-input[type="text."[inputmode="numeric"]'
         );
         if (inputElement) {
             const inputValue = inputElement.value.trim();
             console.log(`当前输入框值: ${inputValue}`);
-
+    
             if (!inputValue) {
+                // 生成随机值，例如 0.01 到 1.00，保留两位小数
+                const randomValue = (Math.random() * (1.00 - 0.01) + 0.01).toFixed(2);
                 const inputSuccess = await inputText(
-                    'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]',
+                    'input.mantine-Input-input.mantine-NumberInput-input[type="text."[inputmode="numeric"]',
                     'change',
-                    '0.01',
+                    randomValue,
                     false
                 );
                 if (inputSuccess) {
-                    console.log("输入框处理完成，等待点击 Stake 按钮");
+                    console.log(`输入框处理完成，输入随机值: ${randomValue}，等待点击 Stake 按钮`);
                     await waitForStakeButton(inputElement);
                 }
             } else {
