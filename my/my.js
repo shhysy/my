@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.33
+// @version      47.34
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2107,100 +2107,100 @@
     }
 })()
 
-//sapenAi
-(function() {
+// //sapenAi
+// (function() {
 
-    if (window.location.hostname !== 'app.sapien.io') {
-        return;
-    }
+//     if (window.location.hostname !== 'app.sapien.io') {
+//         return;
+//     }
 
-    function waitForElementByCondition(conditionFn, timeout = 30000) {
-        return new Promise((resolve, reject) => {
-            const start = Date.now();
-            const interval = setInterval(() => {
-                const buttons = document.querySelectorAll('button'); // 获取所有按钮
-                const targetButton = Array.from(buttons).find(conditionFn); // 根据条件查找
-                if (targetButton) {
-                    clearInterval(interval);
-                    resolve(targetButton);
-                } else if (Date.now() - start >= timeout) {
-                    clearInterval(interval);
-                    reject(new Error('Timeout waiting for matching button'));
-                }
-            }, 500);
-        });
-    }
+//     function waitForElementByCondition(conditionFn, timeout = 30000) {
+//         return new Promise((resolve, reject) => {
+//             const start = Date.now();
+//             const interval = setInterval(() => {
+//                 const buttons = document.querySelectorAll('button'); // 获取所有按钮
+//                 const targetButton = Array.from(buttons).find(conditionFn); // 根据条件查找
+//                 if (targetButton) {
+//                     clearInterval(interval);
+//                     resolve(targetButton);
+//                 } else if (Date.now() - start >= timeout) {
+//                     clearInterval(interval);
+//                     reject(new Error('Timeout waiting for matching button'));
+//                 }
+//             }, 500);
+//         });
+//     }
 
-    // 点击按钮的函数（基于文本查找）
-    async function clickVehiclePositioningButton() {
-        if (location.href !== 'https://app.sapien.io/t/dashboard') {
-            console.log('Not on target page, skipping...');
-            return;
-        }
+//     // 点击按钮的函数（基于文本查找）
+//     async function clickVehiclePositioningButton() {
+//         if (location.href !== 'https://app.sapien.io/t/dashboard') {
+//             console.log('Not on target page, skipping...');
+//             return;
+//         }
 
-        try {
-            const targetButton = await waitForElementByCondition(
-                (button) => button.textContent.includes('Vehicle Positioning')
-            );
-            console.log('Found "Vehicle Positioning" button, clicking...');
-            targetButton.click();
-        } catch (error) {
-            console.log('Button not found or error occurred:', error.message);
-        }
-    }
+//         try {
+//             const targetButton = await waitForElementByCondition(
+//                 (button) => button.textContent.includes('Vehicle Positioning')
+//             );
+//             console.log('Found "Vehicle Positioning" button, clicking...');
+//             targetButton.click();
+//         } catch (error) {
+//             console.log('Button not found or error occurred:', error.message);
+//         }
+//     }
 
-    // 初始化：页面加载时立即执行一次
-    console.log('Initializing script...');
-    clickVehiclePositioningButton();
+//     // 初始化：页面加载时立即执行一次
+//     console.log('Initializing script...');
+//     clickVehiclePositioningButton();
 
-    // 每 10 秒检查一次
-    setInterval(() => {
-        console.log('Checking for button (10s interval)...');
-        clickVehiclePositioningButton();
-    }, 10000); // 10 秒 = 10000 毫秒
-})();
+//     // 每 10 秒检查一次
+//     setInterval(() => {
+//         console.log('Checking for button (10s interval)...');
+//         clickVehiclePositioningButton();
+//     }, 10000); // 10 秒 = 10000 毫秒
+// })();
 
-//sapenAi
-(function() {
-    if (window.location.hostname !== 'app.sapien.io') {
-        return;
-    }
+// //sapenAi
+// (function() {
+//     if (window.location.hostname !== 'app.sapien.io') {
+//         return;
+//     }
 
-    const buttonSelector = '.chakra-button';
-    const validTexts = ['Interior / Close Up', 'Back', 'Side', 'Front', 'Front Angle'];
+//     const buttonSelector = '.chakra-button';
+//     const validTexts = ['Interior / Close Up', 'Back', 'Side', 'Front', 'Front Angle'];
 
-    let refreshTimer;
+//     let refreshTimer;
 
-    // 创建一个 MutationObserver 用来监听 DOM 变化
-    const observer = new MutationObserver(() => {
-        // 获取所有按钮元素
-        const buttons = document.querySelectorAll(buttonSelector);
+//     // 创建一个 MutationObserver 用来监听 DOM 变化
+//     const observer = new MutationObserver(() => {
+//         // 获取所有按钮元素
+//         const buttons = document.querySelectorAll(buttonSelector);
 
-        // 检查是否有按钮已经被选中
-        const activeButton = Array.from(buttons).find(button => button.hasAttribute('data-active'));
+//         // 检查是否有按钮已经被选中
+//         const activeButton = Array.from(buttons).find(button => button.hasAttribute('data-active'));
 
-        // 如果没有按钮被选中，并且按钮文本符合要求，则随机选择一个按钮
-        if (!activeButton && buttons.length > 0) {
-            const validButtons = Array.from(buttons).filter(button => validTexts.includes(button.textContent.trim()));
+//         // 如果没有按钮被选中，并且按钮文本符合要求，则随机选择一个按钮
+//         if (!activeButton && buttons.length > 0) {
+//             const validButtons = Array.from(buttons).filter(button => validTexts.includes(button.textContent.trim()));
 
-            if (validButtons.length > 0) {
-                const randomIndex = Math.floor(Math.random() * validButtons.length);
-                const randomButton = validButtons[randomIndex];
-                if (randomButton) {
-                    randomButton.click();
-                    randomButton.setAttribute('data-active', '');
-                }
-            }
-        }
-    });
+//             if (validButtons.length > 0) {
+//                 const randomIndex = Math.floor(Math.random() * validButtons.length);
+//                 const randomButton = validButtons[randomIndex];
+//                 if (randomButton) {
+//                     randomButton.click();
+//                     randomButton.setAttribute('data-active', '');
+//                 }
+//             }
+//         }
+//     });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true,
-    });
-})();
+//     observer.observe(document.body, {
+//         childList: true,
+//         subtree: true,
+//         attributes: true,
+//         characterData: true,
+//     });
+// })();
 
 //listas
 (function() {
