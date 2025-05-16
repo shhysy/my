@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.35
+// @version      47.36
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1823,78 +1823,55 @@
             if (redethContainer) {
                 var spanElement = redethContainer.querySelector("span.font-bold.text-bold");
                 if (spanElement && spanElement.textContent.includes("redETH")) {
-                    redethContainer.click(); // 点击元素
+                    try {
+                        const clickEvent = new MouseEvent('click', {
+                            bubbles: true,
+                            cancelable: true,
+                            view: window
+                        });
+                        redethContainer.dispatchEvent(clickEvent);
+                    } catch (error) {
+                        console.error("点击元素时出错:", error);
+                    }
                 }
             } else {
                 console.log("目标元素不存在");
             }
 
-
             var inputField = document.querySelector("#__next > div > main > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > input");
             if (inputField && (inputField.value === "" || parseFloat(inputField.value) < 0.001)) {
-
-                inputField.focus();
-                document.execCommand('insertText', false, randomNumber);
+                try {
+                    inputField.focus();
+                    const inputEvent = new InputEvent('input', {
+                        bubbles: true,
+                        cancelable: true,
+                        inputType: 'insertText',
+                        data: randomNumber
+                    });
+                    inputField.value = randomNumber;
+                    inputField.dispatchEvent(inputEvent);
+                } catch (error) {
+                    console.error("输入文本时出错:", error);
+                }
             } else {
                 const withdrawButton = document.querySelector("#__next > div > main > div > button");
                 if (withdrawButton && !falg) {
                     const isDisabled = withdrawButton.disabled || withdrawButton.classList.contains('disabled');
                     if (!isDisabled) {
-                        withdrawButton.dispatchEvent(event);
-                        console.log("按钮已点击，事件已分发");
+                        try {
+                            const clickEvent = new MouseEvent('click', {
+                                bubbles: true,
+                                cancelable: true,
+                                view: window
+                            });
+                            withdrawButton.dispatchEvent(clickEvent);
+                            console.log("按钮已点击，事件已分发");
+                        } catch (error) {
+                            console.error("点击按钮时出错:", error);
+                        }
                     } else {
                         console.log("按钮处于禁用状态，未点击");
                     }
-                } else {
-                    if(!v1){
-                        let successCount = parseInt(sessionStorage.getItem('successfulSwaps') || '0');
-                        if(successCount>0){
-                            const withdrawButton = document.querySelector("#__next > div > main > div > div.mb-2.mt-4 > div > div.relative.flex-1.pb-2.text-center.before\\:absolute.before\\:bottom-0.before\\:left-0.before\\:h-\\[2px\\].before\\:bg-blue.before\\:transition-all.before\\:duration-300.before\\:content-\\[\\'\\'\\].after\\:absolute.after\\:bottom-0.after\\:left-0.after\\:h-\\[2px\\].after\\:w-full.after\\:transition-colors.after\\:duration-300.after\\:bg-gray-200.after\\:content-\\[\\'\\'\\].before\\:w-0.cursor-pointer")
-                            // 点击 Withdraw 按钮
-                            if (withdrawButton && falg) {
-                                const isDisabled = withdrawButton.disabled || withdrawButton.classList.contains('disabled');
-                                if (!isDisabled) {
-                                    withdrawButton.dispatchEvent(event);
-                                    sessionStorage.removeItem('successfulSwaps');
-                                     setTimeout(() => {
-                                         v1=true;
-                                     }, 60000);
-                                    console.log("Withdraw 按钮已点击，事件已分发");
-                                } else {
-                                    console.log("Withdraw 按钮处于禁用状态，未点击");
-                                }
-                            } else {
-                                console.error("Withdraw 按钮未找到或已经点击");
-                            }
-                        }
-                    }
-                }
-                if(v1){
-                    var claim = document.querySelector("#__next > div > main > div > div.mt-6.flex.max-h-\\[400px\\].flex-col.gap-4.overflow-y-auto > div:nth-child(1) > button")
-                    if(claim && s){
-                        const isDisabled = claim.disabled || claim.classList.contains('disabled');
-                        if(!isDisabled){
-                            claim.dispatchEvent(event);
-                            setTimeout(() => {
-                                window.open('https://0xvm.com/honor', '_self');
-                           }, 60000);
-                            s = false;
-                            setTimeout(() => {
-                                s = true;
-                            }, 20000);
-
-                        }
-                        setInterval(() => {
-                            const alertMessage = document.querySelector('.MuiAlert-message.css-1xsto0d');
-                            if (alertMessage && alertMessage.textContent=='Claim failed') {
-                                setTimeout(() => {
-                                     window.open('https://0xvm.com/honor', '_self');
-                                }, 2000);
-                            }
-                        }, 1000);
-
-                    }
-
                 }
             }
         },3000)
@@ -2105,7 +2082,7 @@
         }
     }, 5000); // 每5秒执行一次
     }
-})()
+})();
 
 // //sapenAi
 // (function() {
@@ -2162,6 +2139,8 @@
 
 // //sapenAi
 (function() {
+    'use strict';
+    
     if (window.location.hostname !== 'app.sapien.io') {
         return;
     }
@@ -2171,28 +2150,29 @@
 
     let refreshTimer;
 
-    // 创建一个 MutationObserver 用来监听 DOM 变化
-    const observer = new MutationObserver(() => {
-        // 获取所有按钮元素
-        const buttons = document.querySelectorAll(buttonSelector);
+    function handleButtonClick(button) {
+        if (button) {
+            button.click();
+            button.setAttribute('data-active', '');
+        }
+    }
 
-        // 检查是否有按钮已经被选中
+    function findAndClickRandomButton() {
+        const buttons = document.querySelectorAll(buttonSelector);
         const activeButton = Array.from(buttons).find(button => button.hasAttribute('data-active'));
 
-        // 如果没有按钮被选中，并且按钮文本符合要求，则随机选择一个按钮
         if (!activeButton && buttons.length > 0) {
             const validButtons = Array.from(buttons).filter(button => validTexts.includes(button.textContent.trim()));
 
             if (validButtons.length > 0) {
                 const randomIndex = Math.floor(Math.random() * validButtons.length);
-                const randomButton = validButtons[randomIndex];
-                if (randomButton) {
-                    randomButton.click();
-                    randomButton.setAttribute('data-active', '');
-                }
+                handleButtonClick(validButtons[randomIndex]);
             }
         }
-    });
+    }
+
+    // 创建一个 MutationObserver 用来监听 DOM 变化
+    const observer = new MutationObserver(findAndClickRandomButton);
 
     observer.observe(document.body, {
         childList: true,
@@ -2204,41 +2184,53 @@
 
 //listas
 (function() {
-
+    'use strict';
+    
     if (window.location.hostname !== 'wallet.litas.io') {
         return;
+    }
+
+    function handleUpgradeClick() {
+        const buttonss = document.getElementsByTagName('button');
+        let i = 0;
+        for (let btn of buttonss) {
+            if (btn.textContent.trim() === 'Upgrade' && i < 2) {
+                btn.click();
+                i++;
+                console.log('Upgrade 按钮已点击');
+            }
+        }
+    }
+
+    function handleClaimButton() {
+        if (window.location.href === 'https://wallet.litas.io/wallet') {
+            window.location.href = "https://wallet.litas.io/miner";
+            return;
+        }
+
+        const buttons = Array.from(document.querySelectorAll('button'));
+        const claimButton = buttons.find(button => button.textContent.trim() === 'CLAIM');
+
+        if (claimButton) {
+            claimButton.click();
+            console.log("CLAIM button clicked.");
+            return true;
+        } else {
+            console.log("CLAIM button not found.");
+            return false;
+        }
     }
 
     setTimeout(() => {
         window.location.href = 'https://app.olab.xyz/taskCenter';
     }, 100000);
 
-    var i = 0
     if (window.location.href === 'https://wallet.litas.io/miner' || window.location.href === 'https://wallet.litas.io/login') {
-        const buttonss = document.getElementsByTagName('button');
-        for (let btn of buttonss) {
-            if (btn.textContent.trim() === 'Upgrade' && i<2) {
-                btn.click();
-                i++
-                console.log('Upgrade 按钮已点击');
-            }
-        }
-
+        handleUpgradeClick();
+        
         const timer = setInterval(() => {
-            if(window.location.href === 'https://wallet.litas.io/wallet'){
-                window.location.href = "https://wallet.litas.io/miner";
-            }
-            // 找到按钮
-            const buttons = Array.from(document.querySelectorAll('button'));
-            const claimButton = buttons.find(button => button.textContent.trim() === 'CLAIM');
-
-            if (claimButton) {
-                claimButton.click();
-                console.log("CLAIM button clicked.");
+            if (handleClaimButton()) {
                 clearInterval(timer);
-
-            } else {
-                console.log("CLAIM button not found.");
             }
         }, 3000);
     }
@@ -3754,7 +3746,7 @@
                 !button.hasAttribute('disabled')) {
                 console.log('找到可点击的按钮，正在点击...');
                 button.click();
-                clearInterval(MetaMask)
+                clearInterval(MetaMask);
             } else if (button.hasAttribute('disabled')) {
                 console.log('按钮不可点击，跳过');
             }
