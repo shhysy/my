@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.37
+// @version      47.38
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -44,7 +44,7 @@
     // 自定义跳转列表（在此处添加你的目标网址）
     const customSiteSequence = [
         "https://app.crystal.exchange",
-        "https://monad-test.kinza.finance/#/details/MON",
+        //"https://monad-test.kinza.finance/#/details/MON",
         "https://monad.ambient.finance/",
         "https://shmonad.xyz/",
         "https://www.kuru.io/swap",
