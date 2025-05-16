@@ -1,69 +1,192 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.31
+// @version      47.32
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
-// @match        *://*.api.x.com/*
-// @match        *://*.wallet.litas.io/*
-// @match        https://app.union.build/transfer*
-// @match        *://*.x.com/*
-// @match        *://*.app.mahojin.ai/*
-// @match        https://chat.chainopera.ai/*
-// @match        https://app.gata.xyz/dataAgent?invite_code=gdwzwym8
-// @match        *://*.testnet-faucet.reddio.com/*
-// @match        https://testnet.tower.fi/faucet
-// @match        *:/*.testnet.somnia.network/*
-// @match        *://accounts.google.com/*
-// @match        https://klokapp.ai/*
-// @match        *://*.www.gaianet.ai/chat/*
-// @match        *://*.bithub.77-bit.com/*
-// @match        *://*.www.coresky.com/*
-// @match        *://*.share.coresky.com/*
-// @match        *://*.app.sapien.io/*
-// @match        https://testnet.somnia.network/*
-// @match        *://*.monadscore.xyz/*
-// @match        *://*.twitter.com/*
-// @match        *://*.www.youtube.com/*
-// @match        *://*.www.parasail.network/*
-// @match        *://*.bebop.xyz/*
-// @match        https://stake.apr.io/*
-// @match        *://*.earn.taker.xyz/*
-// @match        *://app.crystal.exchange/*
-// @match        *://*.dashboard.layeredge.io/*
-// @match        *://*.sosovalue.com/*
-// @match        *://*.monad-test.kinza.finance/*
-// @match        *://*.app.union.build/*
-// @match        *://*.cryptopond.xyz/*
-// @match        *://*.www.starpower.world*
-// @match        *://*.www.magicnewton.com/*
-// @match        *://*.app.union.build/*
-// @match        *://*.node.securitylabs/*
-// @match        *://*.testnet-bridge.reddio.com/*
-// @match        *://*.cess.network/*
-// @match        https://signup.billions.network/*
-// @match        https://app.union.build/faucet
-// @match        https://0xvm.com/honor
-// @match        https://dashboard.union.build/achievements
-// @match        https://node.securitylabs.xyz/
-// @match        https://www.starpower.world/wallet
-// @match        https://app.sapien.io/t/dashboard
-// @match        https://x.ink/airdrop
-// @match        https://testnet.lilchogstars.com/*
-// @match        https://hub.beamable.network/modules/*
-// @match        *://*.chat.chainopera.ai/*
-// @match        https://app.nexus.xyz/
-// @match        https://points.reddio.com/task?invite_code=2IFX9
-// @run-at       document-end
+// @match        *://*/*
+// @exclude      https://www.hcaptcha.com/*
+// @exclude      https://hcaptcha.com/*
+// @exclude      https://www.cloudflare.com/*
+// @exclude      https://cloudflare.com/*
+// @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @grant        GM_download
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @run-at       document-end
 // @license      MIT
 // @updateURL    https://raw.githubusercontent.com/shhysy/my/main/my/my.js
 // @downloadURL  https://raw.githubusercontent.com/shhysy/my/main/my/my.js
 // @supportURL   https://github.com/shhysy/my/issues
 // ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // 检查当前URL是否在排除列表中
+    const currentUrl = window.location.href;
+    if (currentUrl.includes('hcaptcha.com') || currentUrl.includes('cloudflare.com')) {
+        return; // 不执行脚本
+    }
+
+    // 自定义跳转列表（在此处添加你的目标网址）
+    const customSiteSequence = [
+        "https://app.crystal.exchange",
+        "https://monad-test.kinza.finance/#/details/MON",
+        "https://monad.ambient.finance/",
+        "https://shmonad.xyz/",
+        "https://www.kuru.io/swap",
+    ];
+
+    // 添加控制面板样式
+    GM_addStyle(`
+        #manualJumpPanel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            min-width: 250px;
+        }
+        #manualJumpPanel h3 {
+            margin: 0 0 10px 0;
+            padding: 0;
+            font-size: 14px;
+            color: #4CAF50;
+        }
+        #manualJumpPanel button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+        }
+        #manualJumpPanel button:hover {
+            background: #45a049;
+        }
+        #manualJumpPanel .current-site {
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+        #manualJumpPanel .error-notice {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        #manualJumpPanel .progress {
+            font-size: 12px;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        #manualJumpPanel .close-btn {
+            background: #f44336 !important;
+            margin-top: 10px;
+        }
+    `);
+
+    // 创建控制面板
+    const panel = document.createElement('div');
+    panel.id = 'manualJumpPanel';
+    panel.innerHTML = `
+        <h3>自定义网站跳转控制</h3>
+        <div class="current-site">当前网址: ${window.location.href}</div>
+        <div class="progress" id="progressInfo"></div>
+        <div class="error-notice" id="errorNotice" style="display:none;">页面加载可能出错，但您仍可强制跳转</div>
+        <button id="nextSiteBtn">跳转到下一个网站</button>
+        <button id="closePanelBtn" class="close-btn">关闭控制面板</button>
+    `;
+
+    // 直接添加到body
+    const root = document.documentElement || document.body;
+    root.appendChild(panel);
+
+    // 初始化访问记录
+    let visitedSites = GM_getValue('visitedSites', {});
+
+    // 检查当前网站是否在列表中，如果是则标记为已访问
+    if (customSiteSequence.includes(currentUrl)) {
+        visitedSites[currentUrl] = true;
+        GM_setValue('visitedSites', visitedSites);
+    }
+
+    // 更新进度显示
+    function updateProgress() {
+        const totalSites = customSiteSequence.length;
+        const visitedCount = Object.keys(visitedSites).length;
+        document.getElementById('progressInfo').textContent =
+            `进度: ${visitedCount}/${totalSites} (${Math.round((visitedCount/totalSites)*100)}%)`;
+            //如果进度为100%，跳转到下一个网页
+            if (visitedCount === totalSites) {
+                //跳转盗360
+                window.location.href = 'https://www.360.com'
+                //清除访问记录
+                visitedSites = {};
+                GM_setValue('visitedSites', visitedSites);
+            } 
+    }
+
+    updateProgress();
+
+    // 监听可能的错误
+    window.addEventListener('error', function() {
+        document.getElementById('errorNotice').style.display = 'block';
+    });
+
+    // 跳转逻辑，改为随机跳转
+    document.getElementById('nextSiteBtn').addEventListener('click', function() {
+        // 获取未访问过的网站列表
+        const unvisitedSites = customSiteSequence.filter(site => !visitedSites[site]);
+
+        // 添加调试信息
+        console.log('已访问的网站:', visitedSites);
+        console.log('未访问的网站数量:', unvisitedSites.length);
+        console.log('未访问的网站列表:', unvisitedSites);
+
+        // 如果所有网站都已访问过，显示提示并返回
+        if (unvisitedSites.length === 0) {
+            // 重置访问记录
+            visitedSites = {};
+            GM_setValue('visitedSites', visitedSites);
+            alert('已重置访问记录，可以重新开始访问！');
+            return;
+        }
+
+        // 从未访问过的网站中随机选择一个
+        const randomIndex = Math.floor(Math.random() * unvisitedSites.length);
+        const randomSite = unvisitedSites[randomIndex];
+
+        // 记录已访问的网站
+        visitedSites[randomSite] = true;
+        GM_setValue('visitedSites', visitedSites);
+
+        updateProgress();
+        window.location.href = randomSite;
+    });
+
+    // 关闭面板按钮 - 仅移除面板，不重置记录
+    document.getElementById('closePanelBtn').addEventListener('click', function() {
+        panel.remove();
+    });
+
+    // 即使页面完全加载失败也确保面板可见
+    setTimeout(() => {
+        document.getElementById('errorNotice').style.display = 'block';
+    }, 3000);
+
+    console.log('自定义跳转脚本已加载，控制面板将显示');
+})();
 
 
 //beamable
@@ -615,191 +738,6 @@
 
 })();
 
-//MONAD STAK
-(function() {
-    'use strict';
-    if (window.location.hostname !== 'stake.apr.io') {
-        return;
-    }
-
-    // 配置目标跳转URL
-    const TARGET_URL = "https://signup.billions.network/";
-
-    // 第一步：判断路径
-
-    // 辅助函数：等待元素出现
-    function waitForElement(selector, callback, maxAttempts = 20, interval = 500) {
-        return new Promise((resolve) => {
-            let attempts = 0;
-            const checkElement = setInterval(() => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    clearInterval(checkElement);
-                    resolve(element);
-                } else if (attempts >= maxAttempts) {
-                    clearInterval(checkElement);
-                    console.log(`未找到元素: ${selector}`);
-                    resolve(null);
-                } else {
-                    attempts++;
-                }
-            }, interval);
-        });
-    }
-
-    // 添加监视器来检测存款完成通知
-    function watchForDepositNotification() {
-        const notification = document.querySelector('.m_a49ed24.mantine-Notification-body');
-        if (notification && notification.textContent.includes("Deposit completed")) {
-            console.log("检测到存款完成通知，正在跳转...");
-            window.location.href = TARGET_URL;
-        }
-    }
-
-    // 辅助函数：随机延迟
-    function randomy(min, max) {
-        return new Promise(resolve => setTimeout(resolve, Math.random() * (max - min) + min));
-    }
-
-    // 模拟粘贴输入
-    function simulatePaste(inputElement, inputValue) {
-        inputElement.value = inputValue;
-        return Promise.resolve();
-    }
-
-    // 输入文本函数
-    async function inputText(selector, eventType, inputValue, isPaste = false) {
-        try {
-            const inputElement = await waitForElement(selector);
-            if (!inputElement) {
-                console.log(`Input element ${selector} not found.`);
-                return false;
-            }
-
-            if (inputElement.value !== '') {
-                console.log(`Input field ${selector} is not empty. Skipping input.`);
-                return false;
-            }
-
-            inputElement.focus();
-            await randomy(100, 300);
-
-            if (isPaste) {
-                await simulatePaste(inputElement, inputValue);
-            } else {
-                for (let char of inputValue.toString()) {
-                    document.execCommand('insertText', false, char);
-                    await randomy(50, 150);
-                }
-            }
-
-            inputElement.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
-            await randomy(100, 300);
-            inputElement.blur();
-
-            if (inputElement.value === inputValue.toString()) {
-                console.log(`Input completed for ${selector}`);
-                return true;
-            } else {
-                console.log(`Input verification failed for ${selector}`);
-                return false;
-            }
-        } catch (error) {
-            console.error(`Error inputting text for ${selector}:`, error);
-            return false;
-        }
-    }
-
-    // 处理输入框和质押按钮
-    async function waitForInputAndStake() {
-        const inputElement = await waitForElement(
-            'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]'
-        );
-        if (inputElement) {
-            const inputValue = inputElement.value.trim();
-            console.log(`当前输入框值: ${inputValue}`);
-
-            if (!inputValue) {
-                const inputSuccess = await inputText(
-                    'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]',
-                    'change',
-                    '0.01',
-                    false
-                );
-                if (inputSuccess) {
-                    console.log("输入框处理完成，等待点击 Stake 按钮");
-                    await waitForStakeButton(inputElement);
-                }
-            } else {
-                console.log("输入框不为空，直接点击 Stake 按钮");
-                await waitForStakeButton(inputElement);
-            }
-        } else {
-            console.log("未找到输入框元素");
-        }
-    }
-
-    // 处理 Stake 按钮
-    async function waitForStakeButton(inputElement) {
-        const stakeButton = await waitForElement(
-            'button.mantine-Button-root[data-variant="gradient"][data-size="lg"]'
-        );
-        if (stakeButton) {
-            const buttonText = stakeButton.querySelector(".mantine-Button-label");
-            if (buttonText && buttonText.textContent === "Stake" && !stakeButton.disabled) {
-                const currentInputValue = inputElement.value.trim();
-                if (currentInputValue) {
-                    console.log("输入框不为空，点击 Stake 按钮");
-                    stakeButton.click();
-                    watchForDepositNotification();
-                } else {
-                    console.log("输入框为空，无法点击 Stake 按钮");
-                }
-            } else {
-                console.log("Stake 按钮不可用或文本不匹配");
-            }
-        } else {
-            console.log("未找到 Stake 按钮");
-        }
-    }
-
-    function scanForConnectButton() {
-        const intervalId = setInterval(() => {
-            const buttons = document.querySelectorAll('button');
-            let initialConnectButton = null;
-
-            for (const button of buttons) {
-                const buttonLabel = button.querySelector('.mantine-Button-label');
-                if (buttonLabel && buttonLabel.textContent === "Connect Wallet" && !button.disabled) {
-                    initialConnectButton = button;
-                    break;
-                }
-            }
-
-            if (initialConnectButton) {
-                console.log("定时器找到初始 'Connect Wallet' 按钮，执行点击并停止扫描");
-                initialConnectButton.click();
-                clearInterval(intervalId); // 找到按钮后停止定时器
-                waitForMetaMaskAndStake();
-            } else {
-                console.log("未找到可用 'Connect Wallet' 按钮，继续扫描...");
-            }
-        }, 1000); // 每 1 秒扫描一次
-    }
-
-    if (window.location.href=="https://stake.apr.io/") {
-        setInterval(() => {
-            waitForStakeButton();
-            waitForInputAndStake();
-        }, 5000);
-        scanForConnectButton();
-
-        setInterval(() => {
-            watchForDepositNotification();
-        }, 2000);
-    }
-
-})();
 
 //taker
 (function () {
@@ -950,102 +888,6 @@
     }
 
 })();
-
-/**
-//layeredge
-(function () {
-    'use strict';
-    if (window.location.hostname !== 'dashboard.layeredge.io') {
-        return;
-    }
-
-    let startNodeClicked = false; // Start in the "not clicked" state
-    let claimRewardClicked = false; // Start in the "not clicked" state
-    let secondClaimClicked= false;
-    function clickStartNode() {
-        const startNodeButtons = Array.from(document.querySelectorAll('button'));
-        const startNodeButton = startNodeButtons.find(button =>
-            button.textContent.trim() === 'Start Node'
-        );
-        if (startNodeButton) {
-            startNodeButton.click();
-                startNodeClicked = true; // Mark as clicked
-        }else{
-            if(checkForStopNode()){
-                claimReward();
-            }
-        }
-    }
-    function claimReward() {
-        const claimButtons = Array.from(document.querySelectorAll('button'));
-        const claimButton = claimButtons.find(button =>
-                                                button.querySelector('span') && button.querySelector('span').textContent.trim() === 'Claim Reward'
-                                                );
-
-        if (claimButton && !claimRewardClicked) {
-            claimButton.click();
-            claimRewardClicked = true;
-            console.log('Clicked Claim Reward button.');
-        } else {
-            console.log('Claim Reward button not found.');
-        }
-    }
-
-    function checkForStopNode() {
-        const stopNodeButtons = Array.from(document.querySelectorAll('button'));
-        const stopNodeButton = stopNodeButtons.find(button =>
-            button.textContent.includes('Stop Node')
-        );
-        if (stopNodeButton) {
-            return true;
-        } else {
-            console.log('Stop Node button not found yet.');
-        }
-    }
-    function checkSuccessMessage() {
-        // Select all <p> tags and check if any contain "successfully"
-        const successMessages = Array.from(document.querySelectorAll('p'));
-        const successMessage = successMessages.find(p =>
-                                                    p.textContent.includes('successfully') || p.textContent.includes('reward. Please come back tomorrow!') || p.textContent.includes('Failed to claim reward, Please try again later.')
-                                                    );
-
-        if (successMessage) {
-            console.log('Success message found:', successMessage.textContent);
-                window.open('https://www.magicnewton.com/portal/rewards', '_self');
-        } else {
-            console.log('No success message found yet.');
-        }
-    }
-    if (window.location.href === 'https://dashboard.layeredge.io/') {
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                window.location.href = "https://www.magicnewton.com/portal/rewards";
-            }, 100000);
-            setInterval(() => {
-
-                const h2s = document.querySelector("body > div > main > div > div > h2")
-                if(!h2s){
-                    clickStartNode();
-                    if (claimRewardClicked) {
-                        const claimButtons = Array.from(document.querySelectorAll('button'));
-                        const claimRewardButtons = claimButtons.filter(button =>
-                                                                        button.querySelector('span') && button.querySelector('span').textContent.trim() === 'Claim Reward'
-                                                                        );
-                        if (claimRewardButtons.length > 1 && !secondClaimClicked) {
-                            claimRewardButtons[1].click(); // Click the second
-                            secondClaimClicked = true;
-                            console.log('Clicked second Claim Reward button.');
-                        }
-                    }
-                    if(secondClaimClicked){
-                        checkSuccessMessage();
-                    }
-                }
-            }, 3000);
-        });
-    }
-})();
-*/
 
 //newton
 (function() {
@@ -1682,58 +1524,6 @@
     console.log('Interval check started (every 5 seconds) on ' + targetDomain);
 })();
 
-//monad min nft
-(function() {
-    'use strict';
-    if (window.location.hostname !== 'testnet.lilchogstars.com') {
-        return;
-    }
-
-    // 检查当前URL是否匹配
-    if (window.location.href === 'https://testnet.lilchogstars.com/') {
-        // 第一步：查找并点击 "Connect Wallet" 按钮
-        let connectWalletButton = document.querySelector('button.w-full.bg-purple-500.text-white.px-4.py-2.rounded.hover\\:bg-purple-700');
-
-        if (connectWalletButton && !connectWalletButton.disabled) {
-            console.log('找到Connect Wallet按钮，尝试点击');
-            connectWalletButton.click();
-
-            // 等待MetaMask选项出现并点击
-            let checkMetaMask = setInterval(() => {
-                let metaMaskButton = document.querySelector('button[data-testid="rk-wallet-option-io.metamask"]');
-                if (metaMaskButton && !metaMaskButton.disabled) {
-                    console.log('找到MetaMask选项，点击连接');
-                    metaMaskButton.click();
-                    clearInterval(checkMetaMask);
-                }
-            }, 5000);
-        }
-        // 检查钱包连接成功并点击Mint按钮
-        setInterval(() => {
-            // 检查连接钱包按钮是否消失
-            let walletBtnExists = document.querySelector('button.w-full.bg-purple-500.text-white.px-4.py-2.rounded.hover\\:bg-purple-700');
-            if (!walletBtnExists) {
-                let mintButton = document.querySelector('button.px-4.py-2.bg-purple-500.text-white.rounded.hover\\:bg-purple-700.w-1\\/3');
-                if (mintButton && !mintButton.disabled) {
-                    console.log('找到Mint More按钮，点击');
-                    mintButton.click();
-
-                    // 检查Mint成功信息并跳转
-                    let checkSuccess = setInterval(() => {
-                        let successMsg = document.querySelector('p.text-lg.font-medium.my-4');
-                        if (successMsg && successMsg.textContent === 'Minted successfully') {
-                            console.log('Mint成功，准备跳转');
-                            clearInterval(checkSuccess);
-                            // 在这里添加跳转到下一个页面的URL
-                            window.location.href = 'https://cryptopond.xyz/modelfactory/detail/306250?tab=4';
-                        }
-                    }, 3000);
-                }
-            }
-        }, 30000);
-    }
-})();
-
 //Pond Ai Public
 (function() {
 
@@ -2241,34 +2031,6 @@
     }
 })();
 
-//nexus
-(function() {
-    'use strict';
-
-    function toggleButtonState() {
-        const btnOff =document.querySelector("body > div:nth-child(3) > div.lg\\:pl-20 > main > main > div.hidden.md\\:block > div > div > div:nth-child(1) > div.mt-48 > div > div > div > div > div.relative.w-24.h-16.rounded-full.cursor-pointer.transition-colors.duration-300.ease-in-out.border-4.border-gray-400.bg-\\[\\#ffffff\\]")
-
-        if (btnOff) {
-            // 检查按钮当前状态并切换
-            if (btnOff.style.display !== 'none') {
-                btnOff.click();
-            }
-        } else {
-            console.log('按钮元素未找到，请检查选择器');
-        }
-    }
-
-    if (window.location.href === 'https://app.nexus.xyz/') {
-        // 监听页面加载完成
-        window.addEventListener('load', function() {
-            // 每秒检查一次按钮状态
-            setInterval(toggleButtonState, 10000); // 1秒钟检查一次按钮状态
-        });
-    }
-})();
-
-
-
 //0xvm
 (function() {
     'use strict';
@@ -2343,8 +2105,7 @@
         }
     }, 5000); // 每5秒执行一次
     }
-})();
-
+})()
 
 //sapenAi
 (function() {
@@ -2751,7 +2512,6 @@
 })();
 
 //ol
-
 (function() {
     'use strict';
     const currentPath = window.location.pathname;
@@ -2975,39 +2735,6 @@
     });
 })();
 
-(function() {
-
-    if (window.location.hostname !== 'orochi.network') {
-        return;
-    }
-
-    // Function to check for reCAPTCHA failure
-    function checkForRecaptchaFailure() {
-        const alertDiv = document.querySelector('div[role="alert"]');
-        if (alertDiv && alertDiv.textContent.includes('verify the reCAPTCHA')) {
-            console.log("reCAPTCHA failure detected, refreshing page...");
-            setTimeout(() => location.reload(), 2000); // 2-second delay before refresh
-        }
-    }
-
-    // Mutation Observer to detect DOM changes
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach(() => {
-            checkForRecaptchaFailure();
-        });
-    });
-
-    // Start observing the document body
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // Initial check in case the alert is already present
-    checkForRecaptchaFailure();
-
-    // Cleanup on page unload
-    window.addEventListener('unload', () => {
-        observer.disconnect();
-    });
-})();
 
 (function() {
     'use strict';
@@ -3620,7 +3347,6 @@
     }
 })();
 
-
 (function() {
     'use strict';
     if (window.location.hostname !== 'dashboard.monadscore.xyz') {
@@ -3732,7 +3458,6 @@
 })();
 
 
-
 (function() {
     'use strict';
     if (window.location.hostname !== 'cryptopond.xyz') {
@@ -3751,7 +3476,6 @@
         });
     }, 5000);
 })();
-
 
 (function() {
     'use strict';
@@ -5433,203 +5157,295 @@
 //app.crystal.exchange
 //https://monad-test.kinza.finance/#/details/MON
 
-//MONAD SUPER
+
+
+//MONAD STAK
 (function() {
     'use strict';
-
-    if (window.location.href !== 'https://monad-test.kinza.finance/#/details/MON') {
+    if (window.location.hostname !== 'stake.apr.io') {
         return;
     }
 
-    //检测<span>Supply cap is exceeded</span>如果出现跳转下一个网址
-    var Supplyfalg= false;
-    const SupplyCap = setInterval(() => {
-        const span = document.querySelector('span');
-        if (span.textContent.trim() === 'Supply cap is exceeded' && Supplyfalg == false) {
-            window.location.href = 'https://www.360.com';
-            Supplyfalg = true;
-        }
-    }, 1000);
 
-    // 等待页面加载完成
-    function waitForElement(selector, callback, maxAttempts = Infinity, interval = 3000) {
-        let attempts = 0;
-        const checkExist = setInterval(() => {
-            const element = document.querySelector(selector);
-            if (element) {
-                clearInterval(checkExist);
-                callback(element);
-            } else if (attempts >= maxAttempts) {
-                clearInterval(checkExist);
-                console.log(`Element ${selector} not found after ${maxAttempts} attempts. Retrying...`);
-                waitForElement(selector, callback, Infinity, interval);
+    const tourl = setInterval(() => {
+        //新增一个检测按钮文本如果存在跳转下一个
+        const buttons = document.querySelectorAll('button');
+        for (const button of buttons) {
+            const buttonLabel = button.querySelector('.mantine-Button-label');
+            if (buttonLabel && buttonLabel.textContent === "Insufficient balance to cover gas fees") {
+                //
+                const nextSiteBtnA = setInterval(() => {
+                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                    if (nextSiteBtn) {
+                        nextSiteBtn.click();
+                        clearInterval(nextSiteBtnA);
+                        clearInterval(tourl);
+                    }
+                }, 3000);
             }
-            attempts++;
-        }, interval);
+        }
+    }, 2000);
+
+    function findButtonInShadow(root, text) {
+        // 查找当前root下所有button
+        const buttons = root.querySelectorAll('button');
+        for (const btn of buttons) {
+            if (btn.textContent.includes(text) && !btn.disabled) {
+                return btn;
+            }
+        }
+        // 递归查找所有子元素的shadowRoot
+        const elements = root.querySelectorAll('*');
+        for (const el of elements) {
+            if (el.shadowRoot) {
+                const btn = findButtonInShadow(el.shadowRoot, text);
+                if (btn) return btn;
+            }
+        }
+        return null;
     }
 
-    // 查找按钮通过文本内容
-    function findButtonByText(text, callback) {
-        const retryFindButton = () => findButtonByText(text, callback); // 定义重试函数
-        waitForElement('button', (buttons) => {
-            const buttonList = document.querySelectorAll('button');
-            for (let button of buttonList) {
-                if (button.textContent.trim() === text) {
-                    callback(button);
-                    return;
+    const MetaMask = setInterval(() => {
+        const btn = findButtonInShadow(document, 'MetaMask');
+        if (btn) {
+            console.log('找到可点击的按钮，正在点击...');
+            btn.click();
+            clearInterval(MetaMask);
+        } else {
+            console.log('未找到按钮，继续等待...');
+        }
+    }, 2000);
+
+
+    // 第一步：判断路径
+
+    // 辅助函数：等待元素出现
+    function waitForElement(selector, callback, maxAttempts = 20, interval = 500) {
+        return new Promise((resolve) => {
+            let attempts = 0;
+            const checkElement = setInterval(() => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    clearInterval(checkElement);
+                    resolve(element);
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(checkElement);
+                    console.log(`未找到元素: ${selector}`);
+                    resolve(null);
+                } else {
+                    attempts++;
+                }
+            }, interval);
+        });
+    }
+
+    // 添加监视器来检测存款完成通知
+    function watchForDepositNotification() {
+        const notification = document.querySelector('.m_a49ed24.mantine-Notification-body');
+        if (notification && notification.textContent.includes("Deposit completed")) {
+            console.log("检测到存款完成通知，正在跳转...");
+            //使用定时器
+            const nextSiteBtnA = setInterval(() => {
+                //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(nextSiteBtnA);
+                }
+            }, 3000);
+        }
+    }
+
+    // 辅助函数：随机延迟
+    function randomy(min, max) {
+        return new Promise(resolve => setTimeout(resolve, Math.random() * (max - min) + min));
+    }
+
+    // 模拟粘贴输入
+    function simulatePaste(inputElement, inputValue) {
+        inputElement.value = inputValue;
+        return Promise.resolve();
+    }
+
+    // 输入文本函数
+    async function inputText(selector, eventType, inputValue, isPaste = false) {
+        try {
+            const inputElement = await waitForElement(selector);
+            if (!inputElement) {
+                console.log(`Input element ${selector} not found.`);
+                return false;
+            }
+
+            if (inputElement.value !== '') {
+                console.log(`Input field ${selector} is not empty. Skipping input.`);
+                return false;
+            }
+
+            inputElement.focus();
+            await randomy(100, 300);
+
+            if (isPaste) {
+                await simulatePaste(inputElement, inputValue);
+            } else {
+                for (let char of inputValue.toString()) {
+                    document.execCommand('insertText', false, char);
+                    await randomy(50, 150);
                 }
             }
-            console.log(`Button with text "${text}" not found. Retrying in 5 seconds...`);
-            setTimeout(retryFindButton, 5000);
-        }, Infinity, 3000);
-    }
 
-    // 检查按钮是否可点击
-    function isButtonClickable(button) {
-        if (!button) return false;
-        const isDisabled = button.hasAttribute('disabled') || button.classList.contains('ant-btn-disabled');
-        const isVisible = button.style.display !== 'none' && button.style.visibility !== 'hidden' && window.getComputedStyle(button).display !== 'none';
-        return !isDisabled && isVisible;
-    }
+            inputElement.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
+            await randomy(100, 300);
+            inputElement.blur();
 
-    // 检查输入框是否为空
-    function isInputEmpty(input) {
-        if (!input) return true;
-        return !input.value || input.value.trim() === '';
-    }
-
-    // 设置输入框值并触发事件（使用原生 set 方法）
-    function setInputValue(input, value) {
-        if (!input) return;
-
-        // 使用 Object.defineProperty 定义 value 的 set 方法
-        Object.defineProperty(input, 'value', {
-            set: function(newValue) {
-                this._value = newValue; // 内部存储值
-                // 触发输入事件以模拟用户输入
-                this.dispatchEvent(new Event('input', { bubbles: true }));
-                // 触发 change 事件，确保状态更新
-                this.dispatchEvent(new Event('change', { bubbles: true }));
-                // 模拟键盘事件（可选，某些框架可能需要）
-                this.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-                this.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
-                console.log(`Set input value to: ${newValue} using native set`);
-            },
-            get: function() {
-                return this._value || '';
-            },
-            configurable: true,
-            enumerable: true
-        });
-
-        // 设置值
-        input.value = value; // 触发 set 方法
-
-        // 确保 value 属性被正确设置（部分浏览器可能需要）
-        if (input.value !== value) {
-            input._value = value; // 直接设置内部值
-            // 再次触发事件以确保同步
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            input.dispatchEvent(new Event('change', { bubbles: true }));
+            if (inputElement.value === inputValue.toString()) {
+                console.log(`Input completed for ${selector}`);
+                return true;
+            } else {
+                console.log(`Input verification failed for ${selector}`);
+                return false;
+            }
+        } catch (error) {
+            console.error(`Error inputting text for ${selector}:`, error);
+            return false;
         }
     }
 
-    // 第二步：点击 "Supply" 按钮
-    function handleSupplyButton() {
-        findButtonByText('Supply', (supplyButton) => {
-            if (isButtonClickable(supplyButton)) {
-                supplyButton.click();
-                console.log('Clicked "Supply" button. Waiting 5 seconds...');
+    // 处理输入框和质押按钮
+    async function waitForInputAndStake() {
+        const inputElement = await waitForElement(
+            'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]'
+        );
+        if (inputElement) {
+            const inputValue = inputElement.value.trim();
+            console.log(`当前输入框值: ${inputValue}`);
+
+            if (!inputValue) {
+                const inputSuccess = await inputText(
+                    'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]',
+                    'change',
+                    '0.01',
+                    false
+                );
+                if (inputSuccess) {
+                    console.log("输入框处理完成，等待点击 Stake 按钮");
+                    await waitForStakeButton(inputElement);
+                }
             } else {
-                console.log('"Supply" button is not clickable or not ready. Retrying in 5 seconds...');
-                setTimeout(handleSupplyButton, 5000);
-                return;
+                console.log("输入框不为空，直接点击 Stake 按钮");
+                await waitForStakeButton(inputElement);
             }
-
-            // 增加延迟，确保输入框加载
-            setTimeout(() => {
-                // 第三步：查找并检查输入框
-                waitForElement('input[type="text"]', (inputField) => {
-                    if (isInputEmpty(inputField)) {
-                        const randomValue = (Math.random() * 0.009 + 0.001).toFixed(3);
-                        setInputValue(inputField, randomValue);
-
-                        // 增加延迟，确保输入被处理
-                        setTimeout(() => {
-                            // 第四步：点击 "Supply MON" 按钮
-                            function handleSupplyMonButton() {
-                                findButtonByText('Supply MON', (supplyMonButton) => {
-                                    if (isButtonClickable(supplyMonButton)) {
-                                        supplyMonButton.click();
-                                        console.log('Clicked "Supply MON" button. Waiting for "All Done!" with infinite retry...');
-                                    } else {
-                                        console.log('"Supply MON" button is not clickable or not ready. Retrying in 5 seconds...');
-                                        setTimeout(handleSupplyMonButton, 5000);
-                                        return;
-                                    }
-
-                                    // 第五步：等待 "All Done!" 元素出现并检查，无限重试直到成功
-                                    waitForElement('div._SuccessTitle_1542z_137', (successElement) => {
-                                        if (successElement.textContent.trim() === 'All Done!') {
-                                            console.log('Operation completed successfully: All Done!');
-                                            // 跳转到下一个 URL（请替换为实际目标 URL）
-                                            window.location.href = 'https://www.360.com';
-                                        } else {
-                                            console.log('Did not find "All Done!". Retrying...');
-                                            waitForElement('div._SuccessTitle_1542z_137', arguments.callee, Infinity, 5000);
-                                        }
-                                    }, Infinity, 5000); // 每5秒检查一次，无限重试
-                                });
-                            }
-                            handleSupplyMonButton();
-                        }, 10000); // 等待10秒，确保输入被处理和后端响应
-                    } else {
-                        console.log('Input field is not empty, skipping input. Retrying in 5 seconds...');
-                        setTimeout(() => waitForElement('input[type="text"]', (inputField) => handleSupplyButton(), Infinity, 3000), 5000);
-                    }
-                }, Infinity, 3000); // 每3秒检查一次，无限重试
-            }, 5000); // 等待5秒，确保 "Supply" 按钮点击后页面更新
-        });
+        } else {
+            console.log("未找到输入框元素");
+        }
     }
 
-    const Supply = setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('Supply MON') &&
-                !button.hasAttribute('disabled')) {
-                button.click();
+    // 处理 Stake 按钮
+    async function waitForStakeButton(inputElement) {
+        const stakeButton = await waitForElement(
+            'button.mantine-Button-root[data-variant="gradient"][data-size="lg"]'
+        );
+        if (stakeButton) {
+            const buttonText = stakeButton.querySelector(".mantine-Button-label");
+            if (buttonText && buttonText.textContent === "Stake" && !stakeButton.disabled) {
+                const currentInputValue = inputElement.value.trim();
+                if (currentInputValue) {
+                    console.log("输入框不为空，点击 Stake 按钮");
+                    stakeButton.click();
+                    watchForDepositNotification();
+                } else {
+                    console.log("输入框为空，无法点击 Stake 按钮");
+                }
+            } else {
+                console.log("Stake 按钮不可用或文本不匹配");
             }
-        });
-    }, 50000);
+        } else {
+            console.log("未找到 Stake 按钮");
+        }
+    }
 
-    // 启动脚本
-    handleSupplyButton();
+    function scanForConnectButton() {
+        const intervalId = setInterval(() => {
+            const buttons = document.querySelectorAll('button');
+            let initialConnectButton = null;
+
+            for (const button of buttons) {
+                const buttonLabel = button.querySelector('.mantine-Button-label');
+                if (buttonLabel && buttonLabel.textContent === "Connect Wallet" && !button.disabled) {
+                    initialConnectButton = button;
+                    break;
+                }
+            }
+
+            if (initialConnectButton) {
+                console.log("定时器找到初始 'Connect Wallet' 按钮，执行点击并停止扫描");
+                initialConnectButton.click();
+                clearInterval(intervalId); // 找到按钮后停止定时器
+                waitForMetaMaskAndStake();
+            } else {
+                console.log("未找到可用 'Connect Wallet' 按钮，继续扫描...");
+            }
+        }, 1000); // 每 1 秒扫描一次
+    }
+
+    if (window.location.href=="https://stake.apr.io/") {
+        setInterval(() => {
+            waitForStakeButton();
+            waitForInputAndStake();
+        }, 5000);
+        scanForConnectButton();
+
+        setInterval(() => {
+            watchForDepositNotification();
+        }, 2000);
+    }
+
 })();
-
-
-//MONAD
+//MONAD crystal
 (function() {
     if (window.location.hostname !== 'app.crystal.exchange') {
         return;
     }
 
-    const ConnectWallet =setInterval(() => {
+    const ConnectWalletwithwallet =setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            // 检查按钮是否包含 "Continue with Google" 文本并且没有 disabled 属性
             if (button.textContent.includes('Continue with a wallet') &&
                 !button.hasAttribute('disabled')) {
                 console.log('找到可点击的按钮，正在点击...');
                 button.click();
-                clearInterval(ConnectWallet)
+                clearInterval(ConnectWalletwithwallet)
             } else if (button.hasAttribute('disabled')) {
                 console.log('按钮不可点击，跳过');
             }
         });
     }, 3000);
 
+    const MetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                console.log('找到可点击的按钮，正在点击...');
+                button.click();
+                clearInterval(MetaMask);
+            } else {
+                console.log('未找到按钮，继续等待...');
+            }
+        });
+    }, 3000);
 
-    
+    //连接钱包
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Connect Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(ConnectWallet);
+            }
+        });
+    }, 3000);
 
     // 目标路径
     const targetUrl = "https://app.crystal.exchange";
@@ -5745,8 +5561,13 @@
             }
             const link = document.querySelector('.view-transaction');
             if(link){
-                setTimeout(() => {
-                    window.location.href ='https://monad-test.kinza.finance/#/details/MON';
+                const nextSiteBtnA = setInterval(() => {
+                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                    if (nextSiteBtn) {
+                        nextSiteBtn.click();
+                        clearInterval(nextSiteBtnA);
+                    }
                 }, 40000);
             }
         }
@@ -5768,231 +5589,533 @@
     observer.observe(document.body, { childList: true, subtree: true });
          }
 })();
-//MONAD STAK
+//MONAD SUPER
 (function() {
     'use strict';
-    if (window.location.hostname !== 'stake.apr.io') {
-        return;
-    }
 
-
-    const tourl = setInterval(() => {
-        //新增一个检测按钮文本如果存在跳转下一个
-        const buttons = document.querySelectorAll('button');
-        for (const button of buttons) {
-            const buttonLabel = button.querySelector('.mantine-Button-label');
-            if (buttonLabel && buttonLabel.textContent === "Insufficient balance to cover gas fees") {
-                window.location.href = 'https://app.crystal.exchange/swap';
-                clearInterval(tourl);
-            }
+    if (window.location.href !== 'https://monad-test.kinza.finance/#/details/MON') {
+            return;
         }
-    }, 2000);
 
-    function findButtonInShadow(root, text) {
-        // 查找当前root下所有button
-        const buttons = root.querySelectorAll('button');
-        for (const btn of buttons) {
-            if (btn.textContent.includes(text) && !btn.disabled) {
-                return btn;
-            }
-        }
-        // 递归查找所有子元素的shadowRoot
-        const elements = root.querySelectorAll('*');
-        for (const el of elements) {
-            if (el.shadowRoot) {
-                const btn = findButtonInShadow(el.shadowRoot, text);
-                if (btn) return btn;
-            }
-        }
-        return null;
-    }
-    
-    const MetaMask = setInterval(() => {
-        const btn = findButtonInShadow(document, 'MetaMask');
-        if (btn) {
-            console.log('找到可点击的按钮，正在点击...');
-            btn.click();
-            clearInterval(MetaMask);
-        } else {
-            console.log('未找到按钮，继续等待...');
-        }
-    }, 2000);
-
-    // 配置目标跳转URL
-    const TARGET_URL = "https://app.crystal.exchange/swap";
-
-    // 第一步：判断路径
-
-    // 辅助函数：等待元素出现
-    function waitForElement(selector, callback, maxAttempts = 20, interval = 500) {
-        return new Promise((resolve) => {
-            let attempts = 0;
-            const checkElement = setInterval(() => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    clearInterval(checkElement);
-                    resolve(element);
-                } else if (attempts >= maxAttempts) {
-                    clearInterval(checkElement);
-                    console.log(`未找到元素: ${selector}`);
-                    resolve(null);
-                } else {
-                    attempts++;
+    //检测<span>Supply cap is exceeded</span>如果出现跳转下一个网址
+    var Supplyfalg= false;
+    const SupplyCap = setInterval(() => {
+        const span = document.querySelector('span');
+        if (span.textContent.trim() === 'Supply cap is exceeded' && Supplyfalg == false) {
+            const nextSiteBtnA = setInterval(() => {
+                //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(nextSiteBtnA);
                 }
-            }, interval);
+            }, 3000);
+            Supplyfalg = true;
+        }
+    }, 1000);
+
+    //连钱包
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Connect Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(ConnectWallet);
+            }
+        });
+    }, 3000);
+
+    //metamask
+    const MetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(MetaMask);
+            }
+        });
+    }, 3000);
+
+
+    // 等待页面加载完成
+    function waitForElement(selector, callback, maxAttempts = Infinity, interval = 3000) {
+        let attempts = 0;
+        const checkExist = setInterval(() => {
+            const element = document.querySelector(selector);
+            if (element) {
+                clearInterval(checkExist);
+                callback(element);
+            } else if (attempts >= maxAttempts) {
+                clearInterval(checkExist);
+                console.log(`Element ${selector} not found after ${maxAttempts} attempts. Retrying...`);
+                waitForElement(selector, callback, Infinity, interval);
+            }
+            attempts++;
+        }, interval);
+    }
+
+    // 查找按钮通过文本内容
+    function findButtonByText(text, callback) {
+        const retryFindButton = () => findButtonByText(text, callback); // 定义重试函数
+        waitForElement('button', (buttons) => {
+            const buttonList = document.querySelectorAll('button');
+            for (let button of buttonList) {
+                if (button.textContent.trim() === text) {
+                    callback(button);
+                    return;
+                }
+            }
+            console.log(`Button with text "${text}" not found. Retrying in 5 seconds...`);
+            setTimeout(retryFindButton, 5000);
+        }, Infinity, 3000);
+    }
+
+    // 检查按钮是否可点击
+    function isButtonClickable(button) {
+        if (!button) return false;
+        const isDisabled = button.hasAttribute('disabled') || button.classList.contains('ant-btn-disabled');
+        const isVisible = button.style.display !== 'none' && button.style.visibility !== 'hidden' && window.getComputedStyle(button).display !== 'none';
+        return !isDisabled && isVisible;
+    }
+
+    // 检查输入框是否为空
+    function isInputEmpty(input) {
+        if (!input) return true;
+        return !input.value || input.value.trim() === '';
+    }
+
+    // 设置输入框值并触发事件（使用原生 set 方法）
+    function setInputValue(input, value) {
+        if (!input) return;
+
+        // 使用 Object.defineProperty 定义 value 的 set 方法
+        Object.defineProperty(input, 'value', {
+            set: function(newValue) {
+                this._value = newValue; // 内部存储值
+                // 触发输入事件以模拟用户输入
+                this.dispatchEvent(new Event('input', { bubbles: true }));
+                // 触发 change 事件，确保状态更新
+                this.dispatchEvent(new Event('change', { bubbles: true }));
+                // 模拟键盘事件（可选，某些框架可能需要）
+                this.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+                this.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
+                console.log(`Set input value to: ${newValue} using native set`);
+            },
+            get: function() {
+                return this._value || '';
+            },
+            configurable: true,
+            enumerable: true
+        });
+
+        // 设置值
+        input.value = value; // 触发 set 方法
+
+        // 确保 value 属性被正确设置（部分浏览器可能需要）
+        if (input.value !== value) {
+            input._value = value; // 直接设置内部值
+            // 再次触发事件以确保同步
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    }
+
+    // 第二步：点击 "Supply" 按钮
+    function handleSupplyButton() {
+        findButtonByText('Supply', (supplyButton) => {
+            if (isButtonClickable(supplyButton)) {
+                supplyButton.click();
+                console.log('Clicked "Supply" button. Waiting 5 seconds...');
+            } else {
+                console.log('"Supply" button is not clickable or not ready. Retrying in 5 seconds...');
+                setTimeout(handleSupplyButton, 5000);
+                return;
+            }
+
+            // 增加延迟，确保输入框加载
+    setTimeout(() => {
+                // 第三步：查找并检查输入框
+                waitForElement('input[type="text"]', (inputField) => {
+                    if (isInputEmpty(inputField)) {
+                        const randomValue = (Math.random() * 0.009 + 0.001).toFixed(3);
+                        setInputValue(inputField, randomValue);
+
+                        // 增加延迟，确保输入被处理
+                        setTimeout(() => {
+                            // 第四步：点击 "Supply MON" 按钮
+                            function handleSupplyMonButton() {
+                                findButtonByText('Supply MON', (supplyMonButton) => {
+                                    if (isButtonClickable(supplyMonButton)) {
+                                        supplyMonButton.click();
+                                        console.log('Clicked "Supply MON" button. Waiting for "All Done!" with infinite retry...');
+                                    } else {
+                                        console.log('"Supply MON" button is not clickable or not ready. Retrying in 5 seconds...');
+                                        setTimeout(handleSupplyMonButton, 5000);
+                                        return;
+                                    }
+
+                                    // 第五步：等待 "All Done!" 元素出现并检查，无限重试直到成功
+                                    waitForElement('div._SuccessTitle_1542z_137', (successElement) => {
+                                        if (successElement.textContent.trim() === 'All Done!') {
+                                            console.log('Operation completed successfully: All Done!');
+                                            const nextSiteBtnA = setInterval(() => {
+                                                //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                                                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                                                if (nextSiteBtn) {
+                                                    nextSiteBtn.click();
+                                                    clearInterval(nextSiteBtnA);
+                                                }
+                                            }, 3000);
+                                        } else {
+                                            console.log('Did not find "All Done!". Retrying...');
+                                            waitForElement('div._SuccessTitle_1542z_137', arguments.callee, Infinity, 5000);
+                                        }
+                                    }, Infinity, 5000); // 每5秒检查一次，无限重试
+                                });
+                            }
+                            handleSupplyMonButton();
+                        }, 10000); // 等待10秒，确保输入被处理和后端响应
+                    } else {
+                        console.log('Input field is not empty, skipping input. Retrying in 5 seconds...');
+                        setTimeout(() => waitForElement('input[type="text"]', (inputField) => handleSupplyButton(), Infinity, 3000), 5000);
+                    }
+                }, Infinity, 3000); // 每3秒检查一次，无限重试
+            }, 5000); // 等待5秒，确保 "Supply" 按钮点击后页面更新
         });
     }
 
-    // 添加监视器来检测存款完成通知
-    function watchForDepositNotification() {
-        const notification = document.querySelector('.m_a49ed24.mantine-Notification-body');
-        if (notification && notification.textContent.includes("Deposit completed")) {
-            console.log("检测到存款完成通知，正在跳转...");
-            window.location.href = TARGET_URL;
-        }
-    }
-
-    // 辅助函数：随机延迟
-    function randomy(min, max) {
-        return new Promise(resolve => setTimeout(resolve, Math.random() * (max - min) + min));
-    }
-
-    // 模拟粘贴输入
-    function simulatePaste(inputElement, inputValue) {
-        inputElement.value = inputValue;
-        return Promise.resolve();
-    }
-
-    // 输入文本函数
-    async function inputText(selector, eventType, inputValue, isPaste = false) {
-        try {
-            const inputElement = await waitForElement(selector);
-            if (!inputElement) {
-                console.log(`Input element ${selector} not found.`);
-                return false;
+    const Supply = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Supply MON') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
             }
+        });
+    }, 50000);
 
-            if (inputElement.value !== '') {
-                console.log(`Input field ${selector} is not empty. Skipping input.`);
-                return false;
+    // 启动脚本
+    handleSupplyButton();
+})();
+//monad trade
+(function() {
+    if (window.location.hostname !== 'monad.ambient.finance') {
+        return;
+    }
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Connect Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(ConnectWallet);
             }
+        });
+    }, 3000);
+    //<button id="confirm_swap_button" aria-label="" tabindex="0" class="_button_zout7_1 _flat_zout7_18" style="text-transform: none;">Confirm</button>
+    const Confirm = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Confirm')) {
+                button.click();
+                clearInterval(Confirm);
+            }
+        });
+    }, 3000);
 
-            inputElement.focus();
-            await randomy(100, 300);
 
-            if (isPaste) {
-                await simulatePaste(inputElement, inputValue);
-            } else {
-                for (let char of inputValue.toString()) {
-                    document.execCommand('insertText', false, char);
-                    await randomy(50, 150);
+    const MetaMask = setInterval(() => {
+        function clickMetaMaskInAllShadowRoots(root = document) {
+            // 查找本层的所有按钮
+            const buttons = root.querySelectorAll ? root.querySelectorAll('button') : [];
+        for (const button of buttons) {
+                if (
+                    button.textContent.includes('MetaMask') &&
+                    !button.hasAttribute('disabled')
+                ) {
+                    button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => {
+                        button.click();
+                        console.log('Clicked MetaMask button in shadow DOM or normal DOM!');
+                    }, 200);
+                    return true;
                 }
             }
-
-            inputElement.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
-            await randomy(100, 300);
-            inputElement.blur();
-
-            if (inputElement.value === inputValue.toString()) {
-                console.log(`Input completed for ${selector}`);
-                return true;
-            } else {
-                console.log(`Input verification failed for ${selector}`);
-                return false;
+            // 递归查找所有 shadowRoot
+            const elements = root.querySelectorAll ? root.querySelectorAll('*') : [];
+            for (const el of elements) {
+                if (el.shadowRoot) {
+                    if (clickMetaMaskInAllShadowRoots(el.shadowRoot)) {
+                        return true;
+                    }
+                }
             }
-        } catch (error) {
-            console.error(`Error inputting text for ${selector}:`, error);
             return false;
         }
-    }
 
-    // 处理输入框和质押按钮
-    async function waitForInputAndStake() {
-        const inputElement = await waitForElement(
-            'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]'
-        );
-        if (inputElement) {
-            const inputValue = inputElement.value.trim();
-            console.log(`当前输入框值: ${inputValue}`);
-
-            if (!inputValue) {
-                const inputSuccess = await inputText(
-                    'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]',
-                    'change',
-                    '0.01',
-                    false
-                );
-                if (inputSuccess) {
-                    console.log("输入框处理完成，等待点击 Stake 按钮"); 
-                    await waitForStakeButton(inputElement);
-                }
-            } else {
-                console.log("输入框不为空，直接点击 Stake 按钮");
-                await waitForStakeButton(inputElement);
-            }
-        } else {
-            console.log("未找到输入框元素");
+        // 这里要实际调用递归函数
+        if (clickMetaMaskInAllShadowRoots()) {
+            clearInterval(MetaMask);
         }
-    }
+    }, 1000);
 
-    // 处理 Stake 按钮
-    async function waitForStakeButton(inputElement) {
-        const stakeButton = await waitForElement(
-            'button.mantine-Button-root[data-variant="gradient"][data-size="lg"]'
-        );
-        if (stakeButton) {
-            const buttonText = stakeButton.querySelector(".mantine-Button-label");
-            if (buttonText && buttonText.textContent === "Stake" && !stakeButton.disabled) {
-                const currentInputValue = inputElement.value.trim();
-                if (currentInputValue) {
-                    console.log("输入框不为空，点击 Stake 按钮");
-                    stakeButton.click();
-                    watchForDepositNotification();
-                } else {
-                    console.log("输入框为空，无法点击 Stake 按钮");
-                }
-            } else {
-                console.log("Stake 按钮不可用或文本不匹配");
-            }
-        } else {
-            console.log("未找到 Stake 按钮");
+    const clickPoolCard = setInterval(() => {
+        // 选中第一个 pool card
+        const poolCard = document.querySelector('a._pool_card_1b79o_1');
+        if (poolCard) {
+            poolCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                poolCard.click();
+                console.log('Clicked pool card!');
+                clearInterval(clickPoolCard);
+            }, 200); // 延迟200ms确保可见
         }
-    }
+    }, 1000);
 
-    function scanForConnectButton() {
-        const intervalId = setInterval(() => {
-            const buttons = document.querySelectorAll('button');
-            let initialConnectButton = null;
 
-            for (const button of buttons) {
-                const buttonLabel = button.querySelector('.mantine-Button-label');
-                if (buttonLabel && buttonLabel.textContent === "Connect Wallet" && !button.disabled) {
-                    initialConnectButton = button;
-                    break;
-                }
+    const inputInterval = setInterval(() => {
+        const input = document.querySelector('input#swap_sell_qty._tokenQuantityInput_ispvp_37');
+        if (input) {
+            if (!input.value || parseFloat(input.value) === 0) {
+                const min = 0.001, max = 0.003;
+                const randomValue = (Math.random() * (max - min) + min).toFixed(3);
+
+                // 触发原生 input 的 setter
+                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                nativeInputValueSetter.call(input, randomValue);
+
+                // 依次触发事件
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
+                input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
+
+                console.log('已向输入框输入:', randomValue);
             }
+        }
+    }, 3000);
 
-            if (initialConnectButton) {
-                console.log("定时器找到初始 'Connect Wallet' 按钮，执行点击并停止扫描");
-                initialConnectButton.click();
-                clearInterval(intervalId); // 找到按钮后停止定时器
-                waitForMetaMaskAndStake();
-            } else {
-                console.log("未找到可用 'Connect Wallet' 按钮，继续扫描...");
+    const switchInterval = setInterval(() => {
+        // 选中所有目标开关
+        const switches = document.querySelectorAll('#disabled_confirmation_modal_toggleswitch');
+        if (switches.length === 1) {
+            const sw = switches[0];
+            const isOff = sw.getAttribute('data-ison') === 'false' || sw.getAttribute('aria-checked') === 'false';
+            if (isOff) {
+                sw.click();
+                console.log('只有一个开关且为关，已点击开启');
+                clearInterval(switchInterval);
             }
-        }, 1000); // 每 1 秒扫描一次
+        }
+        // 如果不是只有一个，不做任何操作
+    }, 1000);
+
+    //点击确认按钮
+    const ConfirmButton = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Submit Swap')) {
+                button.click();
+                clearInterval(ConfirmButton);
+            }
+        });
+    }, 3000);
+
+    const ConfirmButton1 = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Submit Swap')) {
+                button.click();
+                clearInterval(ConfirmButton1);
+            }
+        });
+    }, 30000);
+
+    //<button class="sc-ihGpye kCvelR" style="text-transform: none;"><div><span class="_circle_completed_avq9e_13" style="width: 30px; height: 30px;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" color="var(--positive)" height="30" width="30" xmlns="http://www.w3.org/2000/svg" style="color: var(--positive);"><path fill="none" stroke-miterlimit="10" stroke-width="32" d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z"></path><path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M352 176 217.6 336 160 272"></path></svg></span></div><div style="color: var(--positive);">Transaction Confirmed</div><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path></svg></button>
+    const TransactionConfirmed = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Transaction Confirmed')) {
+                console.log('交易已确认');
+                const nextSiteBtnA = setInterval(() => {
+                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                    if (nextSiteBtn) {
+                        nextSiteBtn.click();
+                        clearInterval(nextSiteBtnA);
+                        clearInterval(TransactionConfirmed);
+                    }
+                }, 3000);
+            }
+        });
+    }, 3000);
+})();
+//monad hmonad.xyz
+(function() {
+    if (window.location.hostname !== 'shmonad.xyz') {
+        return;
     }
 
-    if (window.location.href=="https://stake.apr.io/") {
-        setInterval(() => {
-            waitForStakeButton();
-            waitForInputAndStake();
-        }, 5000);
-        scanForConnectButton();
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Connect wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(ConnectWallet);
+            }
+        });
+    }, 3000);
 
-        setInterval(() => {
-            watchForDepositNotification();
-        }, 2000);
-    }
+    //选择小狐狸
+    const SelectMetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(SelectMetaMask);
+            }
+        });
+    }, 3000);
+
+
+    //<span class="ml-2 flex-grow">Successfully staked 0.0007 ShMONAD</span>
+    const SuccessfullyStaked = setInterval(() => {
+        const buttons = document.querySelectorAll('span');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Successfully staked')) {
+                //跳转360
+                const nextSiteBtnA = setInterval(() => {
+                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                    if (nextSiteBtn) {
+                        nextSiteBtn.click();
+                        clearInterval(nextSiteBtnA);
+                    }
+                }, 3000);
+            }
+        });
+    }, 1000);
+
+
+    const inputInterval2 = setInterval(() => {
+        // 选中目标输入框（可根据 class 或 placeholder 选）
+        const input = document.querySelector('input.bg-neutral[placeholder="0"]');
+        if (input) {
+            if (!input.value || parseFloat(input.value) === 0) {
+                const min = 0.001, max = 0.003;
+                const randomValue = (Math.random() * (max - min) + min).toFixed(3);
+
+                // 触发原生 input 的 setter
+                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                nativeInputValueSetter.call(input, randomValue);
+
+                // 依次触发事件
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
+                input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
+
+                console.log('已向新输入框输入:', randomValue);
+                clearInterval(inputInterval2);
+            }
+        }
+    }, 3000);
+
+
+    //点击/html/body/div/div[1]/main/main/div/div[4]/div[2]/div/button并且判断文本 Stake
+    const StakeButton = setInterval(() => {
+        const button = document.querySelector('button');
+        if (button && button.textContent.includes('Stake')) {
+            button.click();
+            clearInterval(StakeButton);
+        }
+    }, 3000);
+
+})();
+
+//MONAD https://www.kuru.io/swap        待完善
+(function() {
+    if (window.location.hostname !== 'www.kuru.io') {
+            return;
+        }
+
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Connect wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(ConnectWallet);
+            }
+        });
+    }, 3000);
+
+    //选择小狐狸
+    const SelectMetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(SelectMetaMask);
+            }
+        });
+    }, 3000);
+
+    const inputInterval3 = setInterval(() => {
+        // 选中目标输入框（根据 placeholder 或 class 选）
+        const input = document.querySelector('input[placeholder="0.00"].flex.w-full.rounded-md');
+        if (input) {
+            if (!input.value || parseFloat(input.value) === 0) {
+                const min = 0.001, max = 0.003;
+                const randomValue = (Math.random() * (max - min) + min).toFixed(3);
+
+                // 触发原生 input 的 setter
+                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                nativeInputValueSetter.call(input, randomValue);
+
+                // 依次触发事件
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
+                input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
+
+                console.log('已向新输入框输入:', randomValue);
+                clearInterval(inputInterval3);
+            }
+        }
+    }, 3000);
+
+    //<button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-brand border-2 border-background hover:opacity-80 dark:text-background relative -translate-y-[0.075rem] -translate-x-[0.075rem] hover:translate-y-[0.075rem] hover:translate-x-[0.075rem] transition-all ease-in-out z-10 h-11 rounded-xl px-8 w-full">Swap</button>
+    const SwapButton = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Swap')) {
+                button.click();
+                clearInterval(SwapButton);
+            }
+        });
+    }, 3000);
+
+    //<span class="ml-2 flex-grow">Successfully staked 0.0007 ShMONAD</span>
+    const SuccessfullyStaked = setInterval(() => {
+        const buttons = document.querySelectorAll('span');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Successfully staked')) {
+                //跳转360
+                const nextSiteBtnA = setInterval(() => {
+                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                    if (nextSiteBtn) {
+                        nextSiteBtn.click();
+                        clearInterval(nextSiteBtnA);
+                    }
+                }, 3000);
+            }
+        });
+    }, 1000);
 
 })();
