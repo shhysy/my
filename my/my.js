@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.34
+// @version      47.35
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2161,46 +2161,46 @@
 // })();
 
 // //sapenAi
-// (function() {
-//     if (window.location.hostname !== 'app.sapien.io') {
-//         return;
-//     }
+(function() {
+    if (window.location.hostname !== 'app.sapien.io') {
+        return;
+    }
 
-//     const buttonSelector = '.chakra-button';
-//     const validTexts = ['Interior / Close Up', 'Back', 'Side', 'Front', 'Front Angle'];
+    const buttonSelector = '.chakra-button';
+    const validTexts = ['Interior / Close Up', 'Back', 'Side', 'Front', 'Front Angle'];
 
-//     let refreshTimer;
+    let refreshTimer;
 
-//     // 创建一个 MutationObserver 用来监听 DOM 变化
-//     const observer = new MutationObserver(() => {
-//         // 获取所有按钮元素
-//         const buttons = document.querySelectorAll(buttonSelector);
+    // 创建一个 MutationObserver 用来监听 DOM 变化
+    const observer = new MutationObserver(() => {
+        // 获取所有按钮元素
+        const buttons = document.querySelectorAll(buttonSelector);
 
-//         // 检查是否有按钮已经被选中
-//         const activeButton = Array.from(buttons).find(button => button.hasAttribute('data-active'));
+        // 检查是否有按钮已经被选中
+        const activeButton = Array.from(buttons).find(button => button.hasAttribute('data-active'));
 
-//         // 如果没有按钮被选中，并且按钮文本符合要求，则随机选择一个按钮
-//         if (!activeButton && buttons.length > 0) {
-//             const validButtons = Array.from(buttons).filter(button => validTexts.includes(button.textContent.trim()));
+        // 如果没有按钮被选中，并且按钮文本符合要求，则随机选择一个按钮
+        if (!activeButton && buttons.length > 0) {
+            const validButtons = Array.from(buttons).filter(button => validTexts.includes(button.textContent.trim()));
 
-//             if (validButtons.length > 0) {
-//                 const randomIndex = Math.floor(Math.random() * validButtons.length);
-//                 const randomButton = validButtons[randomIndex];
-//                 if (randomButton) {
-//                     randomButton.click();
-//                     randomButton.setAttribute('data-active', '');
-//                 }
-//             }
-//         }
-//     });
+            if (validButtons.length > 0) {
+                const randomIndex = Math.floor(Math.random() * validButtons.length);
+                const randomButton = validButtons[randomIndex];
+                if (randomButton) {
+                    randomButton.click();
+                    randomButton.setAttribute('data-active', '');
+                }
+            }
+        }
+    });
 
-//     observer.observe(document.body, {
-//         childList: true,
-//         subtree: true,
-//         attributes: true,
-//         characterData: true,
-//     });
-// })();
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true,
+    });
+})();
 
 //listas
 (function() {
@@ -2430,7 +2430,7 @@
         try {
             console.log('开始新聊天周期');
 
-            // 第一步：点击“New Chat”按钮
+            // 第一步：点击"New Chat"按钮
             const newChatButton = await getNewChatButton();
             console.log('找到 New Chat 按钮，准备点击');
             simulateClick(newChatButton);
