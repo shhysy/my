@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.52
+// @version      47.53
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -27,7 +27,7 @@
     //使用定时器
     const timer = setInterval(() => {
         // 如果当前在360网站，清除进度条
-        if (currentUrl.includes('360.com') || currentUrl.includes('www.360.com')) {
+        if (currentUrl.includes('360.com') || currentUrl.includes('www.360.com') || currentUrl.includes('monad.talentum.id')) {
             visitedSites = {};
             GM_setValue('visitedSites', visitedSites);
             return; // 清除后不执行后续代码
