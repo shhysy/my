@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.63
+// @version      47.64
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5902,21 +5902,31 @@
     const inputInterval = setInterval(() => {
         const input = document.querySelector('input#swap_sell_qty._tokenQuantityInput_ispvp_37');
         if (input) {
-            if (input.value ='' || parseFloat(input.value) === 0) {
+            if (input.value === '' || parseFloat(input.value) === 0 || input.value>0.1) {
                 const min = 0.001, max = 0.003;
                 const randomValue = (Math.random() * (max - min) + min).toFixed(3);
-
-                // 触发原生 input 的 setter
+    
                 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
                 nativeInputValueSetter.call(input, randomValue);
-
-                // 依次触发事件
+    
                 input.dispatchEvent(new Event('input', { bubbles: true }));
                 input.dispatchEvent(new Event('change', { bubbles: true }));
                 input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
                 input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
-
+    
                 console.log('已向输入框输入:', randomValue);
+            }
+        }
+    }, 3000);
+
+    setInterval(() => {
+        var selsect_mon = document.querySelector("#swap_sell_token_selector")
+        if(selsect_mon){
+            if(!selsect_mon.innerHTML.includes("MON")){
+                var fanx = document.querySelector("#root > div.sc-bXdtCk.gLqQQC.content-container-trade > section > div.sc-bXdtCk.fNydqz > section > div > div > div:nth-child(3) > div > div.sc-bXdtCk.fVjSfp > button")
+                if(fanx){
+                    fanx.click();
+                }
             }
         }
     }, 3000);
