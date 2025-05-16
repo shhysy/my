@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.62
+// @version      47.63
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5902,7 +5902,7 @@
     const inputInterval = setInterval(() => {
         const input = document.querySelector('input#swap_sell_qty._tokenQuantityInput_ispvp_37');
         if (input) {
-            if (!input.value || parseFloat(input.value) === 0) {
+            if (input.value ='' || parseFloat(input.value) === 0) {
                 const min = 0.001, max = 0.003;
                 const randomValue = (Math.random() * (max - min) + min).toFixed(3);
 
