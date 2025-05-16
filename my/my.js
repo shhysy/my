@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.40
+// @version      47.41
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -45,7 +45,7 @@
     // 自定义跳转列表（在此处添加你的目标网址）
     const customSiteSequence = [
         "https://app.crystal.exchange",
-        "https://monad-test.kinza.finance/#/details/MON",
+        //"https://monad-test.kinza.finance/#/details/MON",
         "https://monad.ambient.finance/",
         "https://shmonad.xyz/",
         "https://www.kuru.io/swap",
@@ -166,7 +166,7 @@
             // 重置访问记录
             visitedSites = {};
             GM_setValue('visitedSites', visitedSites);
-            alert('已重置访问记录，可以重新开始访问！');
+            //alert('已重置访问记录，可以重新开始访问！');
             return;
         }
 
