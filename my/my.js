@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.53
+// @version      47.54
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -14,7 +14,7 @@
 // @grant        GM_download
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @run-at       document-end
+// @run-at       document-start
 // @license      MIT
 // @updateURL    https://raw.githubusercontent.com/shhysy/my/main/my/my.js
 // @downloadURL  https://raw.githubusercontent.com/shhysy/my/main/my/my.js
