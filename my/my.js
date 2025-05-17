@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.65
+// @version      47.66
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5285,15 +5285,15 @@
                 console.log(`Input element ${selector} not found.`);
                 return false;
             }
-
+    
             if (inputElement.value !== '') {
                 console.log(`Input field ${selector} is not empty. Skipping input.`);
                 return false;
             }
-
+    
             inputElement.focus();
             await randomy(100, 300);
-
+    
             if (isPaste) {
                 await simulatePaste(inputElement, inputValue);
             } else {
@@ -5302,11 +5302,11 @@
                     await randomy(50, 150);
                 }
             }
-
+    
             inputElement.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
             await randomy(100, 300);
             inputElement.blur();
-
+    
             if (inputElement.value === inputValue.toString()) {
                 console.log(`Input completed for ${selector}`);
                 return true;
@@ -5323,17 +5323,17 @@
     // 处理输入框和质押按钮
     async function waitForInputAndStake() {
         const inputElement = await waitForElement(
-            'input.mantine-Input-input.mantine-NumberInput-input[type="text."[inputmode="numeric"]'
+            'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]'
         );
         if (inputElement) {
             const inputValue = inputElement.value.trim();
             console.log(`当前输入框值: ${inputValue}`);
     
             if (!inputValue) {
-                // 生成随机值，例如 0.01 到 1.00，保留两位小数
-                const randomValue = (Math.random() * (1.00 - 0.01) + 0.01).toFixed(2);
+                // Generate random value between 0.01 and 1.00, with 2 decimal places
+                const randomValue = (Math.random() * (0.001 - 0.01) + 0.01).toFixed(2);
                 const inputSuccess = await inputText(
-                    'input.mantine-Input-input.mantine-NumberInput-input[type="text."[inputmode="numeric"]',
+                    'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]',
                     'change',
                     randomValue,
                     false
@@ -5350,6 +5350,7 @@
             console.log("未找到输入框元素");
         }
     }
+    
 
     // 处理 Stake 按钮
     async function waitForStakeButton(inputElement) {
