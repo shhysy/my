@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.78
+// @version      47.79
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -53,7 +53,7 @@
     'use strict';
 
     
-    if (window.location.hostname == 'accounts.google.com') {
+    if (window.location.hostname == 'accounts.google.com' || window.location.hostname == 'x.com') {
         return;
     }
 
@@ -6426,3 +6426,4 @@
     }, 3000); // Check every 3 seconds
     // Your code here...
 })();
+
