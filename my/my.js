@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.71
+// @version      47.72
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -65,6 +65,7 @@
         "https://app.crystal.exchange",
         //"https://monad-test.kinza.finance/#/details/MON",
         "https://monad.ambient.finance/",
+        "https://bebop.xyz/trade?network=monad&sell=MON&buy=WMON",
         "https://shmonad.xyz/",
         "https://www.kuru.io/swap",
     ];
@@ -2200,103 +2201,103 @@
 // })();
 
 // //sapenAi
-(function() {
-    'use strict';
+// (function() {
+//     'use strict';
     
-    if (window.location.hostname !== 'app.sapien.io') {
-        return;
-    }
+//     if (window.location.hostname !== 'app.sapien.io') {
+//         return;
+//     }
 
-    const buttonSelector = '.chakra-button';
-    const validTexts = ['Interior / Close Up', 'Back', 'Side', 'Front', 'Front Angle'];
+//     const buttonSelector = '.chakra-button';
+//     const validTexts = ['Interior / Close Up', 'Back', 'Side', 'Front', 'Front Angle'];
 
-    let refreshTimer;
+//     let refreshTimer;
 
-    function handleButtonClick(button) {
-        if (button) {
-            button.click();
-            button.setAttribute('data-active', '');
-        }
-    }
+//     function handleButtonClick(button) {
+//         if (button) {
+//             button.click();
+//             button.setAttribute('data-active', '');
+//         }
+//     }
 
-    function findAndClickRandomButton() {
-        const buttons = document.querySelectorAll(buttonSelector);
-        const activeButton = Array.from(buttons).find(button => button.hasAttribute('data-active'));
+//     function findAndClickRandomButton() {
+//         const buttons = document.querySelectorAll(buttonSelector);
+//         const activeButton = Array.from(buttons).find(button => button.hasAttribute('data-active'));
 
-        if (!activeButton && buttons.length > 0) {
-            const validButtons = Array.from(buttons).filter(button => validTexts.includes(button.textContent.trim()));
+//         if (!activeButton && buttons.length > 0) {
+//             const validButtons = Array.from(buttons).filter(button => validTexts.includes(button.textContent.trim()));
 
-            if (validButtons.length > 0) {
-                const randomIndex = Math.floor(Math.random() * validButtons.length);
-                handleButtonClick(validButtons[randomIndex]);
-            }
-        }
-    }
+//             if (validButtons.length > 0) {
+//                 const randomIndex = Math.floor(Math.random() * validButtons.length);
+//                 handleButtonClick(validButtons[randomIndex]);
+//             }
+//         }
+//     }
 
-    // 创建一个 MutationObserver 用来监听 DOM 变化
-    const observer = new MutationObserver(findAndClickRandomButton);
+//     // 创建一个 MutationObserver 用来监听 DOM 变化
+//     const observer = new MutationObserver(findAndClickRandomButton);
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true,
-    });
-})();
+//     observer.observe(document.body, {
+//         childList: true,
+//         subtree: true,
+//         attributes: true,
+//         characterData: true,
+//     });
+// })();
 
 //listas
-(function() {
-    'use strict';
+// (function() {
+//     'use strict';
     
-    if (window.location.hostname !== 'wallet.litas.io') {
-        return;
-    }
+//     if (window.location.hostname !== 'wallet.litas.io') {
+//         return;
+//     }
 
-    function handleUpgradeClick() {
-        const buttonss = document.getElementsByTagName('button');
-        let i = 0;
-        for (let btn of buttonss) {
-            if (btn.textContent.trim() === 'Upgrade' && i < 2) {
-                btn.click();
-                i++;
-                console.log('Upgrade 按钮已点击');
-            }
-        }
-    }
+//     function handleUpgradeClick() {
+//         const buttonss = document.getElementsByTagName('button');
+//         let i = 0;
+//         for (let btn of buttonss) {
+//             if (btn.textContent.trim() === 'Upgrade' && i < 2) {
+//                 btn.click();
+//                 i++;
+//                 console.log('Upgrade 按钮已点击');
+//             }
+//         }
+//     }
 
-    function handleClaimButton() {
-        if (window.location.href === 'https://wallet.litas.io/wallet') {
-            window.location.href = "https://wallet.litas.io/miner";
-            return;
-        }
+//     function handleClaimButton() {
+//         if (window.location.href === 'https://wallet.litas.io/wallet') {
+//             window.location.href = "https://wallet.litas.io/miner";
+//             return;
+//         }
 
-        const buttons = Array.from(document.querySelectorAll('button'));
-        const claimButton = buttons.find(button => button.textContent.trim() === 'CLAIM');
+//         const buttons = Array.from(document.querySelectorAll('button'));
+//         const claimButton = buttons.find(button => button.textContent.trim() === 'CLAIM');
 
-        if (claimButton) {
-            claimButton.click();
-            console.log("CLAIM button clicked.");
-            return true;
-        } else {
-            console.log("CLAIM button not found.");
-            return false;
-        }
-    }
+//         if (claimButton) {
+//             claimButton.click();
+//             console.log("CLAIM button clicked.");
+//             return true;
+//         } else {
+//             console.log("CLAIM button not found.");
+//             return false;
+//         }
+//     }
 
-    setTimeout(() => {
-        window.location.href = 'https://app.olab.xyz/taskCenter';
-    }, 100000);
+//     setTimeout(() => {
+//         window.location.href = 'https://app.olab.xyz/taskCenter';
+//     }, 100000);
 
-    if (window.location.href === 'https://wallet.litas.io/miner' || window.location.href === 'https://wallet.litas.io/login') {
-        handleUpgradeClick();
+//     if (window.location.href === 'https://wallet.litas.io/miner' || window.location.href === 'https://wallet.litas.io/login') {
+//         handleUpgradeClick();
         
-        const timer = setInterval(() => {
-            if (handleClaimButton()) {
-                clearInterval(timer);
-            }
-        }, 3000);
-    }
-})();
+//         const timer = setInterval(() => {
+//             if (handleClaimButton()) {
+//                 clearInterval(timer);
+//             }
+//         }, 3000);
+//     }
+// })();
 
 //klokapp
 (function() {
@@ -5213,16 +5214,12 @@
         for (const button of buttons) {
             const buttonLabel = button.querySelector('.mantine-Button-label');
             if (buttonLabel && buttonLabel.textContent === "Insufficient balance to cover gas fees") {
-                //
-                const nextSiteBtnA = setInterval(() => {
-                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
-                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
-                    if (nextSiteBtn) {
-                        nextSiteBtn.click();
-                        clearInterval(nextSiteBtnA);
-                        clearInterval(tourl);
-                    }
-                }, 3000);
+                //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(tourl);
+                }
             }
         }
     }, 2000);
@@ -5285,15 +5282,10 @@
         const notification = document.querySelector('.m_a49ed24.mantine-Notification-body');
         if (notification && notification.textContent.includes("Deposit completed")) {
             console.log("检测到存款完成通知，正在跳转...");
-            //使用定时器
-            const nextSiteBtnA = setInterval(() => {
-                //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
-                const nextSiteBtn = document.querySelector('#nextSiteBtn');
-                if (nextSiteBtn) {
-                    nextSiteBtn.click();
-                    clearInterval(nextSiteBtnA);
-                }
-            }, 3000);
+            const nextSiteBtn = document.querySelector('#nextSiteBtn');
+            if (nextSiteBtn) {
+                nextSiteBtn.click();
+            }
         }
     }
 
@@ -5609,14 +5601,11 @@
                 }
                 const link = document.querySelector('.view-transaction');
                 if(link){
-                    const nextSiteBtnA = setInterval(() => {
-                        //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
-                        const nextSiteBtn = document.querySelector('#nextSiteBtn');
-                        if (nextSiteBtn) {
-                            nextSiteBtn.click();
-                            clearInterval(nextSiteBtnA);
-                        }
-                    }, 40000);
+                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                    if (nextSiteBtn) {
+                        nextSiteBtn.click();
+                    }
                 }
             }
         }, 1000);
@@ -5650,14 +5639,11 @@
     const SupplyCap = setInterval(() => {
         const span = document.querySelector('span');
         if (span.textContent.trim() === 'Supply cap is exceeded' && Supplyfalg == false) {
-            const nextSiteBtnA = setInterval(() => {
-                //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
-                const nextSiteBtn = document.querySelector('#nextSiteBtn');
-                if (nextSiteBtn) {
-                    nextSiteBtn.click();
-                    clearInterval(nextSiteBtnA);
-                }
-            }, 3000);
+            const nextSiteBtn = document.querySelector('#nextSiteBtn');
+            if (nextSiteBtn) {
+                nextSiteBtn.click();
+                clearInterval(SupplyCap);
+            }
             Supplyfalg = true;
         }
     }, 1000);
@@ -5809,7 +5795,6 @@
                                         if (successElement.textContent.trim() === 'All Done!') {
                                             console.log('Operation completed successfully: All Done!');
                                             const nextSiteBtnA = setInterval(() => {
-                                                //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
                                                 const nextSiteBtn = document.querySelector('#nextSiteBtn');
                                                 if (nextSiteBtn) {
                                                     nextSiteBtn.click();
@@ -6007,15 +5992,11 @@
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Transaction Confirmed')) {
                 console.log('交易已确认');
-                const nextSiteBtnA = setInterval(() => {
-                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
-                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
-                    if (nextSiteBtn) {
-                        nextSiteBtn.click();
-                        clearInterval(nextSiteBtnA);
-                        clearInterval(TransactionConfirmed);
-                    }
-                }, 3000);
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(TransactionConfirmed);
+                }
             }
         });
     }, 3000);
@@ -6056,15 +6037,12 @@
         const buttons = document.querySelectorAll('span');
         buttons.forEach(button => {
             if (button.textContent.includes('Successfully staked')) {
-                //跳转360
-                const nextSiteBtnA = setInterval(() => {
-                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
-                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
-                    if (nextSiteBtn) {
-                        nextSiteBtn.click();
-                        clearInterval(nextSiteBtnA);
-                    }
-                }, 3000);
+                //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(SuccessfullyStaked);
+                }
             }
         });
     }, 1000);
@@ -6196,18 +6174,136 @@
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
             if (button.textContent.includes('Go back') || button.textContent.includes('Retry the swap')) {
-                const nextSiteBtnA = setInterval(() => {
-                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
-                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
-                    if (nextSiteBtn) {
-                        nextSiteBtn.click();
-                        clearInterval(nextSiteBtnA);
-                    }
-                }, 3000);
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(GoBackButton);
+                }
             }
         });
     }, 3000);
 })();
 
 
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'bebop.xyz') {
+        return;
+    }
+    //连接钱包
+    const Done = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Done') &&
+                !button.hasAttribute('disabled')) {
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(Done);
+                }
+            }
+        });
+    }, 3000);
+
+    const Wrap = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Wrap') &&
+                !button.hasAttribute('disabled')) {
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(Wrap);
+                }
+            }
+        });
+    }, 3000);
+
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Connect wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(ConnectWallet);
+            }
+        });
+    }, 3000);
+
+
+    //选择小狐狸
+    const SelectMetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(SelectMetaMask);
+            }
+        });
+    }, 3000);
+
+    (function() {
+        'use strict';
+    
+        // Function to generate a random value between 0.001 and 0.003
+        function getRandomAmount() {
+            const min = 0.001;
+            const max = 0.003;
+            return (Math.random() * (max - min) + min).toFixed(3);
+        }
+    
+        // Start the interval to check every 3 seconds
+        const inputInterval = setInterval(() => {
+            // Select the target input field by data-testid
+            const input = document.querySelector('[data-testid="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE-amount-input"]');
+            
+            if (!input) {
+                console.log(`[${new Date().toLocaleTimeString()}] Input field not found`);
+                return;
+            }
+    
+            // Verify placeholder is "0"
+            if (input.placeholder !== "0") {
+                console.log(`[${new Date().toLocaleTimeString()}] Skipping input: placeholder is "${input.placeholder}", expected "0"`);
+                return;
+            }
+    
+            // Check if input is empty or has a value of 0
+            if (!input.value || parseFloat(input.value) === 0) {
+                const randomValue = getRandomAmount();
+    
+                try {
+                    // Use native input value setter
+                    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                        window.HTMLInputElement.prototype, 'value'
+                    ).set;
+                    nativeInputValueSetter.call(input, randomValue);
+    
+                    // Dispatch events to simulate user input
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                    input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
+                    input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
+    
+                    // Verify input
+                    if (input.value === randomValue) {
+                        console.log(`[${new Date().toLocaleTimeString()}] Successfully input ${randomValue} into input field`);
+                        clearInterval(inputInterval);
+                    } else {
+                        console.log(`[${new Date().toLocaleTimeString()}] Input failed: expected "${randomValue}", got "${input.value}"`);
+                    }
+                } catch (error) {
+                    console.error(`[${new Date().toLocaleTimeString()}] Error during input:`, error);
+                }
+            } else {
+                console.log(`[${new Date().toLocaleTimeString()}] Skipping input: field contains "${input.value}"`);
+            }
+        }, 3000); // Check every 3 seconds
+    })();
+
+    
+
+    // Your code here...
+})();
 
