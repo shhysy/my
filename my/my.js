@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.73
+// @version      47.74
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -68,6 +68,7 @@
         "https://bebop.xyz/trade?network=monad&sell=MON&buy=WMON",
         "https://shmonad.xyz/",
         "https://www.kuru.io/swap",
+        "https://app.purps.xyz/stake",
     ];
 
     // 添加控制面板样式
@@ -1969,8 +1970,8 @@
     }
 
     setInterval(() => {
-        //window.location.href = 'https://wallet.litas.io/login';
-        window.location.href = 'https://app.olab.xyz/login';
+        window.location.href = 'https://wallet.litas.io/login';
+        //window.location.href = 'https://app.olab.xyz/login';
     }, 50000);
     var s = 0;
     var c = true;
@@ -2246,58 +2247,58 @@
 // })();
 
 //listas
-// (function() {
-//     'use strict';
+(function() {
+    'use strict';
     
-//     if (window.location.hostname !== 'wallet.litas.io') {
-//         return;
-//     }
+    if (window.location.hostname !== 'wallet.litas.io') {
+        return;
+    }
 
-//     function handleUpgradeClick() {
-//         const buttonss = document.getElementsByTagName('button');
-//         let i = 0;
-//         for (let btn of buttonss) {
-//             if (btn.textContent.trim() === 'Upgrade' && i < 2) {
-//                 btn.click();
-//                 i++;
-//                 console.log('Upgrade 按钮已点击');
-//             }
-//         }
-//     }
+    function handleUpgradeClick() {
+        const buttonss = document.getElementsByTagName('button');
+        let i = 0;
+        for (let btn of buttonss) {
+            if (btn.textContent.trim() === 'Upgrade' && i < 2) {
+                btn.click();
+                i++;
+                console.log('Upgrade 按钮已点击');
+            }
+        }
+    }
 
-//     function handleClaimButton() {
-//         if (window.location.href === 'https://wallet.litas.io/wallet') {
-//             window.location.href = "https://wallet.litas.io/miner";
-//             return;
-//         }
+    function handleClaimButton() {
+        if (window.location.href === 'https://wallet.litas.io/wallet') {
+            window.location.href = "https://wallet.litas.io/miner";
+            return;
+        }
 
-//         const buttons = Array.from(document.querySelectorAll('button'));
-//         const claimButton = buttons.find(button => button.textContent.trim() === 'CLAIM');
+        const buttons = Array.from(document.querySelectorAll('button'));
+        const claimButton = buttons.find(button => button.textContent.trim() === 'CLAIM');
 
-//         if (claimButton) {
-//             claimButton.click();
-//             console.log("CLAIM button clicked.");
-//             return true;
-//         } else {
-//             console.log("CLAIM button not found.");
-//             return false;
-//         }
-//     }
+        if (claimButton) {
+            claimButton.click();
+            setTimeout(() => {
+                window.location.href = 'https://app.olab.xyz/taskCenter';
+            }, 10000);
+            console.log("CLAIM button clicked.");
+            return true;
+        } else {
+            console.log("CLAIM button not found.");
+            return false;
+        }
+    }
 
-//     setTimeout(() => {
-//         window.location.href = 'https://app.olab.xyz/taskCenter';
-//     }, 100000);
 
-//     if (window.location.href === 'https://wallet.litas.io/miner' || window.location.href === 'https://wallet.litas.io/login') {
-//         handleUpgradeClick();
+    if (window.location.href === 'https://wallet.litas.io/miner' || window.location.href === 'https://wallet.litas.io/login') {
+        handleUpgradeClick();
         
-//         const timer = setInterval(() => {
-//             if (handleClaimButton()) {
-//                 clearInterval(timer);
-//             }
-//         }, 3000);
-//     }
-// })();
+        const timer = setInterval(() => {
+            if (handleClaimButton()) {
+                clearInterval(timer);
+            }
+        }, 5000);
+    }
+})();
 
 //klokapp
 (function() {
@@ -6297,3 +6298,92 @@
     // Your code here...
 })();
 
+
+
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'app.purps.xyz') {
+        return;
+    }
+
+
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Connect Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(ConnectWallet);
+            }
+        });
+    }, 3000);
+
+
+    //选择小狐狸
+    const SelectMetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(SelectMetaMask);
+            }
+        });
+    }, 3000);
+
+    // Function to generate a random value between 0.001 and 0.003
+    function getRandomAmount() {
+        const min = 0.001;
+        const max = 0.003;
+        return (Math.random() * (max - min) + min).toFixed(3);
+    }
+
+    // Start the interval to check every 3 seconds
+    const inputInterval = setInterval(() => {
+        // Select the target input field by data-testid
+        const input = document.querySelector('[data-testid="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE-amount-input"]');
+        
+        if (!input) {
+            console.log(`[${new Date().toLocaleTimeString()}] Input field not found`);
+            return;
+        }
+
+        // Verify placeholder is "0"
+        if (input.placeholder !== "0") {
+            console.log(`[${new Date().toLocaleTimeString()}] Skipping input: placeholder is "${input.placeholder}", expected "0"`);
+            return;
+        }
+
+        // Check if input is empty or has a value of 0
+        if (!input.value || parseFloat(input.value) === 0) {
+            const randomValue = getRandomAmount();
+
+            try {
+                // Use native input value setter
+                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                    window.HTMLInputElement.prototype, 'value'
+                ).set;
+                nativeInputValueSetter.call(input, randomValue);
+
+                // Dispatch events to simulate user input
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
+                input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
+
+                // Verify input
+                if (input.value === randomValue) {
+                    console.log(`[${new Date().toLocaleTimeString()}] Successfully input ${randomValue} into input field`);
+                    clearInterval(inputInterval);
+                } else {
+                    console.log(`[${new Date().toLocaleTimeString()}] Input failed: expected "${randomValue}", got "${input.value}"`);
+                }
+            } catch (error) {
+                console.error(`[${new Date().toLocaleTimeString()}] Error during input:`, error);
+            }
+        } else {
+            console.log(`[${new Date().toLocaleTimeString()}] Skipping input: field contains "${input.value}"`);
+        }
+    }, 3000); // Check every 3 seconds
+    // Your code here...
+})();
