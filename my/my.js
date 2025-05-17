@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.77
+// @version      47.78
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -21,6 +21,33 @@
 // @downloadURL  https://raw.githubusercontent.com/shhysy/my/main/my/my.js
 // @supportURL   https://github.com/shhysy/my/issues
 // ==/UserScript==
+
+
+(function() {
+    'use strict';
+    //脚本超时
+    // List of target domains
+    const targetDomains = [
+        'app.crystal.exchange',
+        'monad.ambient.finance',
+        'bebop.xyz',
+        'shmonad.xyz',
+        'www.kuru.io'
+    ];
+
+    // Check if current domain matches any target domain
+    const currentDomain = window.location.hostname;
+    if (targetDomains.includes(currentDomain) || targetDomains.some(domain => currentDomain.endsWith(domain))) {
+        // Wait 90 seconds before attempting to click
+        setInterval(() => {
+            const nextSiteBtn = document.querySelector('#nextSiteBtn');
+            if (nextSiteBtn) {
+                nextSiteBtn.click();
+                console.log('Clicked #nextSiteBtn');
+            }
+        },150000); // 90 seconds in milliseconds
+    }
+})();
 
 (function() {
     'use strict';
@@ -5849,13 +5876,6 @@
         });
     }, 3000);
 
-    // const clearInterval = setInterval(() => {
-    //     const input = document.querySelector('input#swap_sell_qty._tokenQuantityInput_ispvp_37');
-    //     if (input) {
-    //         input.value = '';
-    //         clearInterval(clearInterval);
-    //     }
-    // }, 1000);
 
     //<button id="confirm_swap_button" aria-label="" tabindex="0" class="_button_zout7_1 _flat_zout7_18" style="text-transform: none;">Confirm</button>
     const Confirm = setInterval(() => {
