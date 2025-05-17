@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.74
+// @version      47.75
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -36,7 +36,6 @@
     //使用定时器
     const timer = setInterval(() => {
         const currentUrl = window.location.href;
-        // 如果当前在360网站，清除进度条
         if (currentUrl.includes('360.com') || currentUrl.includes('www.360.com')) {
             visitedSites = {};
             GM_setValue('visitedSites', visitedSites);
@@ -68,7 +67,7 @@
         "https://bebop.xyz/trade?network=monad&sell=MON&buy=WMON",
         "https://shmonad.xyz/",
         "https://www.kuru.io/swap",
-        "https://app.purps.xyz/stake",
+        // "https://app.purps.xyz/stake",
     ];
 
     // 添加控制面板样式
