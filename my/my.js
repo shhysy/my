@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.68
+// @version      47.66
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5331,7 +5331,7 @@
     
             if (!inputValue) {
                 // Generate random value between 0.01 and 1.00, with 2 decimal places
-                const randomValue = (Math.random() * (0.05 - 0.01) + 0.001).toFixed(2);
+                const randomValue = (Math.random() * (0.05 - 0.01) + 0.01).toFixed(2);
                 const inputSuccess = await inputText(
                     'input.mantine-Input-input.mantine-NumberInput-input[type="text"][inputmode="numeric"]',
                     'change',
