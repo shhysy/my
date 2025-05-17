@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.75
+// @version      47.76
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5934,9 +5934,29 @@
                 input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
     
                 console.log('已向输入框输入:', randomValue);
+                clearInterval(inputInterval);
             }
         }
     }, 3000);
+
+    setInterval(() => {
+        const input = document.querySelector('input#swap_sell_qty._tokenQuantityInput_ispvp_37');
+        if (input) {
+            if (input.value === '' || parseFloat(input.value) === 0 || input.value>0.1) {
+                const min = 0.001, max = 0.003;
+                const randomValue = (Math.random() * (max - min) + min).toFixed(3);
+    
+                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                nativeInputValueSetter.call(input, randomValue);
+    
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
+                input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
+            }
+        }
+    }, 30000);
+
 
     setInterval(() => {
         var selsect_mon = document.querySelector("#swap_sell_token_selector")
