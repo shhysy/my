@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.70
+// @version      47.71
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1861,55 +1861,78 @@
             if (redethContainer) {
                 var spanElement = redethContainer.querySelector("span.font-bold.text-bold");
                 if (spanElement && spanElement.textContent.includes("redETH")) {
-                    try {
-                        const clickEvent = new MouseEvent('click', {
-                            bubbles: true,
-                            cancelable: true,
-                            view: window
-                        });
-                        redethContainer.dispatchEvent(clickEvent);
-                    } catch (error) {
-                        console.error("点击元素时出错:", error);
-                    }
+                    redethContainer.click(); // 点击元素
                 }
             } else {
                 console.log("目标元素不存在");
             }
 
+
             var inputField = document.querySelector("#__next > div > main > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > input");
             if (inputField && (inputField.value === "" || parseFloat(inputField.value) < 0.001)) {
-                try {
-                    inputField.focus();
-                    const inputEvent = new InputEvent('input', {
-                        bubbles: true,
-                        cancelable: true,
-                        inputType: 'insertText',
-                        data: randomNumber
-                    });
-                    inputField.value = randomNumber;
-                    inputField.dispatchEvent(inputEvent);
-                } catch (error) {
-                    console.error("输入文本时出错:", error);
-                }
+
+                inputField.focus();
+                document.execCommand('insertText', false, randomNumber);
             } else {
                 const withdrawButton = document.querySelector("#__next > div > main > div > button");
                 if (withdrawButton && !falg) {
                     const isDisabled = withdrawButton.disabled || withdrawButton.classList.contains('disabled');
                     if (!isDisabled) {
-                        try {
-                            const clickEvent = new MouseEvent('click', {
-                                bubbles: true,
-                                cancelable: true,
-                                view: window
-                            });
-                            withdrawButton.dispatchEvent(clickEvent);
-                            console.log("按钮已点击，事件已分发");
-                        } catch (error) {
-                            console.error("点击按钮时出错:", error);
-                        }
+                        withdrawButton.dispatchEvent(event);
+                        console.log("按钮已点击，事件已分发");
                     } else {
                         console.log("按钮处于禁用状态，未点击");
                     }
+                } else {
+                    if(!v1){
+                        let successCount = parseInt(sessionStorage.getItem('successfulSwaps') || '0');
+                        if(successCount>0){
+                            const withdrawButton = document.querySelector("#__next > div > main > div > div.mb-2.mt-4 > div > div.relative.flex-1.pb-2.text-center.before\\:absolute.before\\:bottom-0.before\\:left-0.before\\:h-\\[2px\\].before\\:bg-blue.before\\:transition-all.before\\:duration-300.before\\:content-\\[\\'\\'\\].after\\:absolute.after\\:bottom-0.after\\:left-0.after\\:h-\\[2px\\].after\\:w-full.after\\:transition-colors.after\\:duration-300.after\\:bg-gray-200.after\\:content-\\[\\'\\'\\].before\\:w-0.cursor-pointer")
+                            // 点击 Withdraw 按钮
+                            if (withdrawButton && falg) {
+                                const isDisabled = withdrawButton.disabled || withdrawButton.classList.contains('disabled');
+                                if (!isDisabled) {
+                                    withdrawButton.dispatchEvent(event);
+                                    sessionStorage.removeItem('successfulSwaps');
+                                     setTimeout(() => {
+                                         v1=true;
+                                     }, 60000);
+                                    console.log("Withdraw 按钮已点击，事件已分发");
+                                } else {
+                                    console.log("Withdraw 按钮处于禁用状态，未点击");
+                                }
+                            } else {
+                                console.error("Withdraw 按钮未找到或已经点击");
+                            }
+                        }
+                    }
+                }
+                if(v1){
+                    var claim = document.querySelector("#__next > div > main > div > div.mt-6.flex.max-h-\\[400px\\].flex-col.gap-4.overflow-y-auto > div:nth-child(1) > button")
+                    if(claim && s){
+                        const isDisabled = claim.disabled || claim.classList.contains('disabled');
+                        if(!isDisabled){
+                            claim.dispatchEvent(event);
+                            setTimeout(() => {
+                                window.open('https://0xvm.com/honor', '_self');
+                           }, 60000);
+                            s = false;
+                            setTimeout(() => {
+                                s = true;
+                            }, 20000);
+
+                        }
+                        setInterval(() => {
+                            const alertMessage = document.querySelector('.MuiAlert-message.css-1xsto0d');
+                            if (alertMessage && alertMessage.textContent=='Claim failed') {
+                                setTimeout(() => {
+                                     window.open('https://0xvm.com/honor', '_self');
+                                }, 2000);
+                            }
+                        }, 1000);
+
+                    }
+
                 }
             }
         },3000)
@@ -1935,6 +1958,7 @@
         },500)
     }
 })();
+
 
 //rediocon and clame
 (function() {
