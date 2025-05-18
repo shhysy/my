@@ -657,7 +657,7 @@
                             }, 2000);
                         }
                     }
-                    const followButton = allElements.find(el =>['Follow', 'Authorize app', 'Repost', 'Post', 'Like'].some(text => el.innerHTML.trim().includes(text)) && el.tagName === 'BUTTON');
+                    const followButton = allElements.find(el =>['Follow', 'Authorize app', 'Ikuti', 'Repost', 'Post', 'Like'].some(text => el.innerHTML.trim().includes(text)) && el.tagName === 'BUTTON');
                     if (followButton) {
                         setTimeout(() => {
                             followButton.click();
@@ -4852,7 +4852,7 @@
     };
 
     // 循环设置
-    const maxLoops = 100; // 最大循环次数
+    const maxLoops = 50; // 最大循环次数
     let loopCount = 0; // 当前循环次数
     const loopInterval = 3000; // 3秒间隔（毫秒）
     const elementTimeout = 20000; // 元素等待超时20秒
