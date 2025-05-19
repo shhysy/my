@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.80
+// @version      47.81
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -226,7 +226,14 @@
         GM_setValue('visitedSites', visitedSites);
 
         updateProgress();
-        window.location.href = randomSite;
+        
+        // 生成 60000 到 180000 之间的随机毫秒数
+        let randomDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000; 
+
+        setTimeout(() => {
+            window.location.href = randomSite;
+        }, randomDelay);
+
     });
 
     // 关闭面板按钮 - 仅移除面板，不重置记录
