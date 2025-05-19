@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.81
+// @version      47.82
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5241,6 +5241,61 @@
         return;
     }
 
+    const clickButton = () => {
+        try {
+            // 定位 w3m-button 元素
+            const w3mButton = document.querySelector(
+                "#root > div > header > div.m_6dcfc7c7.mantine-AppShell-section.relative.max-w-full.px-\\[4\\%\\].lg\\:px-12.h-full.py-4 > div.m_4081bf90.mantine-Group-root > div.gap-1.md\\:gap-4.m_4081bf90.mantine-Group-root > div > w3m-button"
+            );
+
+            if (!w3mButton) {
+                console.log('w3m-button not found');
+                return false;
+            }
+
+            // 访问第一个 shadowRoot (w3m-button)
+            const appkitConnectButton = w3mButton.shadowRoot?.querySelector("appkit-connect-button");
+            if (!appkitConnectButton) {
+                console.log('appkit-connect-button not found');
+                return false;
+            }
+
+            // 访问第二个 shadowRoot (appkit-connect-button)
+            const wuiConnectButton = appkitConnectButton.shadowRoot?.querySelector("wui-connect-button");
+            if (!wuiConnectButton) {
+                console.log('wui-connect-button not found');
+                return false;
+            }
+
+            // 定位最终的 button 元素
+            const button = wuiConnectButton.shadowRoot?.querySelector("button");
+            if (!button) {
+                console.log('Button not found in wui-connect-button');
+                return false;
+            }
+
+            // 检查按钮是否禁用
+            if (button.hasAttribute('disabled')) {
+                console.log('Button is disabled');
+                return false;
+            }
+
+            // 点击按钮
+            console.log('Clicking Connect Wallet button');
+            button.click();
+            return true;
+        } catch (error) {
+            console.error('Error accessing shadow DOM or clicking button:', error);
+            return false;
+        }
+    };
+
+    // 每3秒检查一次
+    const connectWallet = setInterval(() => {
+        if (clickButton()) {
+            clearInterval(connectWallet); // 点击成功后停止
+        }
+    }, 3000);
 
     const tourl = setInterval(() => {
         //新增一个检测按钮文本如果存在跳转下一个
