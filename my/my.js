@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.86
+// @version      47.87
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4611,27 +4611,13 @@
                 } else {
 
 
-                    //检测所有按钮是否包含newchat  增加一个元素等待超时
-                    const allButtons = document.querySelectorAll('button');
-                    let newChatButtonFound = false;
-                    for (const button of allButtons) {
-                        if (button.textContent.includes('New Chat')) {
-                            newChatButtonFound = true;
-                            break;
-                        }
-                    }
-                    if (newChatButtonFound) {
-                        console.log('找到newchat按钮，点击');
-                        button.click();
+                    const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
+                    if (newChatButton) {
+                        newChatButton.closest('button').click();
+                        console.log('成功点击新对话按钮');
+                        await new Promise(resolve => setTimeout(resolve, 5000));
                     } else {
-                        const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
-                        if (newChatButton) {
-                            newChatButton.closest('button').click();
-                            console.log('成功点击新对话按钮');
-                            await new Promise(resolve => setTimeout(resolve, 5000));
-                        } else {
-                            console.log('未找到新对话按钮');
-                        }
+                        console.log('未找到新对话按钮');
                     }
 
                     // //检测聊天按钮
