@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.88
+// @version      47.89
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4564,7 +4564,7 @@
         let successCount = 0;
         let currentIndex = 0;
 
-        const targetSuccessCount = Math.floor(Math.random() * 6) + 23; // 生成13-18之间的随机数
+        const targetSuccessCount = Math.floor(Math.random() * 6) + 13; // 生成13-18之间的随机数
         while (successCount < targetSuccessCount) {
             try {
                 // 获取当前要点击的按钮
