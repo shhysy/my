@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.87
+// @version      47.88
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4426,6 +4426,39 @@
         return;
     }
 
+    function clickOpenButton() {
+        // Select the BUTTON element that contains an SVG with lucide-panel-left-open
+        const openButton = document.querySelector('button.text-gray-400.hover\\:text-gray-800:has(svg.lucide-panel-left-open)');
+        if (!openButton) {
+            console.warn('Open button not found, will retry on next interval...');
+            return;
+        }
+
+        // Verify the element is a button
+        if (!(openButton instanceof HTMLButtonElement)) {
+            console.error('Selected element is not a button:', openButton);
+            return;
+        }
+
+        // Simulate a click
+        try {
+            openButton.click();
+            console.log('Successfully clicked the open button');
+        } catch (err) {
+            console.error('Failed to click the button:', err);
+        }
+    }
+
+    // Initialize the timer to check and click every 3 seconds
+    setInterval(clickOpenButton, 3000);
+
+    // Initial attempt after DOM loads
+    window.addEventListener('load', clickOpenButton);
+
+    // Fallback for dynamic pages
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(clickOpenButton, 500);
+    }
     // 配置参数
     const config = {
         maxRetries: 3,
