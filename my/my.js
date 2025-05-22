@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.82
+// @version      47.83
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4607,96 +4607,105 @@
 
                     console.log(`未找到对话按钮，尝试下一个`);
 
-                    //检测聊天按钮
-                    let allButtonsExist = false;
-                    for (const xpath of conversationXPaths) {
-                        const element = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                        if (element) {
-                            allButtonsExist = true;
-                            break;
-                        }
+                    const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
+                    if (newChatButton) {
+                        newChatButton.closest('button').click();
+                        console.log('成功点击新对话按钮');
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                    } else {
+                        console.log('未找到新对话按钮');
                     }
-                    await new Promise(resolve => setTimeout(resolve, 5000));
 
-                    if (!allButtonsExist) {
-                        // 点击Discover按钮
-                        const discoverButton = await waitForElement('button[type="button"] svg path[d*="M12 5.75L12.6107"]', 20000);
-                        if (discoverButton) {
-                            discoverButton.closest('button').click();
-                            console.log('成功点击Discover按钮');
-                            await new Promise(resolve => setTimeout(resolve, 3000));
+                    // //检测聊天按钮
+                    // let allButtonsExist = false;
+                    // for (const xpath of conversationXPaths) {
+                    //     const element = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                    //     if (element) {
+                    //         allButtonsExist = true;
+                    //         break;
+                    //     }
+                    // }
+                    // await new Promise(resolve => setTimeout(resolve, 5000));
 
-                            // 定义目标Agent名称列表
-                            const targetAgents = [
-                                'Token Analytics Agent',
-                                'Caila Agent',
-                                'Market Sentiment Radar',
-                                'Meme Coin Radar'
-                            ];
+                    // if (!allButtonsExist) {
+                    //     // 点击Discover按钮
+                    //     const discoverButton = await waitForElement('button[type="button"] svg path[d*="M12 5.75L12.6107"]', 20000);
+                    //     if (discoverButton) {
+                    //         discoverButton.closest('button').click();
+                    //         console.log('成功点击Discover按钮');
+                    //         await new Promise(resolve => setTimeout(resolve, 3000));
 
-                            // 查找并点击目标Agent卡片
-                            let agentFound = false;
-                            for (const agentName of targetAgents) {
-                                // 查找所有可能的Agent卡片
-                                const agentCards = document.querySelectorAll('div.cursor-pointer.group.p-3.sm\\:p-4.rounded-xl');
-                                for (const card of agentCards) {
-                                    const agentTitle = card.querySelector('h3');
-                                    if (agentTitle && agentTitle.textContent.includes(agentName)) {
-                                        card.click();
-                                        console.log(`成功点击 ${agentName} 卡片`);
-                                        agentFound = true;
-                                        await new Promise(resolve => setTimeout(resolve, 2000));
-                                        break;
-                                    }
-                                }
-                                if (agentFound) break;
-                            }
+                    //         // 定义目标Agent名称列表
+                    //         const targetAgents = [
+                    //             'Token Analytics Agent',
+                    //             'Caila Agent',
+                    //             'Market Sentiment Radar',
+                    //             'Meme Coin Radar'
+                    //         ];
 
-                            if (!agentFound) {
-                                console.log('未找到目标Agent卡片，尝试重新点击Discover按钮');
-                                // 尝试重新点击Discover按钮
-                                const retryDiscoverButton = await waitForElement('button[type="button"] svg path[d*="M12 5.75L12.6107"]', 20000);
-                                if (retryDiscoverButton) {
-                                    retryDiscoverButton.closest('button').click();
-                                    console.log('重新点击Discover按钮');
-                                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    //         // 查找并点击目标Agent卡片
+                    //         let agentFound = false;
+                    //         for (const agentName of targetAgents) {
+                    //             // 查找所有可能的Agent卡片
+                    //             const agentCards = document.querySelectorAll('div.cursor-pointer.group.p-3.sm\\:p-4.rounded-xl');
+                    //             for (const card of agentCards) {
+                    //                 const agentTitle = card.querySelector('h3');
+                    //                 if (agentTitle && agentTitle.textContent.includes(agentName)) {
+                    //                     card.click();
+                    //                     console.log(`成功点击 ${agentName} 卡片`);
+                    //                     agentFound = true;
+                    //                     await new Promise(resolve => setTimeout(resolve, 2000));
+                    //                     break;
+                    //                 }
+                    //             }
+                    //             if (agentFound) break;
+                    //         }
 
-                                    // 再次尝试查找目标Agent卡片
-                                    for (const agentName of targetAgents) {
-                                        const retryAgentCards = document.querySelectorAll('div.cursor-pointer.group.p-3.sm\\:p-4.rounded-xl');
-                                        for (const card of retryAgentCards) {
-                                            const agentTitle = card.querySelector('h3');
-                                            if (agentTitle && agentTitle.textContent.includes(agentName)) {
-                                                card.click();
-                                                console.log(`成功点击 ${agentName} 卡片`);
-                                                agentFound = true;
-                                                await new Promise(resolve => setTimeout(resolve, 2000));
-                                                break;
-                                            }
-                                        }
-                                        if (agentFound) break;
-                                    }
-                                }
-                            }
+                    //         if (!agentFound) {
+                    //             console.log('未找到目标Agent卡片，尝试重新点击Discover按钮');
+                    //             // 尝试重新点击Discover按钮
+                    //             const retryDiscoverButton = await waitForElement('button[type="button"] svg path[d*="M12 5.75L12.6107"]', 20000);
+                    //             if (retryDiscoverButton) {
+                    //                 retryDiscoverButton.closest('button').click();
+                    //                 console.log('重新点击Discover按钮');
+                    //                 await new Promise(resolve => setTimeout(resolve, 3000));
 
-                            if (!agentFound) {
-                                console.log('仍然未找到目标Agent卡片，跳过当前对话');
-                                continue;
-                            }
+                    //                 // 再次尝试查找目标Agent卡片
+                    //                 for (const agentName of targetAgents) {
+                    //                     const retryAgentCards = document.querySelectorAll('div.cursor-pointer.group.p-3.sm\\:p-4.rounded-xl');
+                    //                     for (const card of retryAgentCards) {
+                    //                         const agentTitle = card.querySelector('h3');
+                    //                         if (agentTitle && agentTitle.textContent.includes(agentName)) {
+                    //                             card.click();
+                    //                             console.log(`成功点击 ${agentName} 卡片`);
+                    //                             agentFound = true;
+                    //                             await new Promise(resolve => setTimeout(resolve, 2000));
+                    //                             break;
+                    //                         }
+                    //                     }
+                    //                     if (agentFound) break;
+                    //                 }
+                    //             }
+                    //         }
 
-                            // 点击Try Agent按钮
-                            const tryAgentButton = await waitForElement('div[class*="relative z-10"] p.absolute', 20000);
-                            if (tryAgentButton) {
-                                tryAgentButton.click();
-                                console.log('成功点击Try Agent按钮');
-                                await new Promise(resolve => setTimeout(resolve, 2000));
-                            } else {
-                                console.log('未找到Try Agent按钮或等待超时');
-                            }
-                        } else {
-                            console.log('未找到Discover按钮或等待超时');
-                        }
-                    }
+                    //         if (!agentFound) {
+                    //             console.log('仍然未找到目标Agent卡片，跳过当前对话');
+                    //             continue;
+                    //         }
+
+                    //         // 点击Try Agent按钮
+                    //         const tryAgentButton = await waitForElement('div[class*="relative z-10"] p.absolute', 20000);
+                    //         if (tryAgentButton) {
+                    //             tryAgentButton.click();
+                    //             console.log('成功点击Try Agent按钮');
+                    //             await new Promise(resolve => setTimeout(resolve, 2000));
+                    //         } else {
+                    //             console.log('未找到Try Agent按钮或等待超时');
+                    //         }
+                    //     } else {
+                    //         console.log('未找到Discover按钮或等待超时');
+                    //     }
+                    //}
                 }
 
                 // 移动到下一个对话按钮
