@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.85
+// @version      47.86
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -52,14 +52,14 @@
 (function() {
     'use strict';
 
-    
+
     if (window.location.hostname == 'accounts.google.com' || window.location.hostname == 'x.com') {
         return;
     }
 
     var falg = true
     var isCompleted = GM_getValue('isCompleted', false);
-    
+
     //使用定时器
     const timer = setInterval(() => {
         const currentUrl = window.location.href;
@@ -226,9 +226,9 @@
         GM_setValue('visitedSites', visitedSites);
 
         updateProgress();
-        
+
         // 生成 60000 到 180000 之间的随机毫秒数
-        let randomDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000; 
+        let randomDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000;
 
         setTimeout(() => {
             window.location.href = randomSite;
@@ -964,7 +964,7 @@
 
 //newton
 (function() {
-    
+
     if (window.location.hostname !== 'www.magicnewton.com') {
         return;
     }
@@ -2237,7 +2237,7 @@
 // //sapenAi
 // (function() {
 //     'use strict';
-    
+
 //     if (window.location.hostname !== 'app.sapien.io') {
 //         return;
 //     }
@@ -2282,7 +2282,7 @@
 //listas
 (function() {
     'use strict';
-    
+
     if (window.location.hostname !== 'wallet.litas.io') {
         return;
     }
@@ -2324,7 +2324,7 @@
 
     if (window.location.href === 'https://wallet.litas.io/miner' || window.location.href === 'https://wallet.litas.io/login') {
         handleUpgradeClick();
-        
+
         const timer = setInterval(() => {
             if (handleClaimButton()) {
                 clearInterval(timer);
@@ -3482,7 +3482,7 @@
             }
         });
     }, 5000);
-    
+
     //Check In按钮点击一次
     const checkIn =setInterval(() => {
         const buttons = document.querySelectorAll('button');
@@ -3494,7 +3494,7 @@
             }
         });
     }, 5000);
-    
+
     const login =setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
@@ -3885,7 +3885,7 @@
     setInterval(() => {
         window.location.href = 'https://app.mahojin.ai/my/point';
     }, 500000);
-    
+
     // 随机字符串生成函数
     function generateRandomString(base, length) {
         let result = '';
@@ -4564,16 +4564,21 @@
                         if (responseComplete) {
                             hasResponse = true;
                             console.log('对话响应完成');
+                             await new Promise(resolve => setTimeout(resolve, 5000));
                             break;
                         }
                         // 点击停止按钮
-                        const stopButton = await waitForElement('button.bg-destructive', 20000);
+                        const stopButton = await waitForElement('button.bg-destructive', 10000);
                         if (!stopButton) {
+                            console.log('停止按钮不存在');
+                             await new Promise(resolve => setTimeout(resolve, 5000));
                             break;
                         }
-                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        await new Promise(resolve => setTimeout(resolve, 3000));
                     }
+
                     // 点击停止按钮
+                    /**
                     const stopButton = await waitForElement('button.bg-destructive', 20000);
                     if (stopButton) {
                         stopButton.click();
@@ -4593,7 +4598,7 @@
                     } else {
                         console.log('未找到停止按钮或等待超时');
                     }
-
+                    */
                     const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
                     if (newChatButton) {
                         newChatButton.closest('button').click();
@@ -5419,15 +5424,15 @@
                 console.log(`Input element ${selector} not found.`);
                 return false;
             }
-    
+
             if (inputElement.value !== '') {
                 console.log(`Input field ${selector} is not empty. Skipping input.`);
                 return false;
             }
-    
+
             inputElement.focus();
             await randomy(100, 300);
-    
+
             if (isPaste) {
                 await simulatePaste(inputElement, inputValue);
             } else {
@@ -5436,11 +5441,11 @@
                     await randomy(50, 150);
                 }
             }
-    
+
             inputElement.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
             await randomy(100, 300);
             inputElement.blur();
-    
+
             if (inputElement.value === inputValue.toString()) {
                 console.log(`Input completed for ${selector}`);
                 return true;
@@ -5462,7 +5467,7 @@
         if (inputElement) {
             const inputValue = inputElement.value.trim();
             console.log(`当前输入框值: ${inputValue}`);
-    
+
             if (!inputValue) {
                 // Generate random value between 0.01 and 1.00, with 2 decimal places
                 const randomValue = (Math.random() * (0.05 - 0.01) + 0.01).toFixed(2);
@@ -5484,7 +5489,7 @@
             console.log("未找到输入框元素");
         }
     }
-    
+
 
     // 处理 Stake 按钮
     async function waitForStakeButton(inputElement) {
@@ -6028,15 +6033,15 @@
             if (input.value === '' || parseFloat(input.value) === 0 || input.value>0.1) {
                 const min = 0.001, max = 0.003;
                 const randomValue = (Math.random() * (max - min) + min).toFixed(3);
-    
+
                 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
                 nativeInputValueSetter.call(input, randomValue);
-    
+
                 input.dispatchEvent(new Event('input', { bubbles: true }));
                 input.dispatchEvent(new Event('change', { bubbles: true }));
                 input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
                 input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
-    
+
                 console.log('已向输入框输入:', randomValue);
                 clearInterval(inputInterval);
             }
@@ -6049,10 +6054,10 @@
             if (input.value === '' || parseFloat(input.value) === 0 || input.value>0.1) {
                 const min = 0.001, max = 0.003;
                 const randomValue = (Math.random() * (max - min) + min).toFixed(3);
-    
+
                 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
                 nativeInputValueSetter.call(input, randomValue);
-    
+
                 input.dispatchEvent(new Event('input', { bubbles: true }));
                 input.dispatchEvent(new Event('change', { bubbles: true }));
                 input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
@@ -6375,7 +6380,7 @@
     const inputInterval = setInterval(() => {
         // Select the target input field by data-testid
         const input = document.querySelector('[data-testid="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE-amount-input"]');
-        
+
         if (!input) {
             console.log(`[${new Date().toLocaleTimeString()}] Input field not found`);
             return;
@@ -6465,7 +6470,7 @@
     const inputInterval = setInterval(() => {
         // Select the target input field by data-testid
         const input = document.querySelector('[data-testid="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE-amount-input"]');
-        
+
         if (!input) {
             console.log(`[${new Date().toLocaleTimeString()}] Input field not found`);
             return;
@@ -6510,4 +6515,3 @@
     }, 3000); // Check every 3 seconds
     // Your code here...
 })();
-
