@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.90
+// @version      47.91
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5412,18 +5412,6 @@
         });
     }
 
-    // 添加监视器来检测存款完成通知
-    function watchForDepositNotification() {
-        const notification = document.querySelector('.m_a49ed24.mantine-Notification-body');
-        if (notification && notification.textContent.includes("Deposit completed")) {
-            console.log("检测到存款完成通知，正在跳转...");
-            const nextSiteBtn = document.querySelector('#nextSiteBtn');
-            if (nextSiteBtn) {
-                nextSiteBtn.click();
-            }
-        }
-    }
-
     // 辅助函数：随机延迟
     function randomy(min, max) {
         return new Promise(resolve => setTimeout(resolve, Math.random() * (max - min) + min));
@@ -5522,7 +5510,6 @@
                 if (currentInputValue) {
                     console.log("输入框不为空，点击 Stake 按钮");
                     stakeButton.click();
-                    watchForDepositNotification();
                 } else {
                     console.log("输入框为空，无法点击 Stake 按钮");
                 }
@@ -5565,8 +5552,16 @@
         }, 5000);
         scanForConnectButton();
 
-        setInterval(() => {
-            watchForDepositNotification();
+        const suss = setInterval(() => {
+            const notification = document.querySelector('.m_a49ed24.mantine-Notification-body');
+            if (notification && notification.textContent.includes("Deposit completed")) {
+                console.log("检测到存款完成通知，正在跳转...");
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(suss);
+                }
+            }
         }, 2000);
     }
 
