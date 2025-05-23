@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.92
+// @version      47.93
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5500,6 +5500,9 @@
 
     // 处理 Stake 按钮
     async function waitForStakeButton(inputElement) {
+        if(inputElement){
+            return
+        }
         const stakeButton = await waitForElement(
             'button.mantine-Button-root[data-variant="gradient"][data-size="lg"]'
         );
