@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.93
+// @version      47.94
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -227,12 +227,7 @@
 
         updateProgress();
 
-        // 生成 60000 到 180000 之间的随机毫秒数
-        let randomDelay = Math.floor(Math.random() * (180000 - 60000 + 1)) + 60000;
-
-        setTimeout(() => {
-            window.location.href = randomSite;
-        }, randomDelay);
+        window.location.href = randomSite;
 
     });
 
@@ -5280,6 +5275,7 @@
 })();
 
 
+//MONAD Stak
 (function() {
 
     'use strict';
@@ -5287,61 +5283,6 @@
         return;
     }
 
-    const clickButton = () => {
-        try {
-            // 定位 w3m-button 元素
-            const w3mButton = document.querySelector(
-                "#root > div > header > div.m_6dcfc7c7.mantine-AppShell-section.relative.max-w-full.px-\\[4\\%\\].lg\\:px-12.h-full.py-4 > div.m_4081bf90.mantine-Group-root > div.gap-1.md\\:gap-4.m_4081bf90.mantine-Group-root > div > w3m-button"
-            );
-
-            if (!w3mButton) {
-                console.log('w3m-button not found');
-                return false;
-            }
-
-            // 访问第一个 shadowRoot (w3m-button)
-            const appkitConnectButton = w3mButton.shadowRoot?.querySelector("appkit-connect-button");
-            if (!appkitConnectButton) {
-                console.log('appkit-connect-button not found');
-                return false;
-            }
-
-            // 访问第二个 shadowRoot (appkit-connect-button)
-            const wuiConnectButton = appkitConnectButton.shadowRoot?.querySelector("wui-connect-button");
-            if (!wuiConnectButton) {
-                console.log('wui-connect-button not found');
-                return false;
-            }
-
-            // 定位最终的 button 元素
-            const button = wuiConnectButton.shadowRoot?.querySelector("button");
-            if (!button) {
-                console.log('Button not found in wui-connect-button');
-                return false;
-            }
-
-            // 检查按钮是否禁用
-            if (button.hasAttribute('disabled')) {
-                console.log('Button is disabled');
-                return false;
-            }
-
-            // 点击按钮
-            console.log('Clicking Connect Wallet button');
-            button.click();
-            return true;
-        } catch (error) {
-            console.error('Error accessing shadow DOM or clicking button:', error);
-            return false;
-        }
-    };
-
-    // 每3秒检查一次
-    const connectWallet = setInterval(() => {
-        if (clickButton()) {
-            clearInterval(connectWallet); // 点击成功后停止
-        }
-    }, 3000);
 
     const tourl = setInterval(() => {
         //新增一个检测按钮文本如果存在跳转下一个
@@ -5412,6 +5353,19 @@
         });
     }
 
+    // 添加监视器来检测存款完成通知
+    function watchForDepositNotification() {
+        const notification = document.querySelector('.m_a49ed24.mantine-Notification-body');
+        if (notification && notification.textContent.includes("Deposit completed")) {
+            console.log("检测到存款完成通知，正在跳转...");
+            const nextSiteBtn = document.querySelector('#nextSiteBtn');
+            if (nextSiteBtn) {
+                nextSiteBtn.click();
+                return true
+            }
+        }
+    }
+
     // 辅助函数：随机延迟
     function randomy(min, max) {
         return new Promise(resolve => setTimeout(resolve, Math.random() * (max - min) + min));
@@ -5431,15 +5385,15 @@
                 console.log(`Input element ${selector} not found.`);
                 return false;
             }
-
+    
             if (inputElement.value !== '') {
                 console.log(`Input field ${selector} is not empty. Skipping input.`);
                 return false;
             }
-
+    
             inputElement.focus();
             await randomy(100, 300);
-
+    
             if (isPaste) {
                 await simulatePaste(inputElement, inputValue);
             } else {
@@ -5448,11 +5402,11 @@
                     await randomy(50, 150);
                 }
             }
-
+    
             inputElement.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
             await randomy(100, 300);
             inputElement.blur();
-
+    
             if (inputElement.value === inputValue.toString()) {
                 console.log(`Input completed for ${selector}`);
                 return true;
@@ -5474,7 +5428,7 @@
         if (inputElement) {
             const inputValue = inputElement.value.trim();
             console.log(`当前输入框值: ${inputValue}`);
-
+    
             if (!inputValue) {
                 // Generate random value between 0.01 and 1.00, with 2 decimal places
                 const randomValue = (Math.random() * (0.05 - 0.01) + 0.01).toFixed(2);
@@ -5496,13 +5450,10 @@
             console.log("未找到输入框元素");
         }
     }
-
+    
 
     // 处理 Stake 按钮
     async function waitForStakeButton(inputElement) {
-        if(inputElement){
-            return
-        }
         const stakeButton = await waitForElement(
             'button.mantine-Button-root[data-variant="gradient"][data-size="lg"]'
         );
@@ -5513,6 +5464,7 @@
                 if (currentInputValue) {
                     console.log("输入框不为空，点击 Stake 按钮");
                     stakeButton.click();
+                    watchForDepositNotification();
                 } else {
                     console.log("输入框为空，无法点击 Stake 按钮");
                 }
@@ -5541,7 +5493,7 @@
                 console.log("定时器找到初始 'Connect Wallet' 按钮，执行点击并停止扫描");
                 initialConnectButton.click();
                 clearInterval(intervalId); // 找到按钮后停止定时器
-                //waitForMetaMaskAndStake();
+                waitForMetaMaskAndStake();
             } else {
                 console.log("未找到可用 'Connect Wallet' 按钮，继续扫描...");
             }
@@ -5556,19 +5508,16 @@
         scanForConnectButton();
 
         const suss = setInterval(() => {
-            const notification = document.querySelector('.m_a49ed24.mantine-Notification-body');
-            if (notification && notification.textContent.includes("Deposit completed")) {
-                console.log("检测到存款完成通知，正在跳转...");
-                const nextSiteBtn = document.querySelector('#nextSiteBtn');
-                if (nextSiteBtn) {
-                    nextSiteBtn.click();
-                    clearInterval(suss);
-                }
+
+            if (watchForDepositNotification()){
+                clearInterval(suss)
             }
+
         }, 2000);
     }
 
 })();
+
 //MONAD crystal
 (function() {
     if (window.location.hostname !== 'app.crystal.exchange') {
