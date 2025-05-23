@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.95
+// @version      47.96
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5656,37 +5656,39 @@
             // 获取输入框元素
             const input = document.querySelector('.input');
 
-            // 检查输入框是否为空
-            if (!input.value) {
-                // 生成 0.0001 到 0.0005 之间的随机数
-                const min = 0.0001;
-                const max = 0.0005;
-                const randomNumber = (Math.random() * (max - min) + min).toFixed(4); // 保留4位小数
-                // 确保输入框获得焦点
-                input.focus();
-                // 使用 document.execCommand 插入随机数
-                document.execCommand('insertText', false, randomNumber);
-                console.log(`已向输入框插入随机数字: ${randomNumber}`);
-            } else {
-                console.log('输入框不为空，无需插入');
-                const button = document.querySelector('.swap-button')
-                if (button.textContent.trim() === 'Swap' && falg) {
-                    // 检查按钮是否可点击（未被禁用）
-                    if (!button.disabled) {
-                        // 模拟点击按钮
-                        button.click();
-                        falg=false
-                        console.log('已点击 "Swap" 按钮');
-                    } else {
-                        console.log('按钮处于禁用状态，无法点击');
+            if (input) {
+                // 检查输入框是否为空
+                if (!input.value) {
+                    // 生成 0.0001 到 0.0005 之间的随机数
+                    const min = 0.0001;
+                    const max = 0.0005;
+                    const randomNumber = (Math.random() * (max - min) + min).toFixed(4); // 保留4位小数
+                    // 确保输入框获得焦点
+                    input.focus();
+                    // 使用 document.execCommand 插入随机数
+                    document.execCommand('insertText', false, randomNumber);
+                    console.log(`已向输入框插入随机数字: ${randomNumber}`);
+                } else {
+                    console.log('输入框不为空，无需插入');
+                    const button = document.querySelector('.swap-button')
+                    if (button.textContent.trim() === 'Swap' && falg) {
+                        // 检查按钮是否可点击（未被禁用）
+                        if (!button.disabled) {
+                            // 模拟点击按钮
+                            button.click();
+                            falg=false
+                            console.log('已点击 "Swap" 按钮');
+                        } else {
+                            console.log('按钮处于禁用状态，无法点击');
+                        }
                     }
-                }
-                const link = document.querySelector('.view-transaction');
-                if(link){
-                    //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
-                    const nextSiteBtn = document.querySelector('#nextSiteBtn');
-                    if (nextSiteBtn) {
-                        nextSiteBtn.click();
+                    const link = document.querySelector('.view-transaction');
+                    if(link){
+                        //<div id="manualJumpPanel">        <button id="nextSiteBtn">跳转到下一个网站</button>
+                        const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                        if (nextSiteBtn) {
+                            nextSiteBtn.click();
+                        }
                     }
                 }
             }
