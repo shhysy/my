@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.89
+// @version      47.90
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5551,7 +5551,7 @@
                 console.log("定时器找到初始 'Connect Wallet' 按钮，执行点击并停止扫描");
                 initialConnectButton.click();
                 clearInterval(intervalId); // 找到按钮后停止定时器
-                waitForMetaMaskAndStake();
+                //waitForMetaMaskAndStake();
             } else {
                 console.log("未找到可用 'Connect Wallet' 按钮，继续扫描...");
             }
