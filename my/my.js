@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.96
+// @version      47.97
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -32,7 +32,8 @@
         'monad.ambient.finance',
         'bebop.xyz',
         'shmonad.xyz',
-        'www.kuru.io'
+        'www.kuru.io',
+        "app.nad.domains"
     ];
 
     // Check if current domain matches any target domain
@@ -94,7 +95,7 @@
         "https://bebop.xyz/trade?network=monad&sell=MON&buy=WMON",
         "https://shmonad.xyz/",
         "https://www.kuru.io/swap",
-        // "https://app.purps.xyz/stake",
+        "https://app.nad.domains/",
     ];
 
     // 添加控制面板样式
@@ -6481,5 +6482,144 @@
             console.log(`[${new Date().toLocaleTimeString()}] Skipping input: field contains "${input.value}"`);
         }
     }, 3000); // Check every 3 seconds
+    // Your code here...
+})();
+
+
+
+//monad 域名注册
+(function() {
+
+    if (window.location.hostname !== 'app.nad.domains') {
+        return;
+    }
+
+    'use strict';
+
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Connect Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(ConnectWallet);
+            }
+        });
+    }, 3000);
+
+    //选择小狐狸
+    const SelectMetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(SelectMetaMask);
+            }
+        });
+    }, 3000);
+
+        // Function to generate a random string
+    function getRandomString(length = 10) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    // Start the interval to check every 3 seconds
+    const inputInterval = setInterval(() => {
+        // Select the target input field by placeholder
+        const input = document.querySelector('input[placeholder="Search a name"]');
+
+        if (!input) {
+            console.log(`[${new Date().toLocaleTimeString()}] Input field not found`);
+            return;
+        }
+
+        // Check if input is empty
+        if (!input.value) {
+            const randomValue = getRandomString(); // Generate random string
+
+            try {
+                // Use native input value setter
+                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                    window.HTMLInputElement.prototype, 'value'
+                ).set;
+                nativeInputValueSetter.call(input, randomValue);
+
+                // Dispatch events to simulate user input
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: randomValue[0] }));
+                input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: randomValue[0] }));
+
+                // Verify input
+                if (input.value === randomValue) {
+                    console.log(`[${new Date().toLocaleTimeString()}] Successfully input ${randomValue} into input field`);
+                } else {
+                    console.log(`[${new Date().toLocaleTimeString()}] Input failed: expected "${randomValue}", got "${input.value}"`);
+                }
+            } catch (error) {
+                console.error(`[${new Date().toLocaleTimeString()}] Error during input:`, error);
+            }
+        } else {
+            console.log(`[${new Date().toLocaleTimeString()}] Skipping input: field contains "${input.value}"`);
+        }
+    }, 3000); // Check every 3 seconds
+
+    // Function to click the Available link
+    function clickAvailableLink() {
+        const links = document.querySelectorAll('a .bg-green-200.text-green-800');
+        for (const link of links) {
+            if (link.textContent.includes('Available')) {
+                const parentAnchor = link.closest('a');
+                if (parentAnchor) {
+                    parentAnchor.click();
+                    console.log(`[${new Date().toLocaleTimeString()}] Clicked Available link: ${parentAnchor.href}`);
+                    return true; // Return true to indicate a successful click
+                }
+            }
+        }
+        console.log(`[${new Date().toLocaleTimeString()}] No Available link found`);
+        return false;
+    }
+
+    // Start the interval to check every 3 seconds
+    const clickInterval = setInterval(() => {
+        if (clickAvailableLink()) {
+            clearInterval(clickInterval); // Stop interval if link is clicked
+        }
+    }, 3000); // Check every 3 seconds
+
+
+    const Register = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('Register') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Register);
+            }
+        });
+    }, 3000);
+
+
+    // Start the interval to check every 3 seconds
+    const ownerInterval = setInterval(() => {
+        const buttons = document.querySelectorAll('p');
+        buttons.forEach(button => {
+            if (button.textContent.includes('You are now the owner of') &&
+                !button.hasAttribute('disabled')) {
+                const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                if (nextSiteBtn) {
+                    nextSiteBtn.click();
+                    clearInterval(ownerInterval);
+                }
+            }
+        });
+    }, 3000);
     // Your code here...
 })();
