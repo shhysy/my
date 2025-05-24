@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.122
+// @version      47.123
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3499,7 +3499,7 @@
 
     setInterval(() => {
         window.location.href=url
-    }, 150000);
+    }, 300000);
 
 
     const clame =setInterval(() => {
