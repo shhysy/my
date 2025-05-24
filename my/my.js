@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.110
+// @version      47.111
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6819,36 +6819,6 @@
             }
         }
 
-        // Step 3: Click the "Daily Visit" buttons
-        let allDailyButtonsClicked = true;
-
-        // Daily Visit the Sahara AI Blog
-        const blogButton = Array.from(document.querySelectorAll('div')).find(button =>
-            button.textContent.trim().includes('Daily Visit the Sahara AI Blog') && !button.hasAttribute('disabled')
-        );
-        if (blogButton) {
-            try {
-                blogButton.click();
-                console.log(`[${new Date().toLocaleTimeString()}] Clicked 'Daily Visit the Sahara AI Blog' button`);
-            } catch (error) {
-                console.error(`[${new Date().toLocaleTimeString()}] Error clicking Blog button:`, error);
-                allDailyButtonsClicked = false;
-            }
-        }
-
-        // Daily Visit the Sahara AI Twitter
-        const twitterButton = Array.from(document.querySelectorAll('div')).find(button =>
-            button.textContent.trim().includes('Daily Visit the Sahara AI Twitter') && !button.hasAttribute('disabled')
-        );
-        if (twitterButton) {
-            try {
-                twitterButton.click();
-                console.log(`[${new Date().toLocaleTimeString()}] Clicked 'Daily Visit the Sahara AI Twitter' button`);
-            } catch (error) {
-                console.error(`[${new Date().toLocaleTimeString()}] Error clicking Twitter button:`, error);
-                allDailyButtonsClicked = false;
-            }
-        }
 
         // Step 4: Click the two SVG buttons if all previous actions are complete
         if (!input?.value || !checkbox || checkbox.getAttribute('aria-checked') !== 'true' || blogButton || twitterButton) {
@@ -6881,16 +6851,6 @@
             location.reload();
         }
     }, 5000);
-
-    const successCheckInterval = setInterval(() => {
-        // Select all buttons matching the criteria
-        const successButtons = document.querySelectorAll('button[id="radix-«r2f»"][aria-haspopup="menu"][data-state="closed"] .text-success');
-    
-        if (successButtons.length >= 2) {
-            console.log(`[${new Date().toLocaleTimeString()}] Success: ${successButtons.length} success buttons detected!`);
-            window.close();
-        } 
-    }, 5000); // Check every 5 seconds
     
 
 
@@ -7022,7 +6982,16 @@
         });
     }, 1000);
 
-
+    const successCheckInterval = setInterval(() => {
+        // Select all buttons matching the criteria
+        const successButtons = document.querySelectorAll('button[id="radix-«r1o»"][aria-haspopup="menu"][data-state="closed"] .text-success');
+    
+        if (successButtons.length >= 2) {
+            console.log(`[${new Date().toLocaleTimeString()}] Success: ${successButtons.length} success buttons detected!`);
+            window.close();
+            clearInterval(successCheckInterval); // Stop the interval after closing
+        } 
+    }, 5000); // Check every 5 seconds
 
     const Confirm = setInterval(() => {
         const buttons = document.querySelectorAll('button');
@@ -7047,6 +7016,50 @@
             }
         });
     }, 5000);
+    // Your code here...
+})();
+
+
+(function() {
+    'use strict';
+
+    setInterval(() => {
+        if (window.location.hostname == 'saharalabs.ai') {
+            window.close();
+        }
+    }, 2000);
+
+    if (window.location.hostname !== 'app.galxe.com') {
+        return;
+    }
+
+    const Blog = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Daily Visit the Sahara AI Blog') &&
+                !button.hasAttribute('disabled')) {
+                button.click(); 
+                setTimeout(() => {
+                    location.reload();
+                }, 20000);
+                clearInterval(Blog);
+                //30秒后刷新页面
+            }
+        });
+    }, 2000);
+
+
+    const DailyVisittheSaharaAITwitter = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Daily Visit the Sahara AI Twitter') &&
+                !button.hasAttribute('disabled')) {
+                button.click(); 
+                clearInterval(DailyVisittheSaharaAITwitter);
+            }
+        });
+    }, 2000);
+    
     // Your code here...
 })();
 
