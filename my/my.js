@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.117
+// @version      47.118
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7028,6 +7028,12 @@
             window.close();
         }
     }, 2000);
+
+    setInterval(() => {
+        if (window.location.href == 'https://x.com/SaharaLabsAI') {
+            window.close();
+        }
+    }, 10000);
 
     if (window.location.hostname !== 'app.galxe.com') {
         return;
