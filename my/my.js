@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.120
+// @version      47.121
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -55,7 +55,7 @@
     'use strict';
 
 
-    if (window.location.hostname == 'accounts.google.com' || window.location.hostname == 'x.com' || window.location.hostname == 'app.galxe.com') {
+    if (window.location.hostname == 'klokapp.ai' || window.location.hostname == 'accounts.google.com' || window.location.hostname == 'x.com' || window.location.hostname == 'app.galxe.com') {
         return;
     }
 
@@ -2341,9 +2341,25 @@
         return;
     }
 
+    const Moresigninoptions = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            // 检查按钮是否包含 "Continue with Google" 文本并且没有 disabled 属性
+            if (button.textContent.includes('More sign-in options') &&
+                !button.hasAttribute('disabled')) {
+                console.log('找到可点击的按钮，正在点击...');
+                button.click();
+                clearInterval(Moresigninoptions)
+            } else if (button.hasAttribute('disabled')) {
+                console.log('按钮不可点击，跳过');
+            }
+        });
+    }, 5000);
+
+
 
     const ConnectWallet =setInterval(() => {
-        const buttons = document.querySelectorAll('button.style_button__pYQlj');
+        const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
             // 检查按钮是否包含 "Continue with Google" 文本并且没有 disabled 属性
             if (button.textContent.includes('Connect Wallet') &&
