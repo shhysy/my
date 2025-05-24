@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.112
+// @version      47.113
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7041,7 +7041,7 @@
                 button.click(); 
                 setTimeout(() => {
                     location.reload();
-                }, 20000);
+                }, 30000);
                 clearInterval(Blog);
                 //30秒后刷新页面
             }
@@ -7059,6 +7059,27 @@
             }
         });
     }, 2000);
+
+    setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Daily Visit the Sahara AI Blog') &&
+                !button.hasAttribute('disabled')) {
+                button.click(); 
+            }
+        });
+    }, 20000);
+
+
+    setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Daily Visit the Sahara AI Twitter') &&
+                !button.hasAttribute('disabled')) {
+                button.click(); 
+            }
+        });
+    }, 20000);
     
     // Your code here...
 })();
