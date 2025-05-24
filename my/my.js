@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.113
+// @version      47.114
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7080,6 +7080,26 @@
             }
         });
     }, 20000);
+
+    const successCheckInterval = setInterval(() => {
+        // Select buttons with aria-haspopup="menu" and data-state="closed" containing .text-success
+        const successButtons = document.querySelectorAll('button[aria-haspopup="menu"][data-state="closed"] .text-success');
+    
+        console.log(`[${new Date().toLocaleTimeString()}] Found ${successButtons.length} success buttons.`);
+    
+        if (successButtons.length >= 2) {
+            console.log(`[${new Date().toLocaleTimeString()}] Success: ${successButtons.length} success buttons detected!`);
+            clearInterval(successCheckInterval); // Stop the interval
+            try {
+                window.close(); // Attempt to close the window
+            } catch (e) {
+                console.warn('Window.close() failed:', e.message);
+                alert('Success condition met! Please close the window manually.');
+                // Optional: window.location.href = 'about:blank';
+            }
+        }
+    }, 1000); // Check every 1 second for dynamic elements
+
     
     // Your code here...
 })();
@@ -7227,10 +7247,7 @@
                         console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked SVG button ${index + 1} (MouseEvent)`);
                     }
                 });
-    
                 console.log(`[${new Date().toLocaleTimeString()}] All required SVG buttons (2) clicked successfully`);
-                clearInterval(clickInterval); // Stop after clicking both
-                clearInterval(timeoutInterval); // Stop timeout
             } catch (error) {
                 console.error(`[${new Date().toLocaleTimeString()}] Error clicking SVGs:`, error);
             }
@@ -7243,6 +7260,8 @@
             });
         }
     }, 5000); // Check every 5 seconds
+
+
     
     // Timeout mechanism
     let attempts = 0;
