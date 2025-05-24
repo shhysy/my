@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.115
+// @version      47.116
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7115,6 +7115,8 @@
         location.reload
     }, 60000); // Check every 5 seconds
 
+
+
     setInterval(() => {
         // Select all potential SVG elements
         const targetSvgs = [
@@ -7192,6 +7194,22 @@
                 clearInterval(claim);
             }
         });
+    }, 5000);
+
+    const claimtoto = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        let matchCount = 0;
+    
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('claimed') && !button.hasAttribute('disabled')) {
+                matchCount++;
+            }
+        });
+    
+        if (matchCount >= 2) {
+            location.href = 'https://chat.chainopera.ai/login';
+            clearInterval(claimtoto);
+        }
     }, 5000);
 
     setInterval(() => {
