@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.106
+// @version      47.107
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4817,9 +4817,22 @@
             await performSignIn();
             console.log('签到流程完成');
 
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            //<button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 border-none bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 active:bg-primary active:ring-0 h-10 rounded-md px-8 hover:ring-4 hover:ring-primary/40 w-full">Check-In</button>
+            //点击签到
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.includes('Check-In') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    return
+                }
+            });
+            
+
             // 等待10秒让元素出现
             console.log('等待10秒让返回按钮出现');
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 10000));
 
             // 点击返回按钮
             const backButton = await waitForElement('button.inline-flex.items-center.justify-center.whitespace-nowrap svg rect[transform*="matrix(-1"]', 20000);
