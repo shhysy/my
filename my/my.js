@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.119
+// @version      47.120
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4839,9 +4839,16 @@
             if (backButton) {
                 backButton.closest('button').click();
                 console.log('成功点击返回按钮');
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+
+
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+           if (backButton) {
+                backButton.closest('button').click();
+                console.log('成功点击返回按钮');
                 await new Promise(resolve => setTimeout(resolve, 2000));
-            } else {
-                console.log('未找到返回按钮或等待超时');
             }
             console.log('签到流程完成');
 
