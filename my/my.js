@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.99
+// @version      47.100
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4587,6 +4587,14 @@
 
                     // 等待对话开始
                     await new Promise(resolve => setTimeout(resolve, 5000));
+
+                    const buttonXPath = '/html/body/div/div[3]/div[2]/div/div[2]/div/div[1]/div/div[2]/button';
+                    const button = document.evaluate(buttonXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
+                    || document.querySelector('button.inline-flex.items-center.justify-center.rounded-full.p-1.5.size-7');
+                    if (button) {
+                        button.click();
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                    }
 
                     // 检查对话是否超时（1分钟）
                     const startTime = Date.now();
