@@ -2335,14 +2335,84 @@
 (function() {
     'use strict';
 
-    // Validate domain
+    // 验证当前域名是否为 klokapp.ai
     if (window.location.hostname !== 'klokapp.ai') {
-        console.log(`Script only runs on klokapp.ai, current domain: ${window.location.hostname}`);
+        console.log('此脚本仅适用于 klokapp.ai 域名，当前域名：' + window.location.hostname);
         return;
     }
 
+    const Moresigninoptions = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            // 检查按钮是否包含 "More sign-in options" 文本并且没有 disabled 属性
+            if (button.textContent.includes('More sign-in options') &&
+                !button.hasAttribute('disabled')) {
+                console.log('找到可点击的按钮，正在点击...');
+                button.click();
+                clearInterval(Moresigninoptions);
+            } else if (button.hasAttribute('disabled')) {
+                console.log('按钮不可点击，跳过');
+            }
+        });
+    }, 5000);
+
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            // 检查按钮是否包含 "Connect Wallet" 文本并且没有 disabled 属性
+            if (button.textContent.includes('Connect Wallet') &&
+                !button.hasAttribute('disabled')) {
+                console.log('找到可点击的按钮，正在点击...');
+                button.click();
+                clearInterval(ConnectWallet);
+            } else if (button.hasAttribute('disabled')) {
+                console.log('按钮不可点击，跳过');
+            }
+        });
+    }, 5000);
+
+    const MetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                console.log('找到可点击的按钮，正在点击...');
+                button.click();
+                clearInterval(MetaMask);
+            } else if (button.hasAttribute('disabled')) {
+                console.log('按钮不可点击，跳过');
+            }
+        });
+    }, 2000);
+
+    const Signin = setInterval(() => {
+        const buttons = document.querySelectorAll('button.style_button__pYQlj.style_primary__w2PcZ');
+        buttons.forEach(button => {
+            // 检查按钮是否包含 "Sign in" 文本并且没有 disabled 属性
+            if (button.textContent.includes('Sign in') &&
+                !button.hasAttribute('disabled')) {
+                console.log('找到可点击的按钮，正在点击...');
+                button.click();
+                clearInterval(Signin);
+            } else if (button.hasAttribute('disabled')) {
+                console.log('按钮不可点击，跳过');
+            }
+        });
+    }, 5000);
+
+    setInterval(() => {
+        const targetElement = document.querySelector('h2');
+        if (targetElement && targetElement.textContent.includes('Application error: a client-side exception has occurred')) {
+            location.reload();
+        }
+    }, 5000);
+
+    setInterval(() => {
+        location.reload();
+    }, 150000);
+
     // Utility to wait for an element with a selector
-    function waitForElement(selector, timeout = 10000) {
+    function waitForElement(selector, timeout = 15000) {
         return new Promise((resolve, reject) => {
             const startTime = Date.now();
             const interval = setInterval(() => {
@@ -2358,213 +2428,221 @@
         });
     }
 
-    // Utility to wait for an element with XPath
+    // Check if the page is fully loaded
+    function isPageReady() {
+        return document.readyState === 'complete';
+    }
+
+    // Get "New Chat" button with enhanced retry and fallback
+    async function getNewChatButton() {
+        let attempts = 5; // Increased retry attempts
+        const selectors = [
+            'a[href="/app"]', // Original selector
+            'a[href*="/app"]', // Partial match for dynamic URLs
+            '[class*="new-chat"]', // Class-based fallback
+            'a[data-testid*="new-chat"]', // Data attribute fallback
+            'a[title*="New Chat"]' // Title or text-based fallback
+        ];
+
+        while (attempts > 0) {
+            try {
+                // Wait for page to be fully loaded
+                if (!isPageReady()) {
+                    console.log('Page not fully loaded, waiting...');
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+
+                // Try each selector in sequence
+                for (const selector of selectors) {
+                    try {
+                        console.log(`Trying selector: ${selector}`);
+                        const button = await waitForElement(selector, 15000); // Increased timeout
+                        console.log(`Found New Chat button with selector: ${selector}`);
+                        return button;
+                    } catch (e) {
+                        console.warn(`Selector ${selector} failed:`, e.message);
+                    }
+                }
+
+                attempts--;
+                console.warn(`New Chat button not found, ${attempts} attempts left`);
+                if (attempts === 0) throw new Error('Exhausted all attempts to find New Chat button');
+                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait 3s before retry
+            } catch (e) {
+                console.error('Attempt failed:', e);
+                attempts--;
+                if (attempts === 0) throw new Error('Failed to find New Chat button after all retries');
+                await new Promise(resolve => setTimeout(resolve, 3000));
+            }
+        }
+    }
+
+    // 使用 XPath 等待元素出现的函数
     function waitForXPath(xpath, timeout = 10000) {
+        return Promise.race([
+            new Promise((resolve) => {
+                const interval = setInterval(() => {
+                    const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+                    const element = result.singleNodeValue;
+                    if (element) {
+                        clearInterval(interval);
+                        resolve(element);
+                    }
+                }, 500);
+            }),
+            new Promise((_, reject) => {
+                setTimeout(() => reject(new Error(`等待 XPath ${xpath} 超时`)), timeout);
+            })
+        ]);
+    }
+
+    // 带超时的等待四个按钮的容器出现
+    function waitForButtons(timeout = 10000) {
+        return waitForElement('.flex.flex-col.lg\\:flex-row.justify-around.items-center.gap-1.w-full.xs\\:mb-40.md\\:mb-0', timeout);
+    }
+
+    // 带超时的等待加载指示器消失
+    function waitForLoadingToFinish(timeout = 10000) {
         return new Promise((resolve, reject) => {
             const startTime = Date.now();
-            const interval = setInterval(() => {
-                const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-                const element = result.singleNodeValue;
-                if (element) {
+            const checkLoading = () => {
+                const loadingDots = document.querySelector('.style_loadingDots__6shQU');
+                console.log('检查加载状态:', loadingDots ? '存在' : '不存在');
+                if (!loadingDots || loadingDots.offsetParent === null) {
                     clearInterval(interval);
-                    resolve(element);
+                    resolve();
                 } else if (Date.now() - startTime > timeout) {
                     clearInterval(interval);
-                    reject(new Error(`Timeout waiting for XPath: ${xpath}`));
+                    reject(new Error('等待加载指示器消失超时'));
                 }
-            }, 500);
+            };
+            const interval = setInterval(checkLoading, 500);
+            checkLoading(); // 立即检查一次
         });
     }
 
-    // Simulate click with error handling
+    // 模拟点击事件（使用 element.click()）
     function simulateClick(element) {
         try {
             element.click();
-            console.log('Element clicked successfully');
-            return true;
+            console.log('成功点击元素');
         } catch (error) {
-            console.error('Click failed:', error);
-            return false;
+            console.error('点击失败:', error);
+            throw error; // 抛出错误以便上层处理
         }
     }
 
-    // Wait for loading indicator to disappear
-    async function waitForLoadingToFinish(timeout = 10000) {
-        try {
-            const loadingDots = await waitForElement('.style_loadingDots__6shQU', timeout);
-            if (loadingDots.offsetParent === null) return;
-            await new Promise((resolve, reject) => {
-                const startTime = Date.now();
-                const interval = setInterval(() => {
-                    if (loadingDots.offsetParent === null) {
-                        clearInterval(interval);
-                        resolve();
-                    } else if (Date.now() - startTime > timeout) {
-                        clearInterval(interval);
-                        reject(new Error('Timeout waiting for loading indicator to disappear'));
-                    }
-                }, 500);
-            });
-        } catch (error) {
-            console.log('No loading indicator found or already gone');
-        }
-    }
+    // 跳转检查函数
+    function checkAndRedirect() {
+        return new Promise(async (resolve) => {
+            try {
+                const counterElement = await waitForXPath('/html/body/div[1]/div[2]/div[2]/div[1]/div/div[1]/div[1]/div[2]/div[1]', 5000);
+                const counterText = counterElement ? counterElement.textContent.trim() : '';
+                const counter = parseInt(counterText) || 0;
+                console.log('当前计数器值:', counterText, '解析为:', counter);
 
-    // Click a button with specific text
-    async function clickButtonWithText(text, timeout = 10000) {
-        try {
-            const buttons = await waitForElement('button', timeout);
-            const targetButton = Array.from(document.querySelectorAll('button')).find(
-                btn => btn.textContent.includes(text) && !btn.hasAttribute('disabled')
-            );
-            if (targetButton) {
-                console.log(`Clicking button with text: ${text}`);
-                return simulateClick(targetButton);
+                if (counter === 10 || counter === 50) {
+                    const nextPageUrl = 'https://earn.taker.xyz';
+                    window.location.href = nextPageUrl;
+                    console.log('计数器为10，跳转到:', nextPageUrl);
+                    await new Promise(resolve => setTimeout(resolve, 2000)); // 等待2秒确认跳转
+                    resolve();
+                } else {
+                    console.log('计数器不为10，无需跳转');
+                    resolve();
+                }
+            } catch (error) {
+                console.error('跳转检查出错:', error);
+                resolve();
             }
-            console.log(`No clickable button found with text: ${text}`);
-            return false;
-        } catch (error) {
-            console.error(`Error finding button with text "${text}":`, error);
-            return false;
-        }
+        });
     }
 
-    // Check counter and redirect if needed
-    async function checkAndRedirect() {
-        try {
-            const counterElement = await waitForXPath('/html/body/div[1]/div[2]/div[2]/div[1]/div/div[1]/div[1]/div[2]/div[1]', 5000);
-            const counter = parseInt(counterElement.textContent.trim()) || 0;
-            console.log(`Counter value: ${counter}`);
-
-            if (counter === 10 || counter === 50) {
-                console.log(`Counter is ${counter}, redirecting to https://earn.taker.xyz`);
-                window.location.href = 'https://earn.taker.xyz';
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                return true;
-            }
-            console.log('No redirect needed');
-            return false;
-        } catch (error) {
-            console.error('Counter check failed:', error);
-            return false;
-        }
-    }
-
-    // Handle application error by reloading
-    function handleApplicationError() {
-        setInterval(() => {
-            const errorElement = document.querySelector('h2');
-            if (errorElement?.textContent.includes('Application error: a client-side exception has occurred')) {
-                console.log('Application error detected, reloading page');
-                location.reload();
-            }
-        }, 5000);
-    }
-
-    // Periodic page reload to prevent stalls
-    function setupPeriodicReload() {
-        setInterval(() => {
-            console.log('Periodic reload triggered');
-            location.reload();
-        }, 150000);
-    }
-
-    // Main chat cycle
+    // 一次完整流程的执行
     async function runChatCycle() {
         try {
-            console.log('Starting new chat cycle');
+            console.log('开始新聊天周期');
 
-            // Step 1: Click "New Chat" button
-            const newChatButton = await waitForElement('a[href="/app"]', 10000);
-            if (!simulateClick(newChatButton)) throw new Error('Failed to click New Chat button');
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // 第一步：点击"New Chat"按钮
+            const newChatButton = await getNewChatButton();
+            console.log('找到 New Chat 按钮，准备点击');
+            simulateClick(newChatButton);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 等待1秒让页面响应
 
-            // Step 2: Wait for buttons container and click a random button
-            const buttonsContainer = await waitForElement('.flex.flex-col.lg\\:flex-row.justify-around.items-center.gap-1.w-full.xs\\:mb-40.md\\:mb-0', 10000);
+            // 第二步：等待四个按钮出现并随机点击一个
+            const buttonsContainer = await waitForButtons();
+            console.log('找到按钮容器，准备随机点击');
             const buttons = buttonsContainer.querySelectorAll('button');
-            if (buttons.length === 0) {
-                console.log('No buttons found in container');
+            if (buttons.length > 0) {
+                const randomIndex = Math.floor(Math.random() * buttons.length);
+                simulateClick(buttons[randomIndex]);
+                console.log('随机点击第', randomIndex + 1, '个按钮');
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 等待1秒让页面响应
+            } else {
+                console.log('未找到按钮');
                 return false;
             }
-            const randomIndex = Math.floor(Math.random() * buttons.length);
-            if (!simulateClick(buttons[randomIndex])) throw new Error('Failed to click random button');
-            console.log(`Clicked button ${randomIndex + 1}`);
-            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // Step 3: Wait for loading to finish
+            // 等待加载指示器消失
+            console.log('等待加载完成...');
             await waitForLoadingToFinish();
-            console.log('Loading completed');
+            console.log('加载完成');
 
-            // Step 4: Check counter and redirect
-            return !(await checkAndRedirect());
+            // 检查跳转
+            await checkAndRedirect();
+            return true; // 表示周期成功完成
         } catch (error) {
-            console.error('Chat cycle error:', error);
-            return false;
+            console.error('聊天周期出错:', error);
+            return false; // 表示周期失败
         }
     }
 
-    // Main logic
-    async function main() {
-        // Setup error handling and periodic reload
-        handleApplicationError();
-        setupPeriodicReload();
-
-        // Sequential button clicks for login flow
-        const loginSteps = [
-            { text: 'More sign-in options', timeout: 5000 },
-            { text: 'Connect Wallet', timeout: 5000 },
-            { text: 'MetaMask', timeout: 2000 },
-            { text: 'Sign in', timeout: 5000 }
-        ];
-
-        for (const step of loginSteps) {
-            let attempts = 3;
-            while (attempts > 0) {
-                if (await clickButtonWithText(step.text, step.timeout)) break;
-                attempts--;
-                console.log(`Failed to click "${step.text}", ${attempts} attempts left`);
-                await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-            if (attempts === 0) {
-                console.error(`Failed to click "${step.text}" after retries`);
-                return;
-            }
-        }
-
-        // Main chat cycle loop
+    // 主逻辑 - 循环执行
+    (async () => {
+        let maxCycles = 10; // 最大循环次数
         let cycleCount = 0;
         let consecutiveFailures = 0;
-        const maxCycles = 10;
-        const maxFailures = 5;
+        const maxFailures = 5; // 最大连续失败次数
 
         while (cycleCount < maxCycles && consecutiveFailures < maxFailures) {
-            console.log(`Starting cycle ${cycleCount + 1}`);
+            console.log(`开始第 ${cycleCount + 1} 次循环`);
             const success = await runChatCycle();
             if (!success) {
                 consecutiveFailures++;
-                console.log(`Cycle failed (${consecutiveFailures}/${maxFailures}), retrying in 10s`);
-                await new Promise(resolve => setTimeout(resolve, 10000));
+                console.log(`本周期失败 (${consecutiveFailures}/${maxFailures})，暂停10秒后重试`);
+                await new Promise(resolve => setTimeout(resolve, 20000));
             } else {
                 consecutiveFailures = 0;
                 cycleCount++;
-                console.log(`Cycle ${cycleCount} completed`);
-                await new Promise(resolve => setTimeout(resolve, 10000));
+                console.log(`本周期成功，完成 ${cycleCount} 次循环`);
+                await new Promise(resolve => setTimeout(resolve, 20000));
             }
 
-            // Additional counter check
-            if (await checkAndRedirect()) break;
+            // 单独检查计数器并跳转
+            try {
+                const counterElement = await waitForXPath('/html/body/div[1]/div[2]/div[2]/div[1]/div/div[1]/div[1]/div[2]/div[1]', 5000);
+                const counterText = counterElement ? counterElement.textContent.trim() : '';
+                const counter = parseInt(counterText) || 0;
+                if (counter === 10) {
+                    console.log('检测到计数器为10，准备跳转');
+                    await checkAndRedirect();
+                    break; // 跳转后退出循环
+                }
+            } catch (error) {
+                console.error('计数器检查超时:', error);
+            }
         }
 
-        console.log(`Script ended. Completed ${cycleCount} cycles, ${consecutiveFailures} consecutive failures`);
-    }
+        if (consecutiveFailures >= maxFailures) {
+            console.error('连续失败次数达到上限，脚本终止');
+        } else {
+            console.log('脚本执行结束，总计完成', cycleCount, '次循环');
+        }
+    })();
 
-    // Run main logic
-    main().catch(error => console.error('Main script error:', error));
-
-    // Expose manual redirect function
+    // 提供手动触发跳转的接口
     window.checkAndRedirect = checkAndRedirect;
 })();
-
 
 //ol
 (function() {
