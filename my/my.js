@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.103
+// @version      47.104
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3806,21 +3806,6 @@
     }, 80000); // 80秒 = 80000毫秒
 })();
 
-
-(function() {
-    'use strict';
-    if (window.location.hostname !== 'quest.somnia.network') {
-        console.log('此脚本仅适用于 klokapp.ai 域名，当前域名：' + window.location.hostname);
-        return;
-    }
-
-    setInterval(() => {
-        if (document.body.style.zoom != '33%'){
-            document.body.style.zoom = '33%'
-        }
-    }, 3000);
-    // Your code here...
-})();
 
 
 (function() {
