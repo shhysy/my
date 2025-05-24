@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.124
+// @version      47.125
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1441,6 +1441,21 @@
     setInterval(() => {
         location.reload();
     }, 50000);
+
+    const ConnectWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            // 检查按钮是否包含 "Connect Wallet" 文本并且没有 disabled 属性
+            if (button.textContent.includes('Connect') &&
+                !button.hasAttribute('disabled')) {
+                console.log('找到可点击的按钮，正在点击...');
+                button.click();
+                clearInterval(ConnectWallet);
+            } else if (button.hasAttribute('disabled')) {
+                console.log('按钮不可点击，跳过');
+            }
+        });
+    }, 5000);
 
     // 处理按钮的函数
     function handleButton(button) {
