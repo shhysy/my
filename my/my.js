@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.114
+// @version      47.115
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7110,6 +7110,56 @@
     if (window.location.hostname !== 'legends.saharalabs.ai') {
         return;
     }
+
+    setTimeout(() => {
+        location.reload
+    }, 60000); // Check every 5 seconds
+
+    setInterval(() => {
+        // Select all potential SVG elements
+        const targetSvgs = [
+            ...document.querySelectorAll('svg[data-v-a13dd1c6][width="26"][height="26"] path[fill="#F7FF98"]'),
+            ...document.querySelectorAll('svg path[fill="#F7FF98"]'),
+            ...document.querySelectorAll('svg path[d*="M19.3333 13.3333"]'),
+            document.evaluate('/html/body/div[3]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[1]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue,
+            document.evaluate('/html/body/div[2]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[2]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
+        ].filter((svg, index, self) => svg && self.indexOf(svg) === index); // Remove duplicates and null
+    
+        if (targetSvgs.length >= 2) {
+            try {
+                targetSvgs.slice(0, 2).forEach((svg, index) => {
+                    const clickableElement = svg.tagName.toLowerCase() === 'svg' ? svg : svg.closest('svg');
+                    if (!clickableElement) {
+                        console.error(`[${new Date().toLocaleTimeString()}] No valid SVG element for clicking at index ${index + 1}`);
+                        return;
+                    }
+    
+                    // Try native click
+                    try {
+                        clickableElement.click();
+                        console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked SVG button ${index + 1} (native click)`);
+                    } catch (error) {
+                        console.warn(`[${new Date().toLocaleTimeString()}] Native click failed for SVG ${index + 1}, trying MouseEvent:`, error);
+                        // Fallback to MouseEvent
+                        const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+                        clickableElement.dispatchEvent(clickEvent);
+                        console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked SVG button ${index + 1} (MouseEvent)`);
+                    }
+                });
+                console.log(`[${new Date().toLocaleTimeString()}] All required SVG buttons (2) clicked successfully`);
+            } catch (error) {
+                console.error(`[${new Date().toLocaleTimeString()}] Error clicking SVGs:`, error);
+            }
+        } else {
+            // Debug: Log all SVGs for inspection
+            const allSvgs = document.querySelectorAll('svg');
+            console.log(`[${new Date().toLocaleTimeString()}] Found ${targetSvgs.length} of 2 required SVG buttons. Total SVGs on page: ${allSvgs.length}. Checking again...`);
+            allSvgs.forEach((svg, index) => {
+                console.log(`SVG ${index + 1}:`, svg.outerHTML.slice(0, 100) + (svg.outerHTML.length > 100 ? '...' : ''));
+            });
+        }
+    }, 5000); // Check every 5 seconds
+
     //<a data-v-b0d2019a="" class="login-button" style="width: 175px; height: 64px; font-size: 24px;"><img data-v-b0d2019a="" alt="" src="/assets/logo-BeXmBXM3.png" style="width: 70px; height: 37px; position: absolute; right: 0px; bottom: 0px;"><span data-v-b0d2019a="" style="z-index: 1;"> Sign In </span></a>
     const Login = setInterval(() => {
         const buttons = document.querySelectorAll('a');
@@ -7215,51 +7265,6 @@
         }
     }, 1000); // 每 1000ms (1秒) 检查一次
 
-
-    const clickInterval = setInterval(() => {
-        // Select all potential SVG elements
-        const targetSvgs = [
-            ...document.querySelectorAll('svg[data-v-a13dd1c6][width="26"][height="26"] path[fill="#F7FF98"]'),
-            ...document.querySelectorAll('svg path[fill="#F7FF98"]'),
-            ...document.querySelectorAll('svg path[d*="M19.3333 13.3333"]'),
-            document.evaluate('/html/body/div[3]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[1]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue,
-            document.evaluate('/html/body/div[2]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[2]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
-        ].filter((svg, index, self) => svg && self.indexOf(svg) === index); // Remove duplicates and null
-    
-        if (targetSvgs.length >= 2) {
-            try {
-                targetSvgs.slice(0, 2).forEach((svg, index) => {
-                    const clickableElement = svg.tagName.toLowerCase() === 'svg' ? svg : svg.closest('svg');
-                    if (!clickableElement) {
-                        console.error(`[${new Date().toLocaleTimeString()}] No valid SVG element for clicking at index ${index + 1}`);
-                        return;
-                    }
-    
-                    // Try native click
-                    try {
-                        clickableElement.click();
-                        console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked SVG button ${index + 1} (native click)`);
-                    } catch (error) {
-                        console.warn(`[${new Date().toLocaleTimeString()}] Native click failed for SVG ${index + 1}, trying MouseEvent:`, error);
-                        // Fallback to MouseEvent
-                        const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-                        clickableElement.dispatchEvent(clickEvent);
-                        console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked SVG button ${index + 1} (MouseEvent)`);
-                    }
-                });
-                console.log(`[${new Date().toLocaleTimeString()}] All required SVG buttons (2) clicked successfully`);
-            } catch (error) {
-                console.error(`[${new Date().toLocaleTimeString()}] Error clicking SVGs:`, error);
-            }
-        } else {
-            // Debug: Log all SVGs for inspection
-            const allSvgs = document.querySelectorAll('svg');
-            console.log(`[${new Date().toLocaleTimeString()}] Found ${targetSvgs.length} of 2 required SVG buttons. Total SVGs on page: ${allSvgs.length}. Checking again...`);
-            allSvgs.forEach((svg, index) => {
-                console.log(`SVG ${index + 1}:`, svg.outerHTML.slice(0, 100) + (svg.outerHTML.length > 100 ? '...' : ''));
-            });
-        }
-    }, 5000); // Check every 5 seconds
 
 
     
