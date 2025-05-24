@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.123
+// @version      47.124
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2284,6 +2284,20 @@
     if (window.location.hostname !== 'wallet.litas.io') {
         return;
     }
+
+    const Moresigninoptions = setInterval(() => {
+        const buttons = document.querySelectorAll('span');
+        buttons.forEach(button => {
+            // 检查按钮是否包含 "More sign-in options" 文本并且没有 disabled 属性
+            if (button.textContent.includes('Connection timed out') &&
+                !button.hasAttribute('disabled')) {
+                location.href='https://app.olab.xyz/taskCenter'
+                clearInterval(Moresigninoptions);
+            } else if (button.hasAttribute('disabled')) {
+                console.log('按钮不可点击，跳过');
+            }
+        });
+    }, 5000);
 
     function handleUpgradeClick() {
         const buttonss = document.getElementsByTagName('button');
