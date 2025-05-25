@@ -7317,8 +7317,10 @@
             }
         });
     
-        if (matchCount >= 3) {
-            location.href = 'https://chat.chainopera.ai/login';
+        if (matchCount >= 2) {
+            setTimeout(() => {
+                location.href = 'https://chat.chainopera.ai/login';
+            }, 15000);
             clearInterval(claimtoto);
         }
     }, 5000);
