@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.128
+// @version      47.129
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7318,9 +7318,7 @@
         });
     
         if (matchCount >= 3) {
-            setTimeout(() => {
-                location.href = 'https://chat.chainopera.ai/login';
-            }, 15000);
+            location.href = 'https://chat.chainopera.ai/login';
             clearInterval(claimtoto);
         }
     }, 5000);
