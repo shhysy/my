@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.133
+// @version      47.134
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1336,8 +1336,10 @@
                 console.log("Buttons found, attempting to click...");
                 for (let i = 0; i < buttons.length; i++) {
                     if (!buttons[i].disabled) {
-                        buttons[i].click();
-                        allDisabled = 0; // Reset
+                        if(i!=0){
+                            buttons[i].click();
+                            allDisabled = 0; // Reset
+                        }
                     } else {
                         allDisabled++;
                         console.log(`Button ${i} is disabled.`);
@@ -5262,9 +5264,13 @@
         // 等待页面稳定
         await waitForPageStable();
 
-        const element2_1XPath = Math.random() < 0.5 ?
-            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[2]' :
-            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[5]';
+        const xPaths = [
+            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[2]',
+            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[5]',
+            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[4]'
+        ];
+          
+        const element2_1XPath = xPaths[Math.floor(Math.random() * 3)];
 
         // 步骤1-5：点击元素1, 1-1, 1-2, 2, 2-1
         const steps = [
