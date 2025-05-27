@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.135
+// @version      47.136
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3562,7 +3562,7 @@
     const checkIn =setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.includes('Check-in') &&
+            if (button.textContent.includes('Check In') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 setTimeout(() => {
