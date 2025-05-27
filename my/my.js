@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.134
+// @version      47.135
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3707,6 +3707,10 @@
         console.log('Not on target page (https://www.coresky.com/meme), script stopped');
         return;
     }
+
+    setInterval(() => {
+        location.reload
+    }, 105000);
 
     const Vote = setInterval(() => {
         // 使用 XPath 查找目标 Vote 按钮
