@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.143
+// @version      47.144
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3650,6 +3650,13 @@
 
 (function() {
     'use strict';
+    if (window.location.hostname != 'www.coresky.com'){
+        return
+    }
+
+    setInterval(() => {
+        location.reload
+    }, 50000);
 
     if (window.location.hostname == 'www.coresky.com' || window.location.hostname == 'share.coresky.com') {
         const Connect = setInterval(() => {
