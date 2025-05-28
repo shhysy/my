@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.145
+// @version      47.146
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1762,7 +1762,7 @@
                 for (const button of saveButtons) {
                     if (button.textContent.includes('Save')) {
                         setTimeout(() => {
-                            window.open('https://testnet-bridge.reddio.com/', '_self');
+                            window.open('https://0xvm.com/honor', '_self');
                         }, 8000);
                         button.click();
                         break;
