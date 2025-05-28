@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.141
+// @version      47.143
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -34,7 +34,8 @@
         'shmonad.xyz',
         'www.kuru.io',
         "app.nad.domains",
-        "testnet.mudigital.net"
+        "testnet.mudigital.net",
+        "monad.fantasy.top"
     ];
 
     // Check if current domain matches any target domain
@@ -53,24 +54,21 @@
 
 (function() {
     'use strict';
-
+    var falg = true;
+    var isCompleted = GM_getValue('isCompleted', false);
 
     if (window.location.hostname == 'klokapp.ai' || window.location.hostname == 'accounts.google.com' || window.location.hostname == 'x.com' || window.location.hostname == 'app.galxe.com') {
         return;
     }
 
-    var falg = true
-    var isCompleted = GM_getValue('isCompleted', false);
-
-    //使用定时器
+    // Timer to check for specific URLs
     const timer = setInterval(() => {
         const currentUrl = window.location.href;
-        if (currentUrl.includes('360.com') || currentUrl.includes('www.360.com')) {
+        if (currentUrl.includes('faucet.xion.burnt.com') || currentUrl.includes('monad.talentum.id')) {
             visitedSites = {};
             GM_setValue('visitedSites', visitedSites);
             GM_setValue('isCompleted', false);
             clearInterval(timer);
-            // 移除控制面板
             const panel = document.getElementById('manualJumpPanel');
             if (panel) {
                 panel.remove();
@@ -79,33 +77,30 @@
         }
     }, 100);
 
-    // 检查当前URL是否在排除列表中
+    // Skip script execution for specific URLs
     const currentUrl = window.location.href;
     if (currentUrl.includes('hcaptcha.com') || currentUrl.includes('cloudflare.com')) {
-        return; // 不执行脚本
+        return;
     }
 
-
-
-
-    // 自定义跳转列表（在此处添加你的目标网址）
+    // Custom site sequence
     const customSiteSequence = [
         "https://app.crystal.exchange",
-        //"https://monad-test.kinza.finance/#/details/MON",
         "https://monad.ambient.finance/",
         "https://shmonad.xyz/",
         "https://www.kuru.io/swap",
         "https://bebop.xyz/?network=monad&sell=MON&buy=WMON",
         "https://app.nad.domains/",
-        "https://testnet.mudigital.net/"
+        "https://testnet.mudigital.net/",
+        "https://monad.fantasy.top/shop"
     ];
 
-    // 添加控制面板样式
+    // Add control panel styles using GM_addStyle to avoid CSP issues
     GM_addStyle(`
         #manualJumpPanel {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 10px;
+            right: 10px;
             z-index: 99999;
             background: rgba(0, 0, 0, 0.8);
             color: white;
@@ -113,24 +108,25 @@
             border-radius: 5px;
             font-family: Arial, sans-serif;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            min-width: 250px;
+            min-width: 150px;
+            transform: scale(0.3);
+            transform-origin: bottom right;
         }
         #manualJumpPanel h3 {
-            margin: 0 0 10px 0;
-            padding: 0;
-            font-size: 14px;
+            margin: 0 0 8px 0;
+            font-size: 16px;
             color: #4CAF50;
         }
         #manualJumpPanel button {
             background: #4CAF50;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 8px;
             margin: 5px 0;
             border-radius: 3px;
             cursor: pointer;
             width: 100%;
-            text-align: left;
+            font-size: 14px;
         }
         #manualJumpPanel button:hover {
             background: #45a049;
@@ -138,62 +134,63 @@
         #manualJumpPanel .current-site {
             font-size: 12px;
             color: #ccc;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             word-break: break-all;
         }
         #manualJumpPanel .error-notice {
             color: #ff6b6b;
             font-size: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            display: none; /* Moved inline style here */
         }
         #manualJumpPanel .progress {
             font-size: 12px;
             color: #4CAF50;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         #manualJumpPanel .close-btn {
-            background: #f44336 !important;
-            margin-top: 10px;
+            background: #f44336;
+        }
+        #manualJumpPanel .close-btn:hover {
+            background: #da190b;
         }
     `);
 
-    // 创建控制面板
+    // Create control panel
     const panel = document.createElement('div');
     panel.id = 'manualJumpPanel';
     panel.innerHTML = `
-        <h3>自定义网站跳转控制</h3>
-        <div class="current-site">当前网址: ${window.location.href}</div>
+        <h3>Custom Site Navigation</h3>
+        <div class="current-site">Current: ${window.location.href}</div>
         <div class="progress" id="progressInfo"></div>
-        <div class="error-notice" id="errorNotice" style="display:none;">页面加载可能出错，但您仍可强制跳转</div>
-        <button id="nextSiteBtn">跳转到下一个网站</button>
-        <button id="closePanelBtn" class="close-btn">关闭控制面板</button>
+        <div class="error-notice" id="errorNotice">Page may have failed to load, but you can still jump</div>
+        <button id="nextSiteBtn">Next Site</button>
+        <button id="closePanelBtn" class="close-btn">Close Panel</button>
     `;
 
-    // 直接添加到body
+    // Append panel to the document
     const root = document.documentElement || document.body;
     root.appendChild(panel);
 
-    // 初始化访问记录
+    // Initialize visited sites
     let visitedSites = GM_getValue('visitedSites', {});
 
-    // 检查当前网站是否在列表中，如果是则标记为已访问
+    // Mark current site as visited if in the sequence
     if (customSiteSequence.includes(currentUrl)) {
         visitedSites[currentUrl] = true;
         GM_setValue('visitedSites', visitedSites);
     }
 
-    // 更新进度显示
+    // Update progress display
     function updateProgress() {
         const totalSites = customSiteSequence.length;
         const visitedCount = Object.keys(visitedSites).length;
         const percent = Math.round((visitedCount / totalSites) * 100);
         document.getElementById('progressInfo').textContent =
-            `进度: ${visitedCount}/${totalSites} (${percent}%)`;
-
-        // 如果进度为100%，直接跳转到360
+            `Progress: ${visitedCount}/${totalSites} (${percent}%)`;
+        console.log('当前进度'+percent)
         if (percent === 100 && falg && !isCompleted) {
-            console.log('进度达到100%，准备跳转到360');
-            // 直接跳转，不重置进度
+            console.log('Progress 100%, redirecting to faucet.xion.burnt.com');
             GM_setValue('isCompleted', true);
             window.location.replace('https://www.360.com');
             falg = false;
@@ -202,49 +199,46 @@
 
     updateProgress();
 
-    // 监听可能的错误
+    // Show error notice on page error
     window.addEventListener('error', function() {
-        document.getElementById('errorNotice').style.display = 'block';
+        const errorNotice = document.getElementById('errorNotice');
+        if (errorNotice) {
+            errorNotice.style.display = 'block';
+        }
     });
 
-    // 跳转逻辑，改为随机跳转
+    // Next site button logic (random unvisited site)
     document.getElementById('nextSiteBtn').addEventListener('click', function() {
-        // 获取未访问过的网站列表
         const unvisitedSites = customSiteSequence.filter(site => !visitedSites[site]);
-
-        // 如果所有网站都已访问过，直接跳转到360
         if (unvisitedSites.length === 0) {
-            console.log('所有网站已访问完成，准备跳转到360');
+            console.log('All sites visited, redirecting to faucet.xion.burnt.com');
             GM_setValue('isCompleted', true);
             window.location.replace('https://www.360.com');
             return;
         }
 
-        // 从未访问过的网站中随机选择一个
         const randomIndex = Math.floor(Math.random() * unvisitedSites.length);
         const randomSite = unvisitedSites[randomIndex];
-
-        // 记录已访问的网站
         visitedSites[randomSite] = true;
         GM_setValue('visitedSites', visitedSites);
-
         updateProgress();
-
         window.location.href = randomSite;
-
     });
 
-    // 关闭面板按钮 - 仅移除面板，不重置记录
+    // Close panel button logic
     document.getElementById('closePanelBtn').addEventListener('click', function() {
         panel.remove();
     });
 
-    // 即使页面完全加载失败也确保面板可见
+    // Show error notice after 3 seconds if page fails to load
     setTimeout(() => {
-        document.getElementById('errorNotice').style.display = 'block';
+        const errorNotice = document.getElementById('errorNotice');
+        if (errorNotice) {
+            errorNotice.style.display = 'block';
+        }
     }, 3000);
 
-    console.log('自定义跳转脚本已加载，控制面板将显示');
+    console.log('Custom navigation script loaded, control panel displayed');
 })();
 
 
@@ -3613,7 +3607,7 @@
             }
         });
     }, 2000);
-    
+
     setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
@@ -4906,7 +4900,7 @@
 
             // 执行签到
             await performSignIn();
-            
+
 
             await new Promise(resolve => setTimeout(resolve, 5000));
             //<button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 border-none bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 active:bg-primary active:ring-0 h-10 rounded-md px-8 hover:ring-4 hover:ring-primary/40 w-full">Check-In</button>
@@ -4919,7 +4913,7 @@
                     return
                 }
             });
-            
+
 
             // 等待10秒让元素出现
             console.log('等待10秒让返回按钮出现');
@@ -5283,7 +5277,7 @@
         //     '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[5]',
         //     '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[4]'
         // ];
-          
+
         // const element2_1XPath = xPaths[Math.floor(Math.random() * 3)];
 
         const element2_1XPath ='/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[1]'
@@ -5532,15 +5526,15 @@
                 console.log(`Input element ${selector} not found.`);
                 return false;
             }
-    
+
             if (inputElement.value !== '') {
                 console.log(`Input field ${selector} is not empty. Skipping input.`);
                 return false;
             }
-    
+
             inputElement.focus();
             await randomy(100, 300);
-    
+
             if (isPaste) {
                 await simulatePaste(inputElement, inputValue);
             } else {
@@ -5549,11 +5543,11 @@
                     await randomy(50, 150);
                 }
             }
-    
+
             inputElement.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
             await randomy(100, 300);
             inputElement.blur();
-    
+
             if (inputElement.value === inputValue.toString()) {
                 console.log(`Input completed for ${selector}`);
                 return true;
@@ -5575,7 +5569,7 @@
         if (inputElement) {
             const inputValue = inputElement.value.trim();
             console.log(`当前输入框值: ${inputValue}`);
-    
+
             if (!inputValue) {
                 // Generate random value between 0.01 and 1.00, with 2 decimal places
                 const randomValue = (Math.random() * (0.05 - 0.01) + 0.01).toFixed(2);
@@ -5597,7 +5591,7 @@
             console.log("未找到输入框元素");
         }
     }
-    
+
 
     // 处理 Stake 按钮
     async function waitForStakeButton(inputElement) {
@@ -6978,7 +6972,7 @@
             location.reload();
         }
     }, 5000);
-    
+
 
 
     function getRandomNickname() {
@@ -7013,19 +7007,19 @@
     const interval = setInterval(() => {
         // Select the checkbox button by its attributes
         const checkbox = document.querySelector('button[role="checkbox"][id="terms1"]');
-    
+
         if (!checkbox) {
             console.log(`[${new Date().toLocaleTimeString()}] Checkbox button not found`);
             return;
         }
-    
+
         try {
             // Check if the checkbox is not already checked
             if (checkbox.getAttribute('aria-checked') === 'false') {
                 // Simulate a click on the checkbox
                 checkbox.click();
                 console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked checkbox with id "terms1"`);
-    
+
                 // Verify if the checkbox is now checked
                 if (checkbox.getAttribute('aria-checked') === 'true') {
                     console.log(`[${new Date().toLocaleTimeString()}] Checkbox is now checked`);
@@ -7048,29 +7042,29 @@
     const inputInterval = setInterval(() => {
         // Select the target input field by placeholder (based on your HTML snippet)
         const input = document.querySelector('input[placeholder="Enter username"]');
-    
+
         if (!input) {
             console.log(`[${new Date().toLocaleTimeString()}] Input field not found`);
             return;
         }
-    
+
         // Check if input is empty
         if (!input.value) {
             const randomNickname = getRandomNickname(); // Use the nickname generator
-    
+
             try {
                 // Use native input value setter
                 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
                     window.HTMLInputElement.prototype, 'value'
                 ).set;
                 nativeInputValueSetter.call(input, randomNickname);
-    
+
                 // Dispatch events to simulate user input
                 input.dispatchEvent(new Event('input', { bubbles: true }));
                 input.dispatchEvent(new Event('change', { bubbles: true }));
                 input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
                 input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: 'Enter' }));
-    
+
                 // Verify input
                 if (input.value === randomNickname) {
                     console.log(`[${new Date().toLocaleTimeString()}] Successfully input ${randomNickname} into input field`);
@@ -7112,12 +7106,12 @@
     const successCheckInterval = setInterval(() => {
         // Select all buttons matching the criteria
         const successButtons = document.querySelectorAll('button[id="radix-«r1o»"][aria-haspopup="menu"][data-state="closed"] .text-success');
-    
+
         if (successButtons.length >= 2) {
             console.log(`[${new Date().toLocaleTimeString()}] Success: ${successButtons.length} success buttons detected!`);
             window.close();
             clearInterval(successCheckInterval); // Stop the interval after closing
-        } 
+        }
     }, 5000); // Check every 5 seconds
 
     const Confirm = setInterval(() => {
@@ -7131,7 +7125,7 @@
         });
     }, 5000);
 
-    
+
 
     const MetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('div');
@@ -7171,7 +7165,7 @@
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Daily Visit the Sahara AI Blog') &&
                 !button.hasAttribute('disabled')) {
-                button.click(); 
+                button.click();
                 setTimeout(() => {
                     location.reload();
                 }, 30000);
@@ -7187,7 +7181,7 @@
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Daily Visit the Sahara AI Twitter') &&
                 !button.hasAttribute('disabled')) {
-                button.click(); 
+                button.click();
                 clearInterval(DailyVisittheSaharaAITwitter);
             }
         });
@@ -7198,7 +7192,7 @@
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Daily Visit the Sahara AI Blog') &&
                 !button.hasAttribute('disabled')) {
-                button.click(); 
+                button.click();
             }
         });
     }, 20000);
@@ -7209,7 +7203,7 @@
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Daily Visit the Sahara AI Twitter') &&
                 !button.hasAttribute('disabled')) {
-                button.click(); 
+                button.click();
             }
         });
     }, 20000);
@@ -7217,9 +7211,9 @@
     const successCheckInterval = setInterval(() => {
         // Select buttons with aria-haspopup="menu" and data-state="closed" containing .text-success
         const successButtons = document.querySelectorAll('button[aria-haspopup="menu"][data-state="closed"] .text-success');
-    
+
         console.log(`[${new Date().toLocaleTimeString()}] Found ${successButtons.length} success buttons.`);
-    
+
         if (successButtons.length >= 2) {
             console.log(`[${new Date().toLocaleTimeString()}] Success: ${successButtons.length} success buttons detected!`);
             clearInterval(successCheckInterval); // Stop the interval
@@ -7233,7 +7227,7 @@
         }
     }, 1000); // Check every 1 second for dynamic elements
 
-    
+
     // Your code here...
 })();
 
@@ -7259,7 +7253,7 @@
             document.evaluate('/html/body/div[3]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[1]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue,
             document.evaluate('/html/body/div[2]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[2]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
         ].filter((svg, index, self) => svg && self.indexOf(svg) === index); // Remove duplicates and null
-    
+
         if (targetSvgs.length >= 2) {
             try {
                 targetSvgs.slice(0, 2).forEach((svg, index) => {
@@ -7268,7 +7262,7 @@
                         console.error(`[${new Date().toLocaleTimeString()}] No valid SVG element for clicking at index ${index + 1}`);
                         return;
                     }
-    
+
                     // Try native click
                     try {
                         clickableElement.click();
@@ -7301,7 +7295,7 @@
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Sign In') &&
                 !button.hasAttribute('disabled')) {
-                button.click(); 
+                button.click();
                 clearInterval(Login);
             }
         });
@@ -7317,7 +7311,7 @@
             }
         });
     }, 5000);
-    
+
     const claim = setInterval(() => {
         const buttons = document.querySelectorAll('div');
         buttons.forEach(button => {
@@ -7332,13 +7326,13 @@
     const claimtoto = setInterval(() => {
         const buttons = document.querySelectorAll('div.task-button'); // Select only divs with class="task-button"
         let matchCount = 0;
-    
+
         buttons.forEach(button => {
             if (button.textContent.trim() === 'claimed' && !button.hasAttribute('disabled')) {
                 matchCount++;
             }
         });
-    
+
         if (matchCount > 2) { // Exactly 3 matches
             setTimeout(() => {
                 location.href = 'https://chat.chainopera.ai/login';
@@ -7349,10 +7343,10 @@
 
     setInterval(() => {
         // Select all divs with class 'task-button-plus' and text 'claim'
-        const claimButtons = Array.from(document.querySelectorAll('div.task-button-plus')).filter(div => 
+        const claimButtons = Array.from(document.querySelectorAll('div.task-button-plus')).filter(div =>
             div.textContent.trim().toLowerCase() === 'claim'
         );
-    
+
         if (claimButtons.length > 0) {
             claimButtons.forEach((button, index) => {
                 try {
@@ -7384,7 +7378,7 @@
     const clickInterval1 = setInterval(() => {
         // Select the target div element
         const targetDiv = document.querySelector('div.map-point.map-animal[data-v-2499a22b][data-v-b0d2019a]');
-    
+
         if (targetDiv) {
             try {
                 targetDiv.click();
@@ -7420,7 +7414,7 @@
 
 
 
-    
+
     // Timeout mechanism
     let attempts = 0;
     const maxAttempts = 12; // 60 seconds
@@ -7433,4 +7427,103 @@
         }
     }, 5000);
     // Your code here...
+})();
+
+
+(function() {
+    'use strict';
+
+    // 确保页面加载完成后再执行
+    document.addEventListener('DOMContentLoaded', () => {
+        // 仅在指定域名下运行
+        if (window.location.hostname !== 'monad.fantasy.top') {
+            return;
+        }
+
+
+        // 检测并点击“Register and Play for free”按钮
+        const Register = setInterval(() => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Register and Play for free') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(Register);
+                }
+            });
+        }, 5000);
+
+        const Continue = setInterval(() => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Continue') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(Continue);
+                }
+            });
+        }, 5000);
+
+
+        // 检测并点击“Twitter”登录按钮
+        const loginmethodbutton = setInterval(() => {
+            const buttons = document.querySelectorAll('button.sc-dTUlgT.efwzyw.login-method-button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Twitter') && !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(loginmethodbutton);
+                }
+            });
+        }, 5000);
+
+        // 检测并点击“Learn More”按钮
+        const LearnMore = setInterval(() => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Learn More') && !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(LearnMore);
+                }
+            });
+        }, 5000);
+        setInterval(() => {
+            if (window.location.hostname === 'monad.fantasy.top' && window.location.pathname !== '/shop') {
+                window.location.href = 'https://monad.fantasy.top/shop';
+            }
+        }, 10000);
+        // 合并的 shop 页面逻辑
+        if (window.location.href.includes('monad.fantasy.top/shop')) {
+            const Claim = setInterval(() => {
+                const buttons = document.querySelectorAll('button.ring-1.ring-inset');
+                buttons.forEach(button => {
+                    const text = button.textContent.trim();
+                    // 情况1：包含“Claim”且有时间格式（如“Claim in 23h 40m”），点击 nextSiteBtn
+                    if (text.includes('Claim') && text.match(/(\d+h\s*\d+m)/)) {
+                        console.log(`检测到包含Claim和时间的按钮: ${text}，点击nextSiteBtn`);
+                        const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                        if (nextSiteBtn) {
+                            nextSiteBtn.click();
+                        } else {
+                            console.warn('nextSiteBtn 未找到');
+                        }
+                        clearInterval(Claim);
+                    }
+                    // 情况2：包含“Claim”且未禁用，点击 Claim 按钮并随后点击 nextSiteBtn
+                    else if (text.includes('Claim') && !button.hasAttribute('disabled')) {
+                        console.log(`检测到启用Claim按钮: ${text}，点击Claim按钮`);
+                        button.click();
+                        setTimeout(() => {
+                            const nextSiteBtn = document.querySelector('#nextSiteBtn');
+                            if (nextSiteBtn) {
+                                nextSiteBtn.click();
+                            } else {
+                                console.warn('nextSiteBtn 未找到');
+                            }
+                        }, 10000);
+                        clearInterval(Claim);
+                    }
+                });
+            }, 5000);
+        }
+    });
 })();
