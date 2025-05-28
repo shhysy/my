@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.144
+// @version      47.145
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -583,8 +583,8 @@
         return;
     }
     setInterval(() => {
-        window.location.href = 'https://testnet-faucet.reddio.com';
-    }, 60000);
+        window.location.href = 'https://klokapp.ai/app';
+    }, 30000);
 
     const LogIn =setInterval(() => {
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
