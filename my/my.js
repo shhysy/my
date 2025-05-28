@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.139
+// @version      47.140
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5001,7 +5001,7 @@
 
 (function() {
     'use strict';
-    if (window.location.hostname !== 'app.union.build') {
+    if (window.location.hostname !== 'dashboard.union.build') {
         return;
     }
     const MetaMask = setInterval(() => {
