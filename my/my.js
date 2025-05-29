@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.155
+// @version      47.156
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5213,6 +5213,29 @@
         if (!element) {
             return false; // 超时已在 waitForElement 中处理
         }
+        if(name=='元素1-2'){
+            if (element.textContent.includes('BABY')) {
+                log(`${name} 已找到，执行点击`);
+                element.click();
+                await getRandomDelay();
+                return true;
+            } else {
+                log(`${name} 不包含BABY文本，尝试点击替代按钮`);
+                let button = document.evaluate(
+                    '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[3]',
+                    document,
+                    null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE,
+                    null
+                ).singleNodeValue;
+                if(button){
+                    button.click();
+                    await getRandomDelay();
+                    return true;
+                }
+                return false;
+            }
+        }
         log(`${name} 已找到，执行点击`);
         element.click();
         await getRandomDelay();
@@ -5286,6 +5309,26 @@
         // ];
 
         // const element2_1XPath = xPaths[Math.floor(Math.random() * 3)];
+
+        function selectButtonByXPath(xpaths) {
+            for (let xpath of xpaths) {
+                let button = document.evaluate(
+                    xpath,
+                    document,
+                    null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE,
+                    null
+                ).singleNodeValue;
+
+                // Check if the button exists and contains the "BABY" text
+                if (button && button.querySelector('span')?.textContent === 'BABY') {
+                    return xpath;
+                }
+            }
+            return null; // Return null if no matching button is found
+        }
+
+
 
         const element2_1XPath ='/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[1]'
 
@@ -5421,6 +5464,7 @@
 
     // Your code here...
 })();
+
 
 
 //MONAD Stak
