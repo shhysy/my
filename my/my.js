@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.154
+// @version      47.155
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7584,7 +7584,7 @@
                 let foundContinue = false;
                 buttons.forEach(button => {
                     const buttonText = button.textContent.trim();
-                    if (buttonText.includes('Continue') && !button.hasAttribute('disabled')) {
+                    if (buttonText.includes('Continue') || buttonText.includes('Close') || button.textContent.trim().includes('Claim 100 $fMON') || (buttonText.includes("Got it, let's go")) && !button.hasAttribute('disabled')) {
                         foundContinue = true;
                     }
                 });
