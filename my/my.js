@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.159
+// @version      47.157
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3050,8 +3050,8 @@
         return;
     }
 
-    const min = 0.000001;
-    const max = 0.000005;
+    const min = 0.00001;
+    const max = 0.00005;
     let rond = 3
     var bt1 = ""
     var bt3 = ""
@@ -5061,8 +5061,8 @@
 
     // 生成随机数字（0.0111到0.02，4位小数）
     function getRandomAmount() {
-        const min = 0.00001;
-        const max = 0.00002;
+        const min = 0.000111;
+        const max = 0.0002;
         const amount = (Math.random() * (max - min) + min).toFixed(4);
         log(`生成随机金额: ${amount}`);
         return amount;
