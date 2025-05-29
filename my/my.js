@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.146
+// @version      47.147
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7494,10 +7494,10 @@
             });
         }, 5000);
         setInterval(() => {
-            if (window.location.hostname === 'monad.fantasy.top' && window.location.pathname !== '/shop') {
+            if (window.location.hostname === 'monad.fantasy.top' && window.location.pathname !== '/shop'  && window.location.pathname !== '/login') {
                 window.location.href = 'https://monad.fantasy.top/shop';
             }
-        }, 10000);
+        },30000);
         // 合并的 shop 页面逻辑
         if (window.location.href.includes('monad.fantasy.top/shop')) {
             const Claim = setInterval(() => {
