@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.153
+// @version      47.154
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7580,29 +7580,32 @@
             }, 5000);
 
             const Claim = setInterval(() => {
-                const buttons = document.querySelectorAll('button.ring-1.ring-inset');
+                const buttons = document.querySelectorAll('button');
+                let foundContinue = false;
                 buttons.forEach(button => {
-                    const text = button.textContent.trim();
-                    // 情况1：包含“Claim”且有时间格式（如“Claim in 23h 40m”），点击 nextSiteBtn
-                    if (text.includes('Claim') && text.match(/(\d+h\s*\d+m)/)) {
-                        console.log(`检测到包含Claim和时间的按钮: ${text}，点击nextSiteBtn`);
-                        window.location.href='https://stake.apr.io/'
-                        clearInterval(Claim);
-                    }
-                    // 情况2：包含“Claim”且未禁用，点击 Claim 按钮并随后点击 nextSiteBtn
-                    else if (text=='Claim' && !button.hasAttribute('disabled')) {
-                        console.log(`检测到启用Claim按钮: ${text}，点击Claim按钮`);
-                        button.click();
-                    }else{
-                        const buttons = document.querySelectorAll('button');
-                        buttons.forEach(button => {
-                            if (button.textContent.trim().includes('Claim') &&
-                                !button.hasAttribute('disabled')) {
-                                button.click();
-                            }
-                        });
+                    const buttonText = button.textContent.trim();
+                    if (buttonText.includes('Continue') && !button.hasAttribute('disabled')) {
+                        foundContinue = true;
                     }
                 });
+                
+                if (!foundContinue) {
+                    const buttons = document.querySelectorAll('button.ring-1.ring-inset');
+                    buttons.forEach(button => {
+                        const text = button.textContent.trim();
+                        // 情况1：包含"Claim"且有时间格式（如"Claim in 23h 40m"），点击 nextSiteBtn
+                        if (text.includes('Claim') && text.match(/(\d+h\s*\d+m)/)) {
+                            console.log(`检测到包含Claim和时间的按钮: ${text}，点击nextSiteBtn`);
+                            window.location.href='https://stake.apr.io/'
+                            clearInterval(Claim);
+                        }
+                        // 情况2：包含"Claim"且未禁用，点击 Claim 按钮并随后点击 nextSiteBtn
+                        else if (text=='Claim' && !button.hasAttribute('disabled')) {
+                            console.log(`检测到启用Claim按钮: ${text}，点击Claim按钮`);
+                            button.click();
+                        }
+                    });
+                }
             }, 5000);
         
     });
