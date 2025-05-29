@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.149
+// @version      47.150
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7464,9 +7464,20 @@
             const buttons = document.querySelectorAll('button');
             buttons.forEach(button => {
                 const buttonText = button.textContent.trim();
-                if ((buttonText.includes('Continue') || buttonText.includes("Got it, let's go")) && !button.hasAttribute('disabled')) {
+                if ((buttonText.includes('Continue') && !button.hasAttribute('disabled')) {
                     button.click();
                     clearInterval(Continue); // 点击后清除定时器
+                }
+            });
+        }, 5000);
+
+        const go = setInterval(() => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                const buttonText = button.textContent.trim();
+                if ((buttonText.includes("Got it, let's go")) && !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(go); // 点击后清除定时器
                 }
             });
         }, 5000);
