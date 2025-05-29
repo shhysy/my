@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.148
+// @version      47.149
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -656,7 +656,7 @@
                             }, 2000);
                         }
                     }
-                    const followButton = allElements.find(el =>['Follow', 'Authorize app', 'Ikuti', 'Repost', 'Post', 'Like'].some(text => el.innerHTML.trim().includes(text)) && el.tagName === 'BUTTON');
+                    const followButton = allElements.find(el =>['Follow', 'Authorize app', 'Repost', 'Post', 'Like','Izinkan aplikasi'].some(text => el.innerHTML.trim().includes(text)) && el.tagName === 'BUTTON');
                     if (followButton) {
                         setTimeout(() => {
                             followButton.click();
@@ -674,7 +674,7 @@
                         }, 2000);
                     }
 
-                    const specificInput = allElements.find(input => input.tagName === 'INPUT' && input.type === 'submit' && input.value === "Authorize app");
+                    const specificInput = allElements.find(input => input.tagName === 'INPUT' && input.type === 'submit' && input.value === "Authorize app" && input.value === "Izinkan aplikasi");
                     if (specificInput) {
                         setTimeout(() => {
                             specificInput.click();
@@ -7436,7 +7436,6 @@
     // Your code here...
 })();
 
-
 (function() {
     'use strict';
 
@@ -7446,6 +7445,7 @@
         if (window.location.hostname !== 'monad.fantasy.top') {
             return;
         }
+
 
 
         // 检测并点击“Register and Play for free”按钮
@@ -7463,10 +7463,10 @@
         const Continue = setInterval(() => {
             const buttons = document.querySelectorAll('button');
             buttons.forEach(button => {
-                if (button.textContent.trim().includes('Continue') &&
-                    !button.hasAttribute('disabled')) {
+                const buttonText = button.textContent.trim();
+                if ((buttonText.includes('Continue') || buttonText.includes("Got it, let's go")) && !button.hasAttribute('disabled')) {
                     button.click();
-                    clearInterval(Continue);
+                    clearInterval(Continue); // 点击后清除定时器
                 }
             });
         }, 5000);
@@ -7493,13 +7493,81 @@
                 }
             });
         }, 5000);
+
+        const Claim100 = setInterval(() => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Claim 100 $fMON') && !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(Claim100);
+                }
+            });
+        }, 5000);
+
+        const Close = setInterval(() => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Close') && !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(Close);
+                }
+            });
+        }, 5000);
+
         setInterval(() => {
-            if (window.location.hostname === 'monad.fantasy.top' && window.location.pathname !== '/shop'  && window.location.pathname !== '/login') {
-                window.location.href = 'https://monad.fantasy.top/shop';
+            if (window.location.href === 'https://monad.fantasy.top/' && window.location.pathname !== '/shop' && window.location.pathname !== '/login') {
+                const xpath = '//*[@id="sidebar"]/div[3]/div[1]/div[3]';
+                const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+                const button = result.singleNodeValue;
+                if (button && button.textContent.trim().includes('Shop') && !button.hasAttribute('disabled')) {
+                    button.click();
+                }
             }
-        },30000);
+        }, 20000);
+
+        setInterval(() => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim()=='Claim' && !button.hasAttribute('disabled') && window.location.pathname !== '/shop') {
+                    button.click();
+                }
+            });
+        }, 5000);
+
         // 合并的 shop 页面逻辑
-        if (window.location.href.includes('monad.fantasy.top/shop') && window.location.pathname == '/shop') {
+        if (window.location.href.includes('monad.fantasy.top/shop')) {
+
+            const Retweet = setInterval(() => {
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(button => {
+                    if (button.textContent.trim().includes('Retweet') && !button.hasAttribute('disabled')) {
+                        button.click();
+                        clearInterval(Retweet);
+                    }
+                });
+            }, 5000);
+
+            const Verify = setInterval(() => {
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(button => {
+                    if (button.textContent.trim().includes('Verify') && !button.hasAttribute('disabled')) {
+                        button.click();
+                        clearInterval(Verify);
+                    }
+                });
+            }, 5000);
+
+            const Confirm = setInterval(() => {
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(button => {
+                    if (button.textContent.trim().includes('Confirm') &&
+                        !button.hasAttribute('disabled')) {
+                        button.click();
+                        clearInterval(Confirm);
+                    }
+                });
+            }, 5000);
+
             const Claim = setInterval(() => {
                 const buttons = document.querySelectorAll('button.ring-1.ring-inset');
                 buttons.forEach(button => {
@@ -7516,7 +7584,7 @@
                         clearInterval(Claim);
                     }
                     // 情况2：包含“Claim”且未禁用，点击 Claim 按钮并随后点击 nextSiteBtn
-                    else if (text.includes('Claim') && !button.hasAttribute('disabled')) {
+                    else if (text=='Claim' && !button.hasAttribute('disabled')) {
                         console.log(`检测到启用Claim按钮: ${text}，点击Claim按钮`);
                         button.click();
                         setTimeout(() => {
@@ -7528,6 +7596,14 @@
                             }
                         }, 10000);
                         clearInterval(Claim);
+                    }else{
+                        const buttons = document.querySelectorAll('button');
+                        buttons.forEach(button => {
+                            if (button.textContent.trim().includes('Claim') &&
+                                !button.hasAttribute('disabled')) {
+                                button.click();
+                            }
+                        });
                     }
                 });
             }, 5000);
