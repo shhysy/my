@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.166
+// @version      47.167
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7632,11 +7632,11 @@
                         // 情况2：包含"Claim"且未禁用，点击 Claim 按钮并随后点击 nextSiteBtn
                         else if (text=='Claim' && !button.hasAttribute('disabled')) {
                             console.log(`检测到启用Claim按钮: ${text}，点击Claim按钮`);
-                            //button.click();
+                            button.click();
                         }
                     });
                 }
-            }, 5000);
+            }, 25000);
         
     });
 })();
