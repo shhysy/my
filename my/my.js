@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.165
+// @version      47.166
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5023,7 +5023,7 @@
     // 元素选择器
     const selectors = {
         element1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/button/div/div' },
-        element1_1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/button[6]' },
+        element1_1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/button[1]' },
         element1_2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[1]' },
         element2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/button/div/div' },
         inputBox: { css: 'input#amount' },
@@ -5046,7 +5046,7 @@
     };
 
     // 循环设置
-    const maxLoops = 50; // 最大循环次数
+    const maxLoops = 100; // 最大循环次数
     let loopCount = 0; // 当前循环次数
     const loopInterval = 3000; // 3秒间隔（毫秒）
     const elementTimeout = 20000; // 元素等待超时20秒
@@ -5217,29 +5217,29 @@
         if (!element) {
             return false; // 超时已在 waitForElement 中处理
         }
-        if(name=='元素1-2'){
-            if (element.textContent.includes('BABY')) {
-                log(`${name} 已找到，执行点击`);
-                element.click();
-                await getRandomDelay();
-                return true;
-            } else {
-                log(`${name} 不包含BABY文本，尝试点击替代按钮`);
-                let button = document.evaluate(
-                    '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[3]',
-                    document,
-                    null,
-                    XPathResult.FIRST_ORDERED_NODE_TYPE,
-                    null
-                ).singleNodeValue;
-                if(button){
-                    button.click();
-                    await getRandomDelay();
-                    return true;
-                }
-                return false;
-            }
-        }
+        // if(name=='元素1-2'){
+        //     if (element.textContent.includes('BABY')) {
+        //         log(`${name} 已找到，执行点击`);
+        //         element.click();
+        //         await getRandomDelay();
+        //         return true;
+        //     } else {
+        //         log(`${name} 不包含BABY文本，尝试点击替代按钮`);
+        //         let button = document.evaluate(
+        //             '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[3]',
+        //             document,
+        //             null,
+        //             XPathResult.FIRST_ORDERED_NODE_TYPE,
+        //             null
+        //         ).singleNodeValue;
+        //         if(button){
+        //             button.click();
+        //             await getRandomDelay();
+        //             return true;
+        //         }
+        //         return false;
+        //     }
+        // }
         log(`${name} 已找到，执行点击`);
         element.click();
         await getRandomDelay();
@@ -5306,35 +5306,17 @@
         // 等待页面稳定
         await waitForPageStable();
 
-        // const xPaths = [
-        //     '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[2]',
-        //     '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[5]',
-        //     '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[4]'
-        // ];
+        const xPaths = [
+            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[6]',
+            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[3]',
+            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[5]'
+        ];
 
-        // const element2_1XPath = xPaths[Math.floor(Math.random() * 3)];
-
-        function selectButtonByXPath(xpaths) {
-            for (let xpath of xpaths) {
-                let button = document.evaluate(
-                    xpath,
-                    document,
-                    null,
-                    XPathResult.FIRST_ORDERED_NODE_TYPE,
-                    null
-                ).singleNodeValue;
-
-                // Check if the button exists and contains the "BABY" text
-                if (button && button.querySelector('span')?.textContent === 'BABY') {
-                    return xpath;
-                }
-            }
-            return null; // Return null if no matching button is found
-        }
+        const element2_1XPath = xPaths[Math.floor(Math.random() * 3)];
 
 
 
-        const element2_1XPath ='/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[1]'
+        // const element2_1XPath ='/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[1]'
 
         // 步骤1-5：点击元素1, 1-1, 1-2, 2, 2-1
         const steps = [
