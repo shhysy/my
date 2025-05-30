@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.161
+// @version      47.162
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2434,7 +2434,7 @@
 
     setInterval(() => {
         location.reload();
-    }, 150000);
+    }, 300000);
 
     // Utility to wait for an element with a selector
     function waitForElement(selector, timeout = 15000) {
@@ -2474,7 +2474,7 @@
                 // Wait for page to be fully loaded
                 if (!isPageReady()) {
                     console.log('Page not fully loaded, waiting...');
-                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    await new Promise(resolve => setTimeout(resolve, 5000));
                 }
 
                 // Try each selector in sequence
@@ -2591,8 +2591,9 @@
             // 第一步：点击"New Chat"按钮
             const newChatButton = await getNewChatButton();
             console.log('找到 New Chat 按钮，准备点击');
+            await new Promise(resolve => setTimeout(resolve, 5000));
             simulateClick(newChatButton);
-            await new Promise(resolve => setTimeout(resolve, 1000)); // 等待1秒让页面响应
+            await new Promise(resolve => setTimeout(resolve, 5000));
 
             // 第二步：等待四个按钮出现并随机点击一个
             const buttonsContainer = await waitForButtons();
@@ -2612,11 +2613,13 @@
             console.log('等待加载完成...');
             await waitForLoadingToFinish();
             console.log('加载完成');
+            await new Promise(resolve => setTimeout(resolve, 5000));
 
             // 检查跳转
             await checkAndRedirect();
             return true; // 表示周期成功完成
         } catch (error) {
+            await new Promise(resolve => setTimeout(resolve, 5000));
             console.error('聊天周期出错:', error);
             return false; // 表示周期失败
         }
@@ -2635,12 +2638,12 @@
             if (!success) {
                 consecutiveFailures++;
                 console.log(`本周期失败 (${consecutiveFailures}/${maxFailures})，暂停10秒后重试`);
-                await new Promise(resolve => setTimeout(resolve, 20000));
+                await new Promise(resolve => setTimeout(resolve, 30000));
             } else {
                 consecutiveFailures = 0;
                 cycleCount++;
                 console.log(`本周期成功，完成 ${cycleCount} 次循环`);
-                await new Promise(resolve => setTimeout(resolve, 20000));
+                await new Promise(resolve => setTimeout(resolve, 30000));
             }
 
             // 单独检查计数器并跳转
@@ -2654,6 +2657,7 @@
                     break; // 跳转后退出循环
                 }
             } catch (error) {
+                await new Promise(resolve => setTimeout(resolve, 5000));
                 console.error('计数器检查超时:', error);
             }
         }
@@ -5061,8 +5065,8 @@
 
     // 生成随机数字（0.0111到0.02，4位小数）
     function getRandomAmount() {
-        const min = 0.000111;
-        const max = 0.0002;
+        const min = 0.0000111;
+        const max = 0.00002;
         const amount = (Math.random() * (max - min) + min).toFixed(4);
         log(`生成随机金额: ${amount}`);
         return amount;
@@ -7646,7 +7650,7 @@
                         // 情况2：包含"Claim"且未禁用，点击 Claim 按钮并随后点击 nextSiteBtn
                         else if (text=='Claim' && !button.hasAttribute('disabled')) {
                             console.log(`检测到启用Claim按钮: ${text}，点击Claim按钮`);
-                            button.click();
+                            //button.click();
                         }
                     });
                 }
