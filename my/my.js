@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.163
+// @version      47.164
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7453,7 +7453,7 @@
         const taskInfoElements = document.querySelectorAll('.task-info');
 
         // 检查是否至少有 9 个元素
-        if (taskInfoElements.length >= 9) {
+        if (taskInfoElements.length >= 8) {
             // 点击第一个元素
             if (taskInfoElements[0]) {
                 taskInfoElements[0].click();
