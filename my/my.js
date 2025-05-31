@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.168
+// @version      47.169
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
-// @match        *://*.accounts.google.com/*
 // @exclude      https://www.hcaptcha.com/*
 // @exclude      https://hcaptcha.com/*
 // @exclude      https://www.cloudflare.com/*
@@ -795,7 +794,7 @@
             clickContinueButton();
             handlePasswordInput();
         }
-    }, 2000); // Adjust the interval time as needed (2000ms = 2 seconds)
+    }, 5000); // Adjust the interval time as needed (2000ms = 2 seconds)
 
     document.addEventListener('DOMContentLoaded', () => {
         //clickButton();
