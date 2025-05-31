@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.170
+// @version      47.171
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3386,6 +3386,9 @@
     });
 })();
 
+
+
+
 (function() {
     if(window.location.href === 'https://dashboard.union.build/achievements'){
         'use strict';
@@ -5003,433 +5006,7 @@
     // Your code here...
 })();
 
-(function() {
-    'use strict';
-    if (window.location.hostname !== 'dashboard.union.build') {
-        return;
-    }
-    const MetaMask = setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('MetaMask') &&
-                !button.hasAttribute('disabled')) {
-                button.click();
-                clearInterval(MetaMask);
-            }
-        });
-    }, 5000);
 
-    // 元素选择器
-    const selectors = {
-        element1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/button/div/div' },
-        element1_1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/button[1]' },
-        element1_2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[1]' },
-        element2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/button/div/div' },
-        inputBox: { css: 'input#amount' },
-        element3: { css: 'button.bg-sky-600' },
-        element3_1: {
-            css: 'button[aria-label="Connect keplr wallet"]',
-            xpath: '/html/body/div[2]/div/div/div/section[2]/div[2]/div[2]/button[2]',
-            fallbackCss: '#modal-container > div > div > div > section.h-\\500px\\].overflow-y-auto.p-6.space-y-6 > div:nth-child(2) > div.grid.grid-cols-1.gap-2 > button:nth-child(2)'
-        },
-        element3_2: { css: '#modal-container > div > div > div > button' },
-        element4: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[2]/button[2]' },
-        element5: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div/div/div[2]/button[1]' },
-        modalContainer: { css: '#modal-container' },
-        mainContainer: { css: 'main' },
-        timeoutFallbackElement: {
-            css: 'a[href="/transfer"]',
-            xpath: '/html/body/div[1]/div[2]/aside/div/div[2]/div[1]/section[1]/ul/li/a',
-            fallbackCss: 'body > div:nth-child(1) > div.relative.min-h-\\100svh\\].w-screen.z-10 > aside > div > div.min-h-full.flex.flex-col.overflow-y-auto > div.flex.flex-col.flex-1 > section:nth-child(1) > ul > li > a'
-        }
-    };
-
-    // 循环设置
-    const maxLoops = 100; // 最大循环次数
-    let loopCount = 0; // 当前循环次数
-    const loopInterval = 3000; // 3秒间隔（毫秒）
-    const elementTimeout = 20000; // 元素等待超时20秒
-
-    // 日志函数
-    function log(message) {
-        console.log(`[Union Build Automation] ${message}`);
-    }
-
-    // 生成随机延迟（1000ms到3000ms）
-    async function getRandomDelay() {
-        const delay = Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000;
-        log(`生成随机延迟: ${delay}ms`);
-        return new Promise(resolve => setTimeout(resolve, delay));
-    }
-
-    // 生成随机数字（0.0111到0.02，4位小数）
-    function getRandomAmount() {
-        const min = 0.000111;
-        const max = 0.0002;
-        const amount = (Math.random() * (max - min) + min).toFixed(4);
-        log(`生成随机金额: ${amount}`);
-        return amount;
-    }
-
-    // 查找元素（支持XPath和CSS）
-    function findElement(selector) {
-        if (selector.css) {
-            const element = document.querySelector(selector.css);
-            if (element) {
-                log(`元素找到，使用CSS选择器: ${selector.css}`);
-                return element;
-            }
-        }
-        if (selector.xpath) {
-            const element = document.evaluate(selector.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            if (element) {
-                log(`元素找到，使用XPath: ${selector.xpath}`);
-                return element;
-            }
-        }
-        if (selector.fallbackCss) {
-            const element = document.querySelector(selector.fallbackCss);
-            if (element) {
-                log(`元素找到，使用回退CSS选择器: ${selector.fallbackCss}`);
-                return element;
-            }
-        }
-        return null;
-    }
-
-    // 处理超时点击备用元素
-    async function handleTimeout(name) {
-        log(`${name} 超时，尝试点击备用元素`);
-        let clicked = false;
-        for (let attempt = 1; attempt <= 3; attempt++) {
-            log(`尝试点击备用元素 (第 ${attempt}/3 次)`);
-            const element = await waitForElement(selectors.timeoutFallbackElement, '备用元素', elementTimeout, false);
-            if (element) {
-                log('备用元素 已找到，执行点击');
-                element.click();
-                await getRandomDelay();
-                clicked = true;
-                break;
-            } else {
-                log(`备用元素 未找到，等待2秒后重试...`);
-                await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-        }
-        if (!clicked) {
-            log('备用元素 最终未找到，继续下一次循环');
-        }
-        return false; // 触发循环终止
-    }
-
-    // 等待元素出现
-    async function waitForElement(selector, name, timeout = elementTimeout, infinite = false) {
-        return new Promise(resolve => {
-            const start = Date.now();
-            const checkInterval = setInterval(() => {
-                const element = findElement(selector);
-                if (element) {
-                    log(`${name} 已找到，耗时 ${Date.now() - start}ms`);
-                    clearInterval(checkInterval);
-                    resolve(element);
-                } else {
-                    log(`${name} 未找到，继续等待...`);
-                }
-
-                if (!infinite && Date.now() - start > timeout) {
-                    log(`${name} 未在 ${timeout}ms 内找到，超时`);
-                    clearInterval(checkInterval);
-                    resolve(null);
-                }
-            }, 1000);
-        }).then(async element => {
-            if (!element && !infinite) {
-                return await handleTimeout(name);
-            }
-            return element;
-        });
-    }
-
-    // 等待模态框出现
-    async function waitForModalContainer(timeout = elementTimeout) {
-        return new Promise(resolve => {
-            const modal = findElement(selectors.modalContainer);
-            if (modal) {
-                log('模态框已找到');
-                resolve(modal);
-                return;
-            }
-
-            const observer = new MutationObserver((mutations, obs) => {
-                const modal = findElement(selectors.modalContainer);
-                if (modal) {
-                    log('模态框动态加载完成');
-                    obs.disconnect();
-                    resolve(modal);
-                }
-            });
-            observer.observe(document.body, { childList: true, subtree: true });
-
-            setTimeout(() => {
-                log(`模态框未在 ${timeout}ms 内出现，超时`);
-                observer.disconnect();
-                resolve(null);
-            }, timeout);
-        }).then(async modal => {
-            if (!modal) {
-                return await handleTimeout('模态框');
-            }
-            return modal;
-        });
-    }
-
-    // 等待页面稳定（主容器DOM变化完成）
-    async function waitForPageStable(timeout = 5000) {
-        return new Promise(resolve => {
-            const mainContainer = findElement(selectors.mainContainer);
-            if (mainContainer) {
-                log('主容器已找到，页面初步稳定');
-                resolve(true);
-                return;
-            }
-
-            const observer = new MutationObserver((mutations, obs) => {
-                const mainContainer = findElement(selectors.mainContainer);
-                if (mainContainer) {
-                    log('主容器动态加载完成，页面稳定');
-                    obs.disconnect();
-                    resolve(true);
-                }
-            });
-            observer.observe(document.body, { childList: true, subtree: true });
-
-            setTimeout(() => {
-                log(`主容器未在 ${timeout}ms 内稳定，继续执行`);
-                observer.disconnect();
-                resolve(false);
-            }, timeout);
-        });
-    }
-
-    // 点击元素
-    async function clickElement(selector, name, timeout = elementTimeout) {
-        const element = await waitForElement(selector, name, timeout, name === '元素1' && loopCount === 0);
-        if (!element) {
-            return false; // 超时已在 waitForElement 中处理
-        }
-        // if(name=='元素1-2'){
-        //     if (element.textContent.includes('BABY')) {
-        //         log(`${name} 已找到，执行点击`);
-        //         element.click();
-        //         await getRandomDelay();
-        //         return true;
-        //     } else {
-        //         log(`${name} 不包含BABY文本，尝试点击替代按钮`);
-        //         let button = document.evaluate(
-        //             '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[3]',
-        //             document,
-        //             null,
-        //             XPathResult.FIRST_ORDERED_NODE_TYPE,
-        //             null
-        //         ).singleNodeValue;
-        //         if(button){
-        //             button.click();
-        //             await getRandomDelay();
-        //             return true;
-        //         }
-        //         return false;
-        //     }
-        // }
-        log(`${name} 已找到，执行点击`);
-        element.click();
-        await getRandomDelay();
-        return true;
-    }
-
-    // 输入文本到输入框
-    async function inputText(selector, text) {
-        const input = await waitForElement(selector, '输入框');
-        if (!input) {
-            return false; // 超时已在 waitForElement 中处理
-        }
-        log(`为输入框输入文本: ${text}`);
-        input.focus();
-        input.value = text;
-        const events = [
-            new Event('input', { bubbles: true }),
-            new Event('change', { bubbles: true }),
-            new KeyboardEvent('keypress', { bubbles: true, key: 'Enter' }),
-            new Event('blur', { bubbles: true })
-        ];
-        events.forEach(event => input.dispatchEvent(event));
-        log(`输入后内容: ${input.value || '空'}`);
-        await getRandomDelay();
-        return true;
-    }
-
-    // 等待元素3目标文本
-    async function waitForElement3Text(selector, timeout = elementTimeout) {
-        return new Promise(resolve => {
-            const start = Date.now();
-            const checkInterval = setInterval(() => {
-                const element = findElement(selector);
-                if (!element) {
-                    log('元素3 未找到，继续等待...');
-                } else {
-                    const text = element.textContent.trim();
-                    log(`元素3 当前文本: ${text}`);
-                    if (text === 'Connect wallet' || text === 'Transfer ready') {
-                        log(`元素3 目标文本 ${text} 已找到，耗时 ${Date.now() - start}ms`);
-                        clearInterval(checkInterval);
-                        resolve(text);
-                    }
-                }
-
-                if (Date.now() - start > timeout) {
-                    log(`元素3 文本未在 ${timeout}ms 内达到目标状态，超时`);
-                    clearInterval(checkInterval);
-                    resolve(null);
-                }
-            }, 1000);
-        }).then(async text => {
-            if (!text) {
-                return await handleTimeout('元素3文本');
-            }
-            return text;
-        });
-    }
-
-    // 主流程
-    async function runAutomation() {
-        log(`开始第 ${loopCount + 1}/${maxLoops} 次循环`);
-
-        // 等待页面稳定
-        await waitForPageStable();
-
-        const xPaths = [
-            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[6]',
-            '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[3]',
-            //'/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[5]'
-        ];
-
-        const element2_1XPath = xPaths[Math.floor(Math.random() * 2)];
-
-
-
-        // const element2_1XPath ='/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[1]'
-
-        // 步骤1-5：点击元素1, 1-1, 1-2, 2, 2-1
-        const steps = [
-            { selector: selectors.element1, name: '元素1' },
-            { selector: selectors.element1_1, name: '元素1-1' },
-            { selector: selectors.element1_2, name: '元素1-2' },
-            { selector: selectors.element2, name: '元素2' },
-            { selector: { xpath: element2_1XPath }, name: '元素2-1' }
-        ];
-
-        for (const step of steps) {
-            if (!await clickElement(step.selector, step.name)) {
-                log(`循环因 ${step.name} 超时而终止`);
-                return false;
-            }
-        }
-
-        // 步骤6：输入随机金额
-        const amount = getRandomAmount();
-        if (!await inputText(selectors.inputBox, amount)) {
-            log('循环因输入框超时而终止');
-            return false;
-        }
-
-        // 步骤7：等待元素3目标文本状态
-        let element3Text = await waitForElement3Text(selectors.element3);
-        if (!element3Text) {
-            log('循环因元素3文本超时而终止');
-            return false;
-        }
-
-        if (element3Text === 'Connect wallet') {
-            log('元素3文本为 "Connect wallet"，执行连接流程');
-            if (!await clickElement(selectors.element3, '元素3')) return false;
-
-            // 等待模态框
-            const modal = await waitForModalContainer();
-            if (!modal) {
-                log('循环因模态框超时而终止');
-                return false;
-            }
-
-            // 尝试点击元素3-1（最多3次）
-            let clicked3_1 = false;
-            for (let attempt = 1; attempt <= 3; attempt++) {
-                log(`尝试点击元素3-1 (第 ${attempt}/3 次)`);
-                clicked3_1 = await clickElement(selectors.element3_1, '元素3-1', elementTimeout);
-                if (clicked3_1) break;
-                log(`元素3-1 未找到，等待2秒后重试...`);
-                await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-            if (!clicked3_1) {
-                log('循环因元素3-1 最终未找到而终止');
-                return false;
-            }
-
-            if (!await clickElement(selectors.element3_2, '元素3-2')) return false;
-
-            // 重新等待元素3目标文本
-            element3Text = await waitForElement3Text(selectors.element3);
-            if (!element3Text) {
-                log('循环因元素3文本（连接后）超时而终止');
-                return false;
-            }
-        }
-
-        if (element3Text === 'Transfer ready') {
-            log('元素3文本为 "Transfer ready"，执行转账');
-            if (!await clickElement(selectors.element3, '元素3')) return false;
-        } else {
-            log(`元素3文本不是 "Transfer ready" (${element3Text})，终止循环`);
-            return false;
-        }
-
-        // 步骤8-9：点击元素4, 5
-        if (!await clickElement(selectors.element4, '元素4')) return false;
-        if (!await clickElement(selectors.element5, '元素5')) return false;
-
-        log(`第 ${loopCount + 1}/${maxLoops} 次循环成功完成`);
-        return true;
-    }
-
-    // 执行循环
-    async function runLoop() {
-        if (loopCount >= maxLoops) {
-            log(`已完成 ${maxLoops} 次循环，脚本停止`);
-            window.open('app.nexus.xyz', '_self');
-        }
-
-        loopCount++;
-        const success = await runAutomation();
-        if (!success) {
-            log(`第 ${loopCount}/${maxLoops} 次循环失败，继续下一次循环`);
-        }
-
-        // 等待3秒后继续下一次循环
-        if (loopCount < maxLoops) {
-            log(`等待 ${loopInterval / 1000} 秒后开始下一次循环`);
-            await new Promise(resolve => setTimeout(resolve, loopInterval));
-            await runLoop();
-        }
-    }
-
-    // 页面加载后执行
-    window.addEventListener('load', async () => {
-        log('页面加载完成，开始执行自动化流程');
-
-        // 初始延迟3秒
-        await new Promise(resolve => setTimeout(resolve, 3000));
-
-        // 开始循环
-        await runLoop();
-    });
-})();
 
 (function() {
     'use strict';
@@ -7637,5 +7214,453 @@
                 }
             }, 25000);
         
+    });
+})();
+
+
+
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'dashboard.union.build') {
+        return;
+    }
+    const MetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(MetaMask);
+            }
+        });
+    }, 5000);
+
+    // 元素选择器
+    const selectors = {
+        element1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/button/div/div' },
+        element1_1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/button[6]' },
+        element1_2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[1]' },
+        element2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/button/div/div' },
+        inputBox: { css: 'input#amount' },
+        element3: { css: 'button.bg-sky-600' },
+        element3_1: {
+            css: 'button[aria-label="Connect keplr wallet"]',
+            xpath: '/html/body/div[2]/div/div/div/section[2]/div[2]/div[2]/button[2]',
+            fallbackCss: '#modal-container > div > div > div > section.h-\\500px\\].overflow-y-auto.p-6.space-y-6 > div:nth-child(2) > div.grid.grid-cols-1.gap-2 > button:nth-child(2)'
+        },
+        element3_2: { css: '#modal-container > div > div > div > button' },
+        element4: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[2]/button[2]' },
+        element5: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div/div/div[2]/button[1]' },
+        modalContainer: { css: '#modal-container' },
+        mainContainer: { css: 'main' },
+        timeoutFallbackElement: {
+            css: 'a[href="/transfer"]',
+            xpath: '/html/body/div[1]/div[2]/aside/div/div[2]/div[1]/section[1]/ul/li/a',
+            fallbackCss: 'body > div:nth-child(1) > div.relative.min-h-\\100svh\\].w-screen.z-10 > aside > div > div.min-h-full.flex.flex-col.overflow-y-auto > div.flex.flex-col.flex-1 > section:nth-child(1) > ul > li > a'
+        }
+    };
+
+    // 循环设置
+    const maxLoops = 50; // 最大循环次数
+    let loopCount = 0; // 当前循环次数
+    const loopInterval = 3000; // 3秒间隔（毫秒）
+    const elementTimeout = 20000; // 元素等待超时20秒
+
+    // 日志函数
+    function log(message) {
+        console.log(`[Union Build Automation] ${message}`);
+    }
+
+    // 生成随机延迟（1000ms到3000ms）
+    async function getRandomDelay() {
+        const delay = Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000;
+        log(`生成随机延迟: ${delay}ms`);
+        return new Promise(resolve => setTimeout(resolve, delay));
+    }
+
+    // 生成随机数字（0.0111到0.02，4位小数）
+    function getRandomAmount() {
+        const min = 0.000111;
+        const max = 0.0002;
+        const amount = (Math.random() * (max - min) + min).toFixed(4);
+        log(`生成随机金额: ${amount}`);
+        return amount;
+    }
+
+    // 查找元素（支持XPath和CSS）
+    function findElement(selector) {
+        if (selector.css) {
+            const element = document.querySelector(selector.css);
+            if (element) {
+                log(`元素找到，使用CSS选择器: ${selector.css}`);
+                return element;
+            }
+        }
+        if (selector.xpath) {
+            const element = document.evaluate(selector.xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            if (element) {
+                log(`元素找到，使用XPath: ${selector.xpath}`);
+                return element;
+            }
+        }
+        if (selector.fallbackCss) {
+            const element = document.querySelector(selector.fallbackCss);
+            if (element) {
+                log(`元素找到，使用回退CSS选择器: ${selector.fallbackCss}`);
+                return element;
+            }
+        }
+        return null;
+    }
+
+    // 处理超时点击备用元素
+    async function handleTimeout(name) {
+        log(`${name} 超时，尝试点击备用元素`);
+        let clicked = false;
+        for (let attempt = 1; attempt <= 3; attempt++) {
+            log(`尝试点击备用元素 (第 ${attempt}/3 次)`);
+            const element = await waitForElement(selectors.timeoutFallbackElement, '备用元素', elementTimeout, false);
+            if (element) {
+                log('备用元素 已找到，执行点击');
+                element.click();
+                await getRandomDelay();
+                clicked = true;
+                break;
+            } else {
+                log(`备用元素 未找到，等待2秒后重试...`);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+        }
+        if (!clicked) {
+            log('备用元素 最终未找到，继续下一次循环');
+        }
+        return false; // 触发循环终止
+    }
+
+    // 等待元素出现
+    async function waitForElement(selector, name, timeout = elementTimeout, infinite = false) {
+        return new Promise(resolve => {
+            const start = Date.now();
+            const checkInterval = setInterval(() => {
+                const element = findElement(selector);
+                if (element) {
+                    log(`${name} 已找到，耗时 ${Date.now() - start}ms`);
+                    clearInterval(checkInterval);
+                    resolve(element);
+                } else {
+                    log(`${name} 未找到，继续等待...`);
+                }
+
+                if (!infinite && Date.now() - start > timeout) {
+                    log(`${name} 未在 ${timeout}ms 内找到，超时`);
+                    clearInterval(checkInterval);
+                    resolve(null);
+                }
+            }, 1000);
+        }).then(async element => {
+            if (!element && !infinite) {
+                return await handleTimeout(name);
+            }
+            return element;
+        });
+    }
+
+    // 等待模态框出现
+    async function waitForModalContainer(timeout = elementTimeout) {
+        return new Promise(resolve => {
+            const modal = findElement(selectors.modalContainer);
+            if (modal) {
+                log('模态框已找到');
+                resolve(modal);
+                return;
+            }
+
+            const observer = new MutationObserver((mutations, obs) => {
+                const modal = findElement(selectors.modalContainer);
+                if (modal) {
+                    log('模态框动态加载完成');
+                    obs.disconnect();
+                    resolve(modal);
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            setTimeout(() => {
+                log(`模态框未在 ${timeout}ms 内出现，超时`);
+                observer.disconnect();
+                resolve(null);
+            }, timeout);
+        }).then(async modal => {
+            if (!modal) {
+                return await handleTimeout('模态框');
+            }
+            return modal;
+        });
+    }
+
+    // 等待页面稳定（主容器DOM变化完成）
+    async function waitForPageStable(timeout = 5000) {
+        return new Promise(resolve => {
+            const mainContainer = findElement(selectors.mainContainer);
+            if (mainContainer) {
+                log('主容器已找到，页面初步稳定');
+                resolve(true);
+                return;
+            }
+
+            const observer = new MutationObserver((mutations, obs) => {
+                const mainContainer = findElement(selectors.mainContainer);
+                if (mainContainer) {
+                    log('主容器动态加载完成，页面稳定');
+                    obs.disconnect();
+                    resolve(true);
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            setTimeout(() => {
+                log(`主容器未在 ${timeout}ms 内稳定，继续执行`);
+                observer.disconnect();
+                resolve(false);
+            }, timeout);
+        });
+    }
+
+    // 点击元素
+    async function clickElement(selector, name, timeout = elementTimeout) {
+        const element = await waitForElement(selector, name, timeout, name === '元素1' && loopCount === 0);
+        if (!element) {
+            return false; // 超时已在 waitForElement 中处理
+        }
+        if(name=='元素1-2'){
+            if (element.textContent.includes('BABY')) {
+                log(`${name} 已找到，执行点击`);
+                element.click();
+                await getRandomDelay();
+                return true;
+            } else {
+                log(`${name} 不包含BABY文本，尝试点击替代按钮`);
+                let button = document.evaluate(
+                    '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[3]',
+                    document,
+                    null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE,
+                    null
+                ).singleNodeValue;
+                if(button){
+                    button.click();
+                    await getRandomDelay();
+                    return true;
+                }
+                return false;
+            }
+        }
+        log(`${name} 已找到，执行点击`);
+        element.click();
+        await getRandomDelay();
+        return true;
+    }
+
+    // 输入文本到输入框
+    async function inputText(selector, text) {
+        const input = await waitForElement(selector, '输入框');
+        if (!input) {
+            return false; // 超时已在 waitForElement 中处理
+        }
+        log(`为输入框输入文本: ${text}`);
+        input.focus();
+        input.value = text;
+        const events = [
+            new Event('input', { bubbles: true }),
+            new Event('change', { bubbles: true }),
+            new KeyboardEvent('keypress', { bubbles: true, key: 'Enter' }),
+            new Event('blur', { bubbles: true })
+        ];
+        events.forEach(event => input.dispatchEvent(event));
+        log(`输入后内容: ${input.value || '空'}`);
+        await getRandomDelay();
+        return true;
+    }
+
+    // 等待元素3目标文本
+    async function waitForElement3Text(selector, timeout = elementTimeout) {
+        return new Promise(resolve => {
+            const start = Date.now();
+            const checkInterval = setInterval(() => {
+                const element = findElement(selector);
+                if (!element) {
+                    log('元素3 未找到，继续等待...');
+                } else {
+                    const text = element.textContent.trim();
+                    log(`元素3 当前文本: ${text}`);
+                    if (text === 'Connect wallet' || text === 'Transfer ready') {
+                        log(`元素3 目标文本 ${text} 已找到，耗时 ${Date.now() - start}ms`);
+                        clearInterval(checkInterval);
+                        resolve(text);
+                    }
+                }
+
+                if (Date.now() - start > timeout) {
+                    log(`元素3 文本未在 ${timeout}ms 内达到目标状态，超时`);
+                    clearInterval(checkInterval);
+                    resolve(null);
+                }
+            }, 1000);
+        }).then(async text => {
+            if (!text) {
+                return await handleTimeout('元素3文本');
+            }
+            return text;
+        });
+    }
+
+    // 主流程
+    async function runAutomation() {
+        log(`开始第 ${loopCount + 1}/${maxLoops} 次循环`);
+
+        // 等待页面稳定
+        await waitForPageStable();
+
+        // const xPaths = [
+        //     '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[2]',
+        //     '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[5]',
+        //     '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[4]'
+        // ];
+
+        // const element2_1XPath = xPaths[Math.floor(Math.random() * 3)];
+
+        function selectButtonByXPath(xpaths) {
+            for (let xpath of xpaths) {
+                let button = document.evaluate(
+                    xpath,
+                    document,
+                    null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE,
+                    null
+                ).singleNodeValue;
+
+                // Check if the button exists and contains the "BABY" text
+                if (button && button.querySelector('span')?.textContent === 'BABY') {
+                    return xpath;
+                }
+            }
+            return null; // Return null if no matching button is found
+        }
+
+
+
+        const element2_1XPath ='/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[1]'
+
+        // 步骤1-5：点击元素1, 1-1, 1-2, 2, 2-1
+        const steps = [
+            { selector: selectors.element1, name: '元素1' },
+            { selector: selectors.element1_1, name: '元素1-1' },
+            { selector: selectors.element1_2, name: '元素1-2' },
+            { selector: selectors.element2, name: '元素2' },
+            { selector: { xpath: element2_1XPath }, name: '元素2-1' }
+        ];
+
+        for (const step of steps) {
+            if (!await clickElement(step.selector, step.name)) {
+                log(`循环因 ${step.name} 超时而终止`);
+                return false;
+            }
+        }
+
+        // 步骤6：输入随机金额
+        const amount = getRandomAmount();
+        if (!await inputText(selectors.inputBox, amount)) {
+            log('循环因输入框超时而终止');
+            return false;
+        }
+
+        // 步骤7：等待元素3目标文本状态
+        let element3Text = await waitForElement3Text(selectors.element3);
+        if (!element3Text) {
+            log('循环因元素3文本超时而终止');
+            return false;
+        }
+
+        if (element3Text === 'Connect wallet') {
+            log('元素3文本为 "Connect wallet"，执行连接流程');
+            if (!await clickElement(selectors.element3, '元素3')) return false;
+
+            // 等待模态框
+            const modal = await waitForModalContainer();
+            if (!modal) {
+                log('循环因模态框超时而终止');
+                return false;
+            }
+
+            // 尝试点击元素3-1（最多3次）
+            let clicked3_1 = false;
+            for (let attempt = 1; attempt <= 3; attempt++) {
+                log(`尝试点击元素3-1 (第 ${attempt}/3 次)`);
+                clicked3_1 = await clickElement(selectors.element3_1, '元素3-1', elementTimeout);
+                if (clicked3_1) break;
+                log(`元素3-1 未找到，等待2秒后重试...`);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+            if (!clicked3_1) {
+                log('循环因元素3-1 最终未找到而终止');
+                return false;
+            }
+
+            if (!await clickElement(selectors.element3_2, '元素3-2')) return false;
+
+            // 重新等待元素3目标文本
+            element3Text = await waitForElement3Text(selectors.element3);
+            if (!element3Text) {
+                log('循环因元素3文本（连接后）超时而终止');
+                return false;
+            }
+        }
+
+        if (element3Text === 'Transfer ready') {
+            log('元素3文本为 "Transfer ready"，执行转账');
+            if (!await clickElement(selectors.element3, '元素3')) return false;
+        } else {
+            log(`元素3文本不是 "Transfer ready" (${element3Text})，终止循环`);
+            return false;
+        }
+
+        // 步骤8-9：点击元素4, 5
+        if (!await clickElement(selectors.element4, '元素4')) return false;
+        if (!await clickElement(selectors.element5, '元素5')) return false;
+
+        log(`第 ${loopCount + 1}/${maxLoops} 次循环成功完成`);
+        return true;
+    }
+
+    // 执行循环
+    async function runLoop() {
+        if (loopCount >= maxLoops) {
+            log(`已完成 ${maxLoops} 次循环，脚本停止`);
+            window.open('app.nexus.xyz', '_self');
+        }
+
+        loopCount++;
+        const success = await runAutomation();
+        if (!success) {
+            log(`第 ${loopCount}/${maxLoops} 次循环失败，继续下一次循环`);
+        }
+
+        // 等待3秒后继续下一次循环
+        if (loopCount < maxLoops) {
+            log(`等待 ${loopInterval / 1000} 秒后开始下一次循环`);
+            await new Promise(resolve => setTimeout(resolve, loopInterval));
+            await runLoop();
+        }
+    }
+
+    // 页面加载后执行
+    window.addEventListener('load', async () => {
+        log('页面加载完成，开始执行自动化流程');
+
+        // 初始延迟3秒
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        // 开始循环
+        await runLoop();
     });
 })();
