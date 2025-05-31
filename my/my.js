@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.169
+// @version      47.170
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -787,17 +787,17 @@
         }
     }
 
-    // Set an interval to continuously scan and perform actions
-    setInterval(() => {
-        if (window.location.href.includes('accounts.google.com')) {
-            checkGoogleAccountPath();
-            clickContinueButton();
-            handlePasswordInput();
-        }
-    }, 5000); // Adjust the interval time as needed (2000ms = 2 seconds)
+
 
     document.addEventListener('DOMContentLoaded', () => {
-        //clickButton();
+        // Set an interval to continuously scan and perform actions
+        setInterval(() => {
+            if (window.location.href.includes('accounts.google.com')) {
+                checkGoogleAccountPath();
+                clickContinueButton();
+                handlePasswordInput();
+            }
+        }, 8000); // Adjust the interval time as needed (2000ms = 2 seconds)
     });
 
 })();
