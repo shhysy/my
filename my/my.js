@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.171
+// @version      47.172
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5704,7 +5704,8 @@
     const Confirm = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.trim().includes('Confirm')) {
+            if (button.textContent.trim().includes('Confirm') &&
+            !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(Confirm);
             }
@@ -7663,4 +7664,36 @@
         // 开始循环
         await runLoop();
     });
+})();
+
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'app.yala.org') {
+        return;
+    }
+
+    const Header_headerConnect__HqGFX = setInterval(() => {
+        const buttons = document.querySelectorAll('div.Header_headerConnect__HqGFX');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Connect Destination Chain Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Header_headerConnect__HqGFX)
+            }
+        });
+    }, 5000);
+
+    const MetaMask = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('MetaMask') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(MetaMask)
+            }
+        });
+    }, 5000);
+
+
+
 })();
