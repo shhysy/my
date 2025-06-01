@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.178
+// @version      47.179
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3490,7 +3490,7 @@
 
 
 (function() {
-    if(window.location.href === 'https://dashboard.union.build/achievements'){
+    if(window.location.href === 'https://dashboard.union.build/dashboard/achievements'){
         'use strict';
 
         // Function to wait for a specified time
