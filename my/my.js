@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.173
+// @version      47.174
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -655,7 +655,7 @@
                             }, 2000);
                         }
                     }
-                    const followButton = allElements.find(el =>['Follow', 'Authorize app', 'Repost', 'Post', 'Like','Izinkan aplikasi'].some(text => el.innerHTML.trim().includes(text)) && el.tagName === 'BUTTON');
+                    const followButton = allElements.find(el =>['Follow','Ikuti', 'Authorize app', 'Repost', 'Post', 'Like','Izinkan aplikasi'].some(text => el.innerHTML.trim().includes(text)) && el.tagName === 'BUTTON');
                     if (followButton) {
                         setTimeout(() => {
                             followButton.click();
@@ -664,7 +664,7 @@
                         }, 2000);
                     }
 
-                    const followInput = allElements.find(input =>input.tagName === 'INPUT' && input.type === 'submit' && ['Follow', 'Authorize app', 'Repost', 'Post', 'Like'].includes(input.value.trim()));
+                    const followInput = allElements.find(input =>input.tagName === 'INPUT' && input.type === 'submit' && ['Follow','Ikuti', 'Authorize app', 'Repost', 'Post', 'Like'].includes(input.value.trim()));
                     if (followButton) {
                         setTimeout(() => {
                             followButton.click();
