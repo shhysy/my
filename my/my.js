@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.181
+// @version      47.182
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7783,17 +7783,290 @@
         });
     }, 5000);
 
-    const MetaMask = setInterval(() => {
-        const buttons = document.querySelectorAll('button');
+    //MetaMask  /html/body/onboard-v2//section/div/div/div/div/div/div/div[2]/div[3]/div/div/div/div[3]/button
+    const waitForOnboard = setInterval(() => {
+        const onboardElement = document.querySelector("body > onboard-v2");
+        if (onboardElement && onboardElement.shadowRoot) {
+            const button = onboardElement.shadowRoot.querySelector("section > div > div > div > div > div > div > div.content.flex.flex-column.svelte-1qwmck3 > div.scroll-container.svelte-1qwmck3 > div > div > div > div:nth-child(3) > button");
+            if (button) {
+                console.log('MetaMask button found:', button.textContent.trim());
+                const clickEvent = new Event('click', { bubbles: true, cancelable: true });
+                button.dispatchEvent(clickEvent);
+                clearInterval(waitForOnboard);
+            }
+        }
+    }, 5000);
+
+    const checkin = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
         buttons.forEach(button => {
-            if (button.textContent.trim().includes('MetaMask') &&
+            if (button.textContent.trim().includes('Check in') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
-                clearInterval(MetaMask)
+                clearInterval(checkin);
             }
         });
     }, 5000);
 
+    const Okay = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Okay') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Okay);
+            }
+        });
+    }, 5000);
 
+    var checkaf = true
+    const checkTime = setInterval(() => {
+        // Query all <div> elements
+        const divs = document.querySelectorAll('div');
+        
+        divs.forEach(div => {
+            const textContent = div.textContent.trim();
+            // Regular expression to match time format (e.g., "23h 59m 43s")
+            const timeRegex = /^\d{1,2}h\s\d{1,2}m\s\d{1,2}s$/;
+            
+            if (timeRegex.test(textContent)) {
+                checkaf=false
+            }
+        });
+    }, 5000); // Check every 5 seconds
+    //Click Here
+
+    const ClickHere = setInterval(() => {
+        const buttons = document.querySelectorAll('div.berries_feedback_click__QY4Ar');
+        const fileInput = document.querySelector('input[name="file"]');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Click Here') &&
+                !button.hasAttribute('disabled') && !fileInput) {
+                button.click();
+            }
+        });
+    }, 5000);
+
+    // 功能 4：随机输入反馈到 <textarea>
+    const feedbackMessages = [
+        "The app is nice but could use a dark mode. Wallet connection is smooth. More tutorials would help new users earn berries faster.",
+        "I like earning berries, but the UI is confusing. Buttons are hard to find. Adding an earnings history tracker would improve the experience.",
+        "The app crashes sometimes. Wallet connection works well. I’d love leaderboards to make earning berries more fun. Notifications for events would be great.",
+        "Navigation is clunky. Simplify the menu and add tooltips. The berry system is fun but needs more transparency on rewards calculation.",
+        "Customer support should be in-app, not on Discord. Wallet connection is good. Add daily quests to make earning berries more engaging.",
+        "Loading times are slow. The UI needs to be more intuitive. A detailed earnings tracker would make the app much better for users.",
+        "I enjoy the app, but it needs more features like challenges. Wallet connection is fine. Fix crashes and add event notifications.",
+        "The app has potential but feels clunky. Simplify navigation and add tooltips. More transparency on berry rewards would be helpful.",
+        "Wallet connection is seamless, but the app needs better support. Add gamification like achievements to make earning berries more fun.",
+        "The design is great, but transaction processing is slow. Add dark mode and tutorials to help new users understand the app better.",
+        // Add more messages following this pattern...
+        "The app is fun, but the UI could be clearer. Add a dark mode and faster loading times for a better experience.",
+        "Wallet connection works well, but the app crashes often. Leaderboards and challenges would make earning berries more exciting.",
+        "I like the berry system, but navigation is hard. Simplify the layout and explain rewards better for new users.",
+        "The app needs in-app support instead of Discord. Add daily quests to make earning berries more interactive and fun.",
+        "Transaction speed is slow. A dark mode and more tutorials would make the app easier for new users to use.",
+        "The UI is confusing. Add tooltips and an earnings tracker. Wallet connection is good, but the app needs polishing.",
+        "Crashes are annoying. Wallet connection is smooth. Add notifications and leaderboards to make the app more engaging for users.",
+        "Navigation needs work. Simplify the menu. The berry system is great but needs clearer reward explanations.",
+        "Support should be in-app. Wallet connection is fine. Add achievements to make earning berries more rewarding.",
+        "The app looks good but loads slowly. Add dark mode and better tutorials for a smoother user experience.",
+        "Add dark mode. UI is confusing. Wallet connects well. Speed up loading. More tutorials needed. Explain rewards better. Navigation needs work. App crashes often.",
+        "Navigation is hard. Add dark mode. Wallet works fine. Include more tutorials. Fix app crashes. UI needs clarity. Speed up app. Support in-app.",
+        "App crashes often. Add leaderboards. Wallet connects great. Notify about events. Improve UI design. Add dark mode. Support in-app. Navigation is tricky.",
+        "UI needs dark mode. Navigation is confusing. Wallet works well. Add in-app support. Speed up loading. Explain rewards clearly. App needs stability.",
+        "Support in-app needed. Wallet connects smoothly. Add daily quests. UI is confusing. Fix slow loading. Navigation needs work. Add dark mode. App crashes.",
+        "Loading is slow. Add dark mode. Wallet works great. Include more tutorials. UI needs work. Explain rewards better. Navigation is hard. Fix crashes.",
+        "Add more challenges. Wallet connects fine. Fix app crashes. Notify about events. Navigation is confusing. UI needs dark mode. Speed up loading. Support in-app.",
+        "Navigation is tricky. Add tooltips. Wallet works well. Explain rewards better. Improve app stability. Add dark mode. UI is confusing. Speed up app.",
+        "Wallet connects smoothly. Add in-app support. Include fun achievements. UI is confusing. Speed up loading. Add dark mode. Navigation needs work. Fix crashes.",
+        "App feels slow. Add dark mode. Wallet connects well. Include user tutorials. Improve transaction speed. Navigation is hard. UI needs clarity. Support in-app.",
+        "Add multi-language support. Navigation is confusing. Wallet works fine. Explain rewards better. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add fun leaderboards. Notify about events. Improve UI stability. Add dark mode. Navigation is tricky. Support in-app.",
+        "App needs better graphics. Navigation is hard. Wallet connects well. Add reward transparency. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "Support in-app needed. Wallet connects fine. Add daily quests. UI needs dark mode. Fix app crashes. Navigation is confusing. Speed up loading. Explain rewards.",
+        "Transaction speed is slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes too often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app.",
+        "Add offline mode. Navigation is hard. Wallet connects fine. Add reward transparency. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add push notifications. Include fun challenges. Improve UI stability. Add dark mode. Navigation is confusing. Support in-app.",
+        "Berry system is unclear. Navigation is tricky. Add reward details. Wallet connects well. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "App needs in-app chat. Add daily quests. Wallet connects fine. Simplify navigation. Speed up loading. UI needs dark mode. App crashes often. Explain rewards.",
+        "Transactions are slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app.",
+        "Add offline mode. Navigation is hard. Wallet connects fine. Add reward transparency. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add push notifications. Include fun challenges. Improve UI stability. Add dark mode. Navigation is confusing. Support in-app.",
+        "Berry system is unclear. Navigation is tricky. Add reward details. Wallet connects well. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "App needs in-app chat. Add daily quests. Wallet connects fine. Simplify navigation. Speed up loading. UI needs dark mode. App crashes often. Explain rewards.",
+        "Transactions are slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app.",
+        "Add offline mode. Navigation is hard. Wallet connects fine. Add reward transparency. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add push notifications. Include fun challenges. Improve UI stability. Add dark mode. Navigation is confusing. Support in-app.",
+        "Berry system is unclear. Navigation is tricky. Add reward details. Wallet connects well. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "App needs in-app chat. Add daily quests. Wallet connects fine. Simplify navigation. Speed up loading. UI needs dark mode. App crashes often. Explain rewards.",
+        "Transactions are slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app.",
+        "Add offline mode. Navigation is hard. Wallet connects fine. Add reward transparency. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add push notifications. Include fun challenges. Improve UI stability. Add dark mode. Navigation is confusing. Support in-app.",
+        "Berry system is unclear. Navigation is tricky. Add reward details. Wallet connects well. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "App needs in-app chat. Add daily quests. Wallet connects fine. Simplify navigation. Speed up loading. UI needs dark mode. App crashes often. Explain rewards.",
+        "Transactions are slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app.",
+        "Add offline mode. Navigation is hard. Wallet connects fine. Add reward transparency. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add push notifications. Include fun challenges. Improve UI stability. Add dark mode. Navigation is confusing. Support in-app.",
+        "Berry system is unclear. Navigation is tricky. Add reward details. Wallet connects well. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "App needs in-app chat. Add daily quests. Wallet connects fine. Simplify navigation. Speed up loading. UI needs dark mode. App crashes often. Explain rewards.",
+        "Transactions are slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app.",
+        "Add offline mode. Navigation is hard. Wallet connects fine. Add reward transparency. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add push notifications. Include fun challenges. Improve UI stability. Add dark mode. Navigation is confusing. Support in-app.",
+        "Berry system is unclear. Navigation is tricky. Add reward details. Wallet connects well. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "App needs in-app chat. Add daily quests. Wallet connects fine. Simplify navigation. Speed up loading. UI needs dark mode. App crashes often. Explain rewards.",
+        "Transactions are slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app.",
+        "Add offline mode. Navigation is hard. Wallet connects fine. Add reward transparency. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add push notifications. Include fun challenges. Improve UI stability. Add dark mode. Navigation is confusing. Support in-app.",
+        "Berry system is unclear. Navigation is tricky. Add reward details. Wallet connects well. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "App needs in-app chat. Add daily quests. Wallet connects fine. Simplify navigation. Speed up loading. UI needs dark mode. App crashes often. Explain rewards.",
+        "Transactions are slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app.",
+        "Add offline mode. Navigation is hard. Wallet connects fine. Add reward transparency. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add push notifications. Include fun challenges. Improve UI stability. Add dark mode. Navigation is confusing. Support in-app.",
+        "Berry system is unclear. Navigation is tricky. Add reward details. Wallet connects well. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "App needs in-app chat. Add daily quests. Wallet connects fine. Simplify navigation. Speed up loading. UI needs dark mode. App crashes often. Explain rewards.",
+        "Transactions are slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app.",
+        "Add offline mode. Navigation is hard. Wallet connects fine. Add reward transparency. Speed up loading. UI needs dark mode. App crashes often. Fix stability.",
+        "Wallet connects great. App crashes often. Add push notifications. Include fun challenges. Improve UI stability. Add dark mode. Navigation is confusing. Support in-app.",
+        "Berry system is unclear. Navigation is tricky. Add reward details. Wallet connects well. Speed up app. Include dark mode. UI needs work. Fix crashes.",
+        "App needs in-app chat. Add daily quests. Wallet connects fine. Simplify navigation. Speed up loading. UI needs dark mode. App crashes often. Explain rewards.",
+        "Transactions are slow. Add dark mode. Wallet works great. Include user tutorials. UI needs clarity. Navigation is hard. Fix app crashes. Support in-app.",
+        "UI is not intuitive. Add tooltips. Wallet connects well. Fix frequent crashes. Improve user experience. Add dark mode. Speed up loading. Navigation needs work.",
+        "App crashes often. Wallet connects fine. Add event notifications. Include fun leaderboards. Navigation is hard. UI needs dark mode. Support in-app. Explain rewards.",
+        "Navigation is very confusing. Simplify menu design. Add reward clarity. Wallet works well. Improve app stability. Add dark mode. UI needs work. Fix crashes.",
+        "App needs in-app support. Wallet connects great. Add fun achievements. UI is confusing. Speed up loading. Navigation needs work. Add dark mode. Fix crashes.",
+        "App loads slowly. Add dark mode. Wallet connects well. Include better tutorials. UI needs clarity. Explain rewards better. Navigation is tricky. Support in-app."
+    ];
+    
+    const inputFeedback = setInterval(() => {
+        const textarea = document.querySelector('textarea.FeedbackModal_rowEmailDiv__BUfTT');
+        if (textarea && textarea.value === '') {
+            // 随机选择一个反馈消息
+            const randomFeedback = feedbackMessages[Math.floor(Math.random() * feedbackMessages.length)];
+            
+            // 设置 textarea 的值
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+            nativeInputValueSetter.call(textarea, randomFeedback);
+
+            // 模拟用户输入事件
+            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            textarea.dispatchEvent(new Event('change', { bubbles: true }));
+            textarea.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+            textarea.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: 'Enter' }));
+
+            console.log('Feedback input set to:', randomFeedback);
+            clearInterval(inputFeedback);
+        }
+    }, 3000);
+
+    const ossBaseUrl = 'https://testdao.oss-cn-beijing.aliyuncs.com/yala/';
+        const imageNames = [
+        '1.png',
+        '2.png',
+        '3.jpg',
+        '5.png',
+        'ad.jpg',
+        'download.jpg',
+        'ef).jpg',
+        'OIP (1).jpg',
+        'OIP.jpg',
+        'sd.jpg'
+        ];
+
+        // 函数：从指定 URL 获取图片并设置到 input
+        function fetchAndSetImage(url, fileName, fileInput) {
+        console.log(`正在获取图片: ${url}`); // 调试 URL
+        fetch(url)
+            .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP 错误: ${response.status} ${response.statusText}`);
+            }
+            return response.blob();
+            })
+            .then(blob => {
+            // 根据文件名确定 MIME 类型
+            const mimeType = fileName.endsWith('.png') ? 'image/png' : 'image/jpeg';
+            
+            // 创建 File 对象
+            const file = new File([blob], fileName, { type: mimeType });
+
+            // 设置到 input，模拟用户选择文件
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+
+            // 触发 change 事件，让页面处理文件（如果有自动上传逻辑）
+            const event = new Event('change', { bubbles: true });
+            fileInput.dispatchEvent(event);
+
+            console.log(`图片 ${fileName} 已成功设置到 input`);
+            })
+            .catch(error => {
+            console.error(`获取图片 ${fileName} 失败:`, error);
+            });
+        }
+
+        // 随机选择一个图片名称
+        const randomFileName = imageNames[Math.floor(Math.random() * imageNames.length)];
+        const ossSignedUrl = ossBaseUrl + encodeURIComponent(randomFileName);
+
+        // 使用定时器扫描 input 元素
+        let hasRun = false; // 确保只运行一次
+        const timer = setInterval(() => {
+            const fileInput = document.querySelector('input[name="file"]');
+            
+            if (fileInput && !hasRun) {
+                console.log('找到输入框，开始设置图片');
+                hasRun = true; // 标记为已运行
+                fetchAndSetImage(ossSignedUrl, randomFileName, fileInput);
+                clearInterval(timer); // 清除定时器
+            } else if (!fileInput) {
+                console.log('未找到 name="file" 的输入框，继续扫描...');
+            }
+        }, 1000); // 每 100ms 检查一次
 
 })();
