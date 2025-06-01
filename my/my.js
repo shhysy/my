@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.191
+// @version      47.192
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7847,70 +7847,73 @@
     }, 5000);
 
     var i = 0;
-    let hasRun = false; // 确保只运行一次
-
     const ossBaseUrl = 'https://testdao.oss-cn-beijing.aliyuncs.com/yala/';
     const imageNames = [
-    '1.png',
-    '2.png',
-    '3.jpg',
-    '5.png',
-    'ad.jpg',
-    'download.jpg',
-    'ef).jpg',
-    'OIP (1).jpg',
-    'OIP.jpg',
-    'sd.jpg'
+        '1.png',
+        '2.png',
+        '3.jpg',
+        '5.png',
+        'ad.jpg',
+        'download.jpg',
+        'ef).jpg',
+        'OIP (1).jpg',
+        'OIP.jpg',
+        'sd.jpg'
     ];
-
+    
     // 函数：从指定 URL 获取图片并设置到 input
     function fetchAndSetImage(url, fileName, fileInput) {
-    console.log(`正在获取图片: ${url}`); // 调试 URL
-    fetch(url)
-        .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP 错误: ${response.status} ${response.statusText}`);
-        }
-        return response.blob();
-        })
-        .then(blob => {
-        // 根据文件名确定 MIME 类型
-        const mimeType = fileName.endsWith('.png') ? 'image/png' : 'image/jpeg';
-        
-        // 创建 File 对象
-        const file = new File([blob], fileName, { type: mimeType });
-
-        // 设置到 input，模拟用户选择文件
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-        fileInput.files = dataTransfer.files;
-
-        // 触发 change 事件，让页面处理文件（如果有自动上传逻辑）
-        const event = new Event('change', { bubbles: true });
-        fileInput.dispatchEvent(event);
-
-        console.log(`图片 ${fileName} 已成功设置到 input`);
-        })
-        .catch(error => {
-        console.error(`获取图片 ${fileName} 失败:`, error);
-        });
+        console.log(`正在获取图片: ${url}`); // 调试 URL
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP 错误: ${response.status} ${response.statusText}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // 根据文件名确定 MIME 类型
+                const mimeType = fileName.endsWith('.png') ? 'image/png' : 'image/jpeg';
+                
+                // 创建 File 对象
+                const file = new File([blob], fileName, { type: mimeType });
+    
+                // 设置到 input，模拟用户选择文件
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+    
+                // 触发 change 事件，让页面处理文件（如果有自动上传逻辑）
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+    
+                console.log(`图片 ${fileName} 已成功设置到 input`);
+            })
+            .catch(error => {
+                console.error(`获取图片 ${fileName} 失败:`, error);
+            });
     }
-
+    
     // 随机选择一个图片名称
     const randomFileName = imageNames[Math.floor(Math.random() * imageNames.length)];
     const ossSignedUrl = ossBaseUrl + encodeURIComponent(randomFileName);
+    
     const timer = setInterval(() => {
         const fileInput = document.querySelector('input[name="file"]');
         
-        if (fileInput && !hasRun) {
-            hasRun=true
-            console.log('找到输入框，开始设置图片');
-            fetchAndSetImage(ossSignedUrl, randomFileName, fileInput);
-        } else if (!fileInput) {
+        if (fileInput) {
+            if (fileInput.files.length > 0) {
+                console.log('输入框已有文件，停止设置图片');
+                clearInterval(timer); // 停止定时器
+            } else {
+                console.log('输入框为空，开始设置图片');
+                fetchAndSetImage(ossSignedUrl, randomFileName, fileInput);
+                clearInterval(timer); // 成功设置后停止定时器
+            }
+        } else {
             console.log('未找到 name="file" 的输入框，继续扫描...');
         }
-    }, 1000); // 每 100ms 检查一次
-
+    }, 1000); // 每 1000ms 检查一次
     //<button class="Button_custom-button__mvkKX Button_custom-button-default__quUhc custom-button-default Button_custom-button-block__K2S1r Btn_btn__T_2Cn FeedbackModal_btnOkay__kZE9y"><span>Send Feedback</span></button>
     const Send = setInterval(() => {
         const input = document.querySelector('input.FeedbackModal_rowEmailDiv__BUfTT');
@@ -7922,10 +7925,11 @@
                     if (button.textContent.trim().includes('Send Feedback') &&
                         !button.hasAttribute('disabled')) {
                         button.click();
-                        hasRun=false
                         i++;
                     }
                 });
+            }else if(i>5){
+                window.location.href='https://www.360.com/'
             }
         }
     }, 10000);
