@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.197
+// @version      47.198
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7798,7 +7798,7 @@
         const onboardElement = document.querySelector("body > onboard-v2");
         if (onboardElement && onboardElement.shadowRoot) {
             const button = onboardElement.shadowRoot.querySelector("section > div > div > div > div > div > div > div.content.flex.flex-column.svelte-1qwmck3 > div.scroll-container.svelte-1qwmck3 > div > div > div > div:nth-child(3) > button");
-            if (button) {
+            if (button && button.textContent.trim().includes('OKX Wallet')) {
                 console.log('MetaMask button found:', button.textContent.trim());
                 const clickEvent = new Event('click', { bubbles: true, cancelable: true });
                 button.dispatchEvent(clickEvent);
