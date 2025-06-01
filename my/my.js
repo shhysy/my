@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.193
+// @version      47.194
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1013,7 +1013,7 @@
                 buttons.forEach(button => {
                     if (button.textContent.trim().includes('Claimed')) {
                         button.click();
-                        window.location.href = 'http://www.360.com';
+                        window.location.href = 'https://app.yala.org/berries';
                         clearInterval(Claimed);
                     }
                 });
