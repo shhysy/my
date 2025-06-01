@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.186
+// @version      47.187
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7849,9 +7849,9 @@
     var i = 0;
     //<button class="Button_custom-button__mvkKX Button_custom-button-default__quUhc custom-button-default Button_custom-button-block__K2S1r Btn_btn__T_2Cn FeedbackModal_btnOkay__kZE9y"><span>Send Feedback</span></button>
     const Send = setInterval(() => {
-        const buttons = document.querySelectorAll('div.berries_feedback_click__QY4Ar');
+        const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.trim().includes('Send') &&
+            if (button.textContent.trim().includes('Send Feedback') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 i++;
