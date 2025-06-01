@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.177
+// @version      47.178
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -908,117 +908,119 @@
     if (window.location.hostname != 'app.olab.xyz') {
         return
     }
-
-    const OKXWallet = setInterval(() => {
-        const buttons = document.querySelectorAll('button.chakra-button.css-1azazgw');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('OKX Wallet') &&
-                !button.hasAttribute('disabled')) {
-                button.click();
-                clearInterval(OKXWallet);
-            }
-        });
-    }, 5000);
-
-
-    var falg =true;
-    const yes = setInterval(() => {
-        if (window.location.href.includes('https://app.olab.xyz/home')) {
-            const buttons = document.querySelectorAll('div.css-1uu81qi');
+    //等待页面加载完成运行
+    document.addEventListener('DOMContentLoaded', () => {
+        const OKXWallet = setInterval(() => {
+            const buttons = document.querySelectorAll('button.chakra-button.css-1azazgw');
             buttons.forEach(button => {
-                if (button.textContent.trim().includes('Yes') &&
-                    !button.hasAttribute('disabled') && falg) {
-                    falg = false;
+                if (button.textContent.trim().includes('OKX Wallet') &&
+                    !button.hasAttribute('disabled')) {
                     button.click();
-                    clearInterval(yes);
+                    clearInterval(OKXWallet);
                 }
             });
-        }
-    }, 5000);
-    const inputInterval = setInterval(() => {
-        const input = document.querySelector('input.chakra-input.css-1qqw0he');
-        if (input) {
-            if (input.value==0.0000) {
-                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-                nativeInputValueSetter.call(input, 2.0000);
-    
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
-                input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
-            }else if(input.value==2.0000){
-                //<button type="button" class="chakra-button css-1lkk2aw">Buy Yes 14.5¢</button>
-                const buttons = document.querySelectorAll('button.chakra-button.css-1lkk2aw');
+        }, 5000);
+
+
+        var falg =true;
+        const yes = setInterval(() => {
+            if (window.location.href.includes('https://app.olab.xyz/home')) {
+                const buttons = document.querySelectorAll('div.css-1uu81qi');
                 buttons.forEach(button => {
-                    if (button.textContent.trim().includes('Buy Yes 14.5¢')) {
+                    if (button.textContent.trim().includes('Yes') &&
+                        !button.hasAttribute('disabled') && falg) {
+                        falg = false;
                         button.click();
-                        clearInterval(inputInterval);
+                        clearInterval(yes);
                     }
                 });
-                
             }
-        }
-    }, 3000);
+        }, 5000);
+        const inputInterval = setInterval(() => {
+            const input = document.querySelector('input.chakra-input.css-1qqw0he');
+            if (input) {
+                if (input.value==0.0000) {
+                    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                    nativeInputValueSetter.call(input, 2.0000);
+        
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                    input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
+                    input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
+                }else if(input.value==2.0000){
+                    //<button type="button" class="chakra-button css-1lkk2aw">Buy Yes 14.5¢</button>
+                    const buttons = document.querySelectorAll('button.chakra-button.css-1lkk2aw');
+                    buttons.forEach(button => {
+                        if (button.textContent.trim().includes('Buy Yes 14.5¢')) {
+                            button.click();
+                            clearInterval(inputInterval);
+                        }
+                    });
+                    
+                }
+            }
+        }, 3000);
 
-    var falgsuss = true;
-    //<p class="chakra-text css-1nb4kym">Order placed successfully</p>
-    const success = setInterval(() => {
-        const buttons = document.querySelectorAll('p');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('Order placed successfully') &&
-                !button.hasAttribute('disabled')) {
-                //<div class="css-11v1nyq">Done</div>
-                const buttons = document.querySelectorAll('div.css-11v1nyq');
+        var falgsuss = true;
+        //<p class="chakra-text css-1nb4kym">Order placed successfully</p>
+        const success = setInterval(() => {
+            const buttons = document.querySelectorAll('p');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Order placed successfully') &&
+                    !button.hasAttribute('disabled')) {
+                    //<div class="css-11v1nyq">Done</div>
+                    const buttons = document.querySelectorAll('div.css-11v1nyq');
+                    buttons.forEach(button => {
+                        if (button.textContent.trim().includes('Done')) {
+                            button.click();
+                            falgsuss = false;
+
+                        }
+                    });
+
+                }
+            });
+        }, 2000);
+
+        //<p class="chakra-text styles_headerTag__R2kzp css-41ah37">Tasks</p>
+        const Tasks = setInterval(() => {
+            const buttons = document.querySelectorAll('p');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Tasks') && !falgsuss) {
+                    button.click();
+                    clearInterval(Tasks);
+                }
+            });
+        }, 5000);
+
+        //https://app.olab.xyz/taskCenter   <button type="button" class="chakra-button css-1415ewd">Claim</button>
+        const taskCenter = setInterval(() => {
+            if (window.location.href.includes('https://app.olab.xyz/taskCenter')) {
+                const buttons = document.querySelectorAll('button.chakra-button.css-1415ewd');
                 buttons.forEach(button => {
-                    if (button.textContent.trim().includes('Done')) {
+                    if (button.textContent.trim().includes('Claim')) {
                         button.click();
-                        falgsuss = false;
-
+                        clearInterval(taskCenter);
                     }
                 });
-
             }
-        });
-    }, 2000);
+        }, 5000);
 
-    //<p class="chakra-text styles_headerTag__R2kzp css-41ah37">Tasks</p>
-    const Tasks = setInterval(() => {
-        const buttons = document.querySelectorAll('p');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('Tasks') && !falgsuss) {
-                button.click();
-                clearInterval(Tasks);
+        //https://app.olab.xyz/taskCenter   <button type="button" class="chakra-button css-1415ewd">Claim</button>
+        const Claimed = setInterval(() => {
+            if (window.location.href.includes('https://app.olab.xyz/taskCenter')) {
+                const buttons = document.querySelectorAll('button.chakra-button.css-7pcd1h');
+                buttons.forEach(button => {
+                    if (button.textContent.trim().includes('Claimed')) {
+                        button.click();
+                        window.location.href = 'http://www.360.com';
+                        clearInterval(Claimed);
+                    }
+                });
             }
-        });
-    }, 5000);
+        }, 5000);
 
-    //https://app.olab.xyz/taskCenter   <button type="button" class="chakra-button css-1415ewd">Claim</button>
-    const taskCenter = setInterval(() => {
-        if (window.location.href.includes('https://app.olab.xyz/taskCenter')) {
-            const buttons = document.querySelectorAll('button.chakra-button.css-1415ewd');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('Claim')) {
-                    button.click();
-                    clearInterval(taskCenter);
-                }
-            });
-        }
-    }, 5000);
-
-    //https://app.olab.xyz/taskCenter   <button type="button" class="chakra-button css-1415ewd">Claim</button>
-    const Claimed = setInterval(() => {
-        if (window.location.href.includes('https://app.olab.xyz/taskCenter')) {
-            const buttons = document.querySelectorAll('button.chakra-button.css-7pcd1h');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('Claimed')) {
-                    button.click();
-                    window.location.href = 'http://www.360.com';
-                    clearInterval(Claimed);
-                }
-            });
-        }
-    }, 5000);
-
+    });
 
 })();
 
