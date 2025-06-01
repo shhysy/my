@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.172
+// @version      47.173
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5295,7 +5295,7 @@
     const MetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.includes('MetaMask') &&
+            if (button.textContent.includes('OKX Wallet') &&
                 !button.hasAttribute('disabled')) {
                 console.log('找到可点击的按钮，正在点击...');
                 button.click();
@@ -5719,7 +5719,7 @@
             const buttons = root.querySelectorAll ? root.querySelectorAll('button') : [];
         for (const button of buttons) {
                 if (
-                    button.textContent.includes('MetaMask') &&
+                    button.textContent.includes('OKX Wallet') &&
                     !button.hasAttribute('disabled')
                 ) {
                     button.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -5887,7 +5887,7 @@
     const SelectMetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.includes('MetaMask') &&
+            if (button.textContent.includes('OKX Wallet') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(SelectMetaMask);
@@ -5990,7 +5990,7 @@
     const SelectMetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('div');
         buttons.forEach(button => {
-            if (button.textContent.includes('MetaMask') &&
+            if (button.textContent.includes('OKX Wallet') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(SelectMetaMask);
@@ -6096,7 +6096,7 @@
     const SelectMetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.includes('MetaMask') &&
+            if (button.textContent.includes('OKX Wallet') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(SelectMetaMask);
@@ -6277,7 +6277,7 @@
     const SelectMetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.includes('MetaMask') &&
+            if (button.textContent.includes('OKX Wallet') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(SelectMetaMask);
@@ -6413,7 +6413,7 @@
     const SelectMetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.includes('MetaMask') &&
+            if (button.textContent.includes('OKX Wallet') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(SelectMetaMask);
