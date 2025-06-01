@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.194
+// @version      47.195
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7771,6 +7771,16 @@
     if (window.location.hostname !== 'app.yala.org') {
         return;
     }
+    var confalg = false;
+    setInterval(() => {
+        const buttons = document.querySelectorAll('div.Header_headerConnect__HqGFX');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Connect Destination Chain Wallet') &&
+                !button.hasAttribute('disabled')) {
+                confalg=true;
+            }
+        });
+    }, 5000);
 
     const Header_headerConnect__HqGFX = setInterval(() => {
         const buttons = document.querySelectorAll('div.Header_headerConnect__HqGFX');
@@ -7801,7 +7811,7 @@
         const buttons = document.querySelectorAll('div');
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Check in') &&
-                !button.hasAttribute('disabled')) {
+                !button.hasAttribute('disabled') && !confalg) {
                 button.click();
                 clearInterval(checkin);
             }
