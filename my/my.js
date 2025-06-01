@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.188
+// @version      47.189
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7849,13 +7849,14 @@
 
 
     var i = 0;
-    hasRun = true; // 标记为已运行
+            // 使用定时器扫描 input 元素
+    let hasRun = false; // 确保只运行一次
     //<button class="Button_custom-button__mvkKX Button_custom-button-default__quUhc custom-button-default Button_custom-button-block__K2S1r Btn_btn__T_2Cn FeedbackModal_btnOkay__kZE9y"><span>Send Feedback</span></button>
     const Send = setInterval(() => {
         const input = document.querySelector('input.FeedbackModal_rowEmailDiv__BUfTT');
         const textarea = document.querySelector('textarea.FeedbackModal_rowEmailDiv__BUfTT');
         if (input && textarea && !hasRun) {
-            if (textarea.value != '' && input.value != '') {
+            if (textarea.value != '' && input.value != '' && i<=5) {
                 const buttons = document.querySelectorAll('button');
                 buttons.forEach(button => {
                     if (button.textContent.trim().includes('Send Feedback') &&
@@ -7943,9 +7944,6 @@
         // 随机选择一个图片名称
         const randomFileName = imageNames[Math.floor(Math.random() * imageNames.length)];
         const ossSignedUrl = ossBaseUrl + encodeURIComponent(randomFileName);
-
-        // 使用定时器扫描 input 元素
-        let hasRun = false; // 确保只运行一次
         const timer = setInterval(() => {
             const fileInput = document.querySelector('input[name="file"]');
             
