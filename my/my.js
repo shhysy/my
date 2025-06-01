@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.180
+// @version      47.181
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -959,7 +959,7 @@
                     
                 }
             }
-        }, 3000);
+        }, 5000);
 
         var falgsuss = true;
         //<p class="chakra-text css-1nb4kym">Order placed successfully</p>
