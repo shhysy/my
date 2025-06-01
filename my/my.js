@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.195
+// @version      47.196
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7915,7 +7915,7 @@
     
     // Handle form submission
     const sendFeedbackInterval = setInterval(() => {
-        if (submissionCount >= 5) {
+        if (submissionCount >= 8) {
             console.log('Reached 5 submissions, redirecting...');
             window.location.href = 'https://www.360.com/';
             clearInterval(sendFeedbackInterval);
