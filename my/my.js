@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.174
+// @version      47.175
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2180,7 +2180,7 @@
 
         if (!hasButtons && !s){
              setTimeout(() => {
-                window.location.href = 'https://points.reddio.com/task?invite_code=2IFX9';
+                window.location.href = 'https://app.olab.xyz';
             }, 15000);
             console.log("All buttons have disappeared. Stopping script.");
             clearInterval(this);
