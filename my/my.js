@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.199
+// @version      47.200
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3146,345 +3146,345 @@
     }
 })();
 
-(function() {
-    'use strict';
+// (function() {
+//     'use strict';
 
-    if (window.location.hostname !== 'app.union.build') {
-        return;
-    }
+//     if (window.location.hostname !== 'app.union.build') {
+//         return;
+//     }
 
-    const min = 0.00001;
-    const max = 0.00005;
-    let rond = 3
-    var bt1 = ""
-    var bt3 = ""
-    var Holesky = "Holesky"
-    var count= 0;
-    var previousCount = 0
-    let BY = 1
+//     const min = 0.00001;
+//     const max = 0.00005;
+//     let rond = 3
+//     var bt1 = ""
+//     var bt3 = ""
+//     var Holesky = "Holesky"
+//     var count= 0;
+//     var previousCount = 0
+//     let BY = 1
 
-    setInterval(() => {
-        const receiverInput = document.querySelector('input.border-red-500');
-        const walletButtons = document.querySelectorAll('button.text-xs.text-muted-foreground');
-        let targetButton = null;
+//     setInterval(() => {
+//         const receiverInput = document.querySelector('input.border-red-500');
+//         const walletButtons = document.querySelectorAll('button.text-xs.text-muted-foreground');
+//         let targetButton = null;
 
-        walletButtons.forEach(button => {
-            if (button.textContent.trim() === "Use connected wallet") {
-                targetButton = button;
-            }
-        });
+//         walletButtons.forEach(button => {
+//             if (button.textContent.trim() === "Use connected wallet") {
+//                 targetButton = button;
+//             }
+//         });
 
-        if (receiverInput && targetButton && receiverInput.value.trim() === "") {
-            targetButton.click();
-        }
-    }, 5000);
-
-
-    setInterval(() => {
-        if (count === previousCount) {
-            const explorerButton = document.querySelector('a[href="/explorer"]');
-            if (explorerButton) {
-                explorerButton.click();
-                previousCount = count;
-            }
-        }else{
-            previousCount = count;
-        }
-    }, 300000);
-
-    // 等待页面加载完成
-    window.addEventListener('load', function() {
-        // 设置定时器每10秒执行一次
-        const checkInterval = setInterval(function() {
-            const inputField = document.getElementById('amount');
-
-            if (inputField) {
-                // 检查输入框是否为空 (trim to remove any whitespace)
-                if (inputField.value.trim() === '') {
-                    const randomValue = (Math.random() * (max - min) + min).toFixed(4);
-                    inputField.value = randomValue; // 要输入的值
-
-                    // 触发 input 事件
-                    inputField.dispatchEvent(new Event('input', { bubbles: true }));
-
-                    console.log('Input value set to 0.001');
-                }
-            } else {
-                console.log('Input field not found.');
-            }
-        }, 5000); // 每10秒检查一次
+//         if (receiverInput && targetButton && receiverInput.value.trim() === "") {
+//             targetButton.click();
+//         }
+//     }, 5000);
 
 
-        setInterval(() => {
-            const receiverInput = document.getElementById('receiver');
-            const button = document.querySelector('button.text-xs.text-muted-foreground');
+//     setInterval(() => {
+//         if (count === previousCount) {
+//             const explorerButton = document.querySelector('a[href="/explorer"]');
+//             if (explorerButton) {
+//                 explorerButton.click();
+//                 previousCount = count;
+//             }
+//         }else{
+//             previousCount = count;
+//         }
+//     }, 300000);
 
-            if (receiverInput && button) {
-                if (receiverInput.value.trim() === "") {
-                    button.click();
-                    console.log("输入框为空，已点击按钮");
-                } else {
-                    console.log("输入框有内容");
-                }
-            } else {
-                console.log("元素未找到，继续查找");
-            }
-        }, 10000); // 每10秒检查一次
+//     // 等待页面加载完成
+//     window.addEventListener('load', function() {
+//         // 设置定时器每10秒执行一次
+//         const checkInterval = setInterval(function() {
+//             const inputField = document.getElementById('amount');
 
-        function getRandomInt(min, max) {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
+//             if (inputField) {
+//                 // 检查输入框是否为空 (trim to remove any whitespace)
+//                 if (inputField.value.trim() === '') {
+//                     const randomValue = (Math.random() * (max - min) + min).toFixed(4);
+//                     inputField.value = randomValue; // 要输入的值
 
-        var targetText="Amount exceeds balance"
-        function compareText() {
-            const spans = document.getElementsByTagName("span");
-            let results = [];
+//                     // 触发 input 事件
+//                     inputField.dispatchEvent(new Event('input', { bubbles: true }));
 
-            for (let span of spans) {
-                const spanText = span.textContent.trim();
-                const hasMatchingClasses = span.classList.contains("text-red-500") && span.classList.contains("text-xs");
-
-                if (hasMatchingClasses) {
-                    if (spanText === targetText) {
-                        return true;
-                    }
-                }
-            }
-        }
+//                     console.log('Input value set to 0.001');
+//                 }
+//             } else {
+//                 console.log('Input field not found.');
+//             }
+//         }, 5000); // 每10秒检查一次
 
 
-        setInterval(() => {
-            let successCount = parseInt(sessionStorage.getItem('successfulSwaps') || '0');
-            if (!sessionStorage.getItem('successfulSwaps') || sessionStorage.getItem('successfulSwaps')==null) {
-                sessionStorage.setItem('successfulSwaps', '0');
-            }
+//         setInterval(() => {
+//             const receiverInput = document.getElementById('receiver');
+//             const button = document.querySelector('button.text-xs.text-muted-foreground');
 
-            const unionButton = document.evaluate('/html/body/div[1]/div[2]/div/div/div/div/div/div/div[2]/div[1]/div[1]/button[1]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            const sepoliaButton = document.evaluate('/html/body/div[1]/div[2]/div/div/div/div/div/div/div[2]/div[1]/div[1]/button[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            const unoButton = document.evaluate('/html/body/div[1]/div[2]/div/div/div/div/div/div/div[2]/div[1]/div[2]/button', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+//             if (receiverInput && button) {
+//                 if (receiverInput.value.trim() === "") {
+//                     button.click();
+//                     console.log("输入框为空，已点击按钮");
+//                 } else {
+//                     console.log("输入框有内容");
+//                 }
+//             } else {
+//                 console.log("元素未找到，继续查找");
+//             }
+//         }, 10000); // 每10秒检查一次
 
-            var unionText = '';
-            var sepoliaText ='';
-            var unoText ='';
+//         function getRandomInt(min, max) {
+//             min = Math.ceil(min);
+//             max = Math.floor(max);
+//             return Math.floor(Math.random() * (max - min + 1)) + min;
+//         }
 
-            if(unionButton){
-                unionText = unionButton.textContent.trim();
-            }
-            if(sepoliaButton){
-                sepoliaText = sepoliaButton.textContent.trim();
-            }
-            if(unoButton){
-                unoText = unoButton.textContent.trim();
-            }
-            if(unionButton && sepoliaButton && unoButton && successCount>1){
-                if(rond==1){
-                    bt1 ="Stargaze Testnet"
-                    bt3 ="STARS"
-                }else if(rond==3){
-                    bt1 ="Babylon Testnet";
-                    bt3 ="BBN";
-                    BY++;
+//         var targetText="Amount exceeds balance"
+//         function compareText() {
+//             const spans = document.getElementsByTagName("span");
+//             let results = [];
 
-                }
-                else if(rond==2){
-                    bt1 ="Union Testnet 9"
-                    bt3 ="UNO"
-                }else if(rond==4){
-                    bt1 ="Sepolia"
-                    bt3 ="USDC"
-                }
+//             for (let span of spans) {
+//                 const spanText = span.textContent.trim();
+//                 const hasMatchingClasses = span.classList.contains("text-red-500") && span.classList.contains("text-xs");
 
-                if (unionText !== bt1) {
-                    unionButton.click(); // 点击 Union Testnet 9 按钮
-                    console.log("点击 Union Testnet 9 按钮");
-                    // 获取所有按钮
-                    const test9 = setInterval(() => {
-                        const buttons = document.querySelectorAll('button.px-2.py-1.w-full');
-
-                        // 遍历按钮并检查文本
-                        buttons.forEach(button => {
-                            const buttonText = button.querySelector('div.text-nowrap') ? button.querySelector('div.text-nowrap').textContent.trim() : '';
-                            if (buttonText === bt1) {
-                                button.click();
-                                clearInterval(test9)
-
-                            }
-                        });
-                    },5000);
-                } else if (unoText !== bt3 && unionText == bt1 || compareText()) {
-                    unoButton.click();
-                    const UNO = setInterval(() => {
-                        const buttons = document.querySelectorAll('button.px-2.py-1.w-full');
-                        buttons.forEach(button => {
-                            const buttonText = button.textContent || button.innerText;
-                            if (buttonText.includes(bt3)) {
-                                button.click();
-                                clearInterval(UNO)
-                            }
-                        });
-                    }, 5000);
-
-                } else if (unoText == bt3 && unionText == bt1 && sepoliaText == Holesky || sepoliaText ==bt1) {
-                    sepoliaButton.click();
-                    const test9 = setInterval(() => {
-                        const buttons = document.querySelectorAll('button.px-2.py-1.w-full');
-                        buttons.forEach(button => {
-                            const buttonText = button.querySelector('div.text-nowrap') ? button.querySelector('div.text-nowrap').textContent.trim() : '';
-                            if(rond==1){
-                                let randomInt = getRandomInt(3, 3);
-                                if (buttonText === "Stride Testnet" && randomInt==1) {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }else if (buttonText === "Union Testnet 9" && randomInt==2) {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }else if (buttonText === "Babylon Testnet" && randomInt==3) {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }
-                            }else if(rond==2){
-                                let randomInt = getRandomInt(2, 3);
-                                if (buttonText === "Stride Testnet" && randomInt==1) {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }else if (buttonText === "Union Testnet 9" && randomInt==2) {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }else if (buttonText === "Stargaze Testnet" && randomInt==3) {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }
-                            }else if(rond==3){
-                                let randomInt = getRandomInt(2, 3);
-                                if (buttonText === "Stride Testnet" && randomInt==1) {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }else if (buttonText === "Babylon Testnet" && randomInt==2) {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }else if (buttonText === "Stargaze Testnet" && randomInt==3) {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }
-                            }else if(rond==4){
-                                if (buttonText === "Union Testnet 9") {
-                                    button.click();
-                                    clearInterval(test9)
-
-                                }
-                            }
-                        });
-                    }, 5000);
-                }else if(unionButton && sepoliaButton && unoButton && unoText == bt3 && unionText == bt1 && sepoliaText != Holesky){
-                    const unoButton = document.evaluate('/html/body/div[1]/div[2]/div/div/div/div/div/div/div[2]/div[1]/div[2]/button', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                    const balanceSpan = document.querySelector('span.text-primary');
-                    if (balanceSpan && unoButton && unoButton.textContent.trim()!='USDC') {
-                        const balance = parseFloat(balanceSpan.textContent);
-                        if (balance < 0.1) {
-                            const explorerButton = document.querySelector('a[href="/faucet"]');
-                            if (explorerButton) explorerButton.click();
-                        }else{
-                            const confirmTransferButton = document.querySelector('button.bg-primary.text-primary-foreground');
-                            if (confirmTransferButton && !confirmTransferButton.disabled && confirmTransferButton.offsetWidth > 0 && confirmTransferButton.offsetHeight > 0) {
-                                confirmTransferButton.click();
-                            }
-                        }
-                    }else{
-                        const confirmTransferButton = document.querySelector('button.bg-primary.text-primary-foreground');
-                        if (confirmTransferButton && !confirmTransferButton.disabled && confirmTransferButton.offsetWidth > 0 && confirmTransferButton.offsetHeight > 0) {
-                            confirmTransferButton.click();
-                        }
-                    }
-                }
-            }else{
-                if(!unionButton && !sepoliaButton && !unoButton && successCount>1){
-                    const confirmTransferButton = document.querySelector('button.bg-primary.text-primary-foreground');
-                    if (confirmTransferButton && !confirmTransferButton.disabled && confirmTransferButton.offsetWidth > 0 && confirmTransferButton.offsetHeight > 0) {
-                        confirmTransferButton.click();
-                    }
-                }
-            }
-        }, 10000);
-
-        function checkUrlAndClick() {
-            const transferButton = document.querySelector('a[href="/transfer"]');
-            if (transferButton) {
-                transferButton.click();
-
-                rond = getRandomInt(3, 3);
-
-                /**
-                if (BY>5) {
-                    rond = getRandomInt(1, 2);
-                }
-                if (BY<=5) {
-                    rond = getRandomInt(3, 3);
-                }
-                **/
-
-                console.log(rond)
-            }
-        }
-
-        function checkBackgroundColor() {
-            const explorerButton = document.querySelector('a[href="/explorer"]');
-            if (explorerButton) {
-                const computedStyle = window.getComputedStyle(explorerButton);
-                const backgroundColor = computedStyle.backgroundColor;
-                const targetColor = 'rgb(0, 0, 0)';
-                if (backgroundColor === targetColor) {
-                    checkUrlAndClick();
-                    count++;
-                }
-            }
-        }
+//                 if (hasMatchingClasses) {
+//                     if (spanText === targetText) {
+//                         return true;
+//                     }
+//                 }
+//             }
+//         }
 
 
-        if (location.href.includes('app.union.build')) {
-            try {
-                setInterval(() => {
-                    const targetDiv = document.querySelector('div[slot="transfer"]');
-                    if (targetDiv && !targetDiv.innerHTML.trim() && targetDiv.children.length === 0) {
-                        const explorerButton = document.querySelector('a[href="/faucet"]');
-                        if (explorerButton) {
-                            explorerButton.click();
-                        }
-                    }
-                }, 78000);
+//         setInterval(() => {
+//             let successCount = parseInt(sessionStorage.getItem('successfulSwaps') || '0');
+//             if (!sessionStorage.getItem('successfulSwaps') || sessionStorage.getItem('successfulSwaps')==null) {
+//                 sessionStorage.setItem('successfulSwaps', '0');
+//             }
 
-                setInterval(() => {
-                    const explorerButton = document.querySelector('a[href="/faucet"]');
-                    if (explorerButton) {
-                        const computedStyle = window.getComputedStyle(explorerButton);
-                        const backgroundColor = computedStyle.backgroundColor;
-                        const targetColor = 'rgb(0, 0, 0)';
-                        if (backgroundColor === targetColor) {
-                            const explorerButton = document.querySelector('a[href="/explorer"]');
-                            if (explorerButton) {
-                                explorerButton.click();
-                            }
-                        }
-                    }
-                }, 100000);
+//             const unionButton = document.evaluate('/html/body/div[1]/div[2]/div/div/div/div/div/div/div[2]/div[1]/div[1]/button[1]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+//             const sepoliaButton = document.evaluate('/html/body/div[1]/div[2]/div/div/div/div/div/div/div[2]/div[1]/div[1]/button[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+//             const unoButton = document.evaluate('/html/body/div[1]/div[2]/div/div/div/div/div/div/div[2]/div[1]/div[2]/button', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
-                setInterval(checkBackgroundColor, 5000);
-            } catch (error) {
-                console.error("An error occurred:", error);
-            }
-        }
-    });
-})();
+//             var unionText = '';
+//             var sepoliaText ='';
+//             var unoText ='';
+
+//             if(unionButton){
+//                 unionText = unionButton.textContent.trim();
+//             }
+//             if(sepoliaButton){
+//                 sepoliaText = sepoliaButton.textContent.trim();
+//             }
+//             if(unoButton){
+//                 unoText = unoButton.textContent.trim();
+//             }
+//             if(unionButton && sepoliaButton && unoButton && successCount>1){
+//                 if(rond==1){
+//                     bt1 ="Stargaze Testnet"
+//                     bt3 ="STARS"
+//                 }else if(rond==3){
+//                     bt1 ="Babylon Testnet";
+//                     bt3 ="BBN";
+//                     BY++;
+
+//                 }
+//                 else if(rond==2){
+//                     bt1 ="Union Testnet 9"
+//                     bt3 ="UNO"
+//                 }else if(rond==4){
+//                     bt1 ="Sepolia"
+//                     bt3 ="USDC"
+//                 }
+
+//                 if (unionText !== bt1) {
+//                     unionButton.click(); // 点击 Union Testnet 9 按钮
+//                     console.log("点击 Union Testnet 9 按钮");
+//                     // 获取所有按钮
+//                     const test9 = setInterval(() => {
+//                         const buttons = document.querySelectorAll('button.px-2.py-1.w-full');
+
+//                         // 遍历按钮并检查文本
+//                         buttons.forEach(button => {
+//                             const buttonText = button.querySelector('div.text-nowrap') ? button.querySelector('div.text-nowrap').textContent.trim() : '';
+//                             if (buttonText === bt1) {
+//                                 button.click();
+//                                 clearInterval(test9)
+
+//                             }
+//                         });
+//                     },5000);
+//                 } else if (unoText !== bt3 && unionText == bt1 || compareText()) {
+//                     unoButton.click();
+//                     const UNO = setInterval(() => {
+//                         const buttons = document.querySelectorAll('button.px-2.py-1.w-full');
+//                         buttons.forEach(button => {
+//                             const buttonText = button.textContent || button.innerText;
+//                             if (buttonText.includes(bt3)) {
+//                                 button.click();
+//                                 clearInterval(UNO)
+//                             }
+//                         });
+//                     }, 5000);
+
+//                 } else if (unoText == bt3 && unionText == bt1 && sepoliaText == Holesky || sepoliaText ==bt1) {
+//                     sepoliaButton.click();
+//                     const test9 = setInterval(() => {
+//                         const buttons = document.querySelectorAll('button.px-2.py-1.w-full');
+//                         buttons.forEach(button => {
+//                             const buttonText = button.querySelector('div.text-nowrap') ? button.querySelector('div.text-nowrap').textContent.trim() : '';
+//                             if(rond==1){
+//                                 let randomInt = getRandomInt(3, 3);
+//                                 if (buttonText === "Stride Testnet" && randomInt==1) {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }else if (buttonText === "Union Testnet 9" && randomInt==2) {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }else if (buttonText === "Babylon Testnet" && randomInt==3) {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }
+//                             }else if(rond==2){
+//                                 let randomInt = getRandomInt(2, 3);
+//                                 if (buttonText === "Stride Testnet" && randomInt==1) {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }else if (buttonText === "Union Testnet 9" && randomInt==2) {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }else if (buttonText === "Stargaze Testnet" && randomInt==3) {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }
+//                             }else if(rond==3){
+//                                 let randomInt = getRandomInt(2, 3);
+//                                 if (buttonText === "Stride Testnet" && randomInt==1) {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }else if (buttonText === "Babylon Testnet" && randomInt==2) {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }else if (buttonText === "Stargaze Testnet" && randomInt==3) {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }
+//                             }else if(rond==4){
+//                                 if (buttonText === "Union Testnet 9") {
+//                                     button.click();
+//                                     clearInterval(test9)
+
+//                                 }
+//                             }
+//                         });
+//                     }, 5000);
+//                 }else if(unionButton && sepoliaButton && unoButton && unoText == bt3 && unionText == bt1 && sepoliaText != Holesky){
+//                     const unoButton = document.evaluate('/html/body/div[1]/div[2]/div/div/div/div/div/div/div[2]/div[1]/div[2]/button', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+//                     const balanceSpan = document.querySelector('span.text-primary');
+//                     if (balanceSpan && unoButton && unoButton.textContent.trim()!='USDC') {
+//                         const balance = parseFloat(balanceSpan.textContent);
+//                         if (balance < 0.1) {
+//                             const explorerButton = document.querySelector('a[href="/faucet"]');
+//                             if (explorerButton) explorerButton.click();
+//                         }else{
+//                             const confirmTransferButton = document.querySelector('button.bg-primary.text-primary-foreground');
+//                             if (confirmTransferButton && !confirmTransferButton.disabled && confirmTransferButton.offsetWidth > 0 && confirmTransferButton.offsetHeight > 0) {
+//                                 confirmTransferButton.click();
+//                             }
+//                         }
+//                     }else{
+//                         const confirmTransferButton = document.querySelector('button.bg-primary.text-primary-foreground');
+//                         if (confirmTransferButton && !confirmTransferButton.disabled && confirmTransferButton.offsetWidth > 0 && confirmTransferButton.offsetHeight > 0) {
+//                             confirmTransferButton.click();
+//                         }
+//                     }
+//                 }
+//             }else{
+//                 if(!unionButton && !sepoliaButton && !unoButton && successCount>1){
+//                     const confirmTransferButton = document.querySelector('button.bg-primary.text-primary-foreground');
+//                     if (confirmTransferButton && !confirmTransferButton.disabled && confirmTransferButton.offsetWidth > 0 && confirmTransferButton.offsetHeight > 0) {
+//                         confirmTransferButton.click();
+//                     }
+//                 }
+//             }
+//         }, 10000);
+
+//         function checkUrlAndClick() {
+//             const transferButton = document.querySelector('a[href="/transfer"]');
+//             if (transferButton) {
+//                 transferButton.click();
+
+//                 rond = getRandomInt(3, 3);
+
+//                 /**
+//                 if (BY>5) {
+//                     rond = getRandomInt(1, 2);
+//                 }
+//                 if (BY<=5) {
+//                     rond = getRandomInt(3, 3);
+//                 }
+//                 **/
+
+//                 console.log(rond)
+//             }
+//         }
+
+//         function checkBackgroundColor() {
+//             const explorerButton = document.querySelector('a[href="/explorer"]');
+//             if (explorerButton) {
+//                 const computedStyle = window.getComputedStyle(explorerButton);
+//                 const backgroundColor = computedStyle.backgroundColor;
+//                 const targetColor = 'rgb(0, 0, 0)';
+//                 if (backgroundColor === targetColor) {
+//                     checkUrlAndClick();
+//                     count++;
+//                 }
+//             }
+//         }
+
+
+//         if (location.href.includes('app.union.build')) {
+//             try {
+//                 setInterval(() => {
+//                     const targetDiv = document.querySelector('div[slot="transfer"]');
+//                     if (targetDiv && !targetDiv.innerHTML.trim() && targetDiv.children.length === 0) {
+//                         const explorerButton = document.querySelector('a[href="/faucet"]');
+//                         if (explorerButton) {
+//                             explorerButton.click();
+//                         }
+//                     }
+//                 }, 78000);
+
+//                 setInterval(() => {
+//                     const explorerButton = document.querySelector('a[href="/faucet"]');
+//                     if (explorerButton) {
+//                         const computedStyle = window.getComputedStyle(explorerButton);
+//                         const backgroundColor = computedStyle.backgroundColor;
+//                         const targetColor = 'rgb(0, 0, 0)';
+//                         if (backgroundColor === targetColor) {
+//                             const explorerButton = document.querySelector('a[href="/explorer"]');
+//                             if (explorerButton) {
+//                                 explorerButton.click();
+//                             }
+//                         }
+//                     }
+//                 }, 100000);
+
+//                 setInterval(checkBackgroundColor, 5000);
+//             } catch (error) {
+//                 console.error("An error occurred:", error);
+//             }
+//         }
+//     });
+// })();
 
 
 
@@ -7322,7 +7322,7 @@
 
 (function() {
     'use strict';
-    if (window.location.hostname !== 'dashboard.union.build') {
+    if (window.location.hostname !== 'app.union.build') {
         return;
     }
     const MetaMask = setInterval(() => {
