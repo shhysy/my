@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.201
+// @version      47.202
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6845,7 +6845,7 @@
     //         }
     //     });
     // }, 5000);
-    
+
     const MetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
@@ -7063,14 +7063,26 @@
             } else {
                 log(`${name} 不包含BABY文本，尝试点击替代按钮`);
                 let button = document.evaluate(
+                    '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[2]',
+                    document,
+                    null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE,
+                    null
+                ).singleNodeValue;
+                if(button && button.textContent.includes('BABY')){
+                    button.click();
+                    await getRandomDelay();
+                    return true;
+                }
+                let button3 = document.evaluate(
                     '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[3]',
                     document,
                     null,
                     XPathResult.FIRST_ORDERED_NODE_TYPE,
                     null
                 ).singleNodeValue;
-                if(button){
-                    button.click();
+                if(button3 && button3.textContent.includes('BABY')){
+                    button3.click();
                     await getRandomDelay();
                     return true;
                 }
