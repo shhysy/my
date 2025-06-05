@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.202
+// @version      47.203
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2303,7 +2303,7 @@
 
         if (!hasButtons && !s){
              setTimeout(() => {
-                window.location.href = 'https://app.olab.xyz/home';
+                window.location.href = 'https://app.olab.xyz/login';
             }, 15000);
             console.log("All buttons have disappeared. Stopping script.");
             clearInterval(this);
@@ -6834,17 +6834,6 @@
         return;
     }
 
-    //<button type="button" class="inline-flex cursor-pointer items-center gap-2 justify-center rounded-md text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-sky-600 border-sky-600 border text-white hover:bg-sky-700 dark:bg-white dark:border-zinc-100 dark:hover:bg-zinc-100 dark:text-black font-bold focus-visible:ring-accent h-9 px-4 py-2 flex-1">Connect wallet<!----></button>
-    // const Connectwallet = setInterval(() => {
-    //     const buttons = document.querySelectorAll('button');
-    //     buttons.forEach(button => {
-    //         if (button.textContent.trim().includes('Connect wallet') &&
-    //             !button.hasAttribute('disabled')) {
-    //             button.click();
-    //             clearInterval(Connectwallet);
-    //         }
-    //     });
-    // }, 5000);
 
     const MetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
