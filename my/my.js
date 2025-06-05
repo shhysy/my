@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.204
+// @version      47.205
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1695,6 +1695,17 @@
     setTimeout(() => {
         window.location.href = 'https://cryptopond.xyz/modelfactory/detail/306250?tab=4';
     }, 30000);
+
+    const OKXWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('连接钱包') || button.textContent.trim().includes('Connect')  &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(OKXWallet);
+            }
+        });
+    }, 5000);
 
     // 处理按钮的函数
     function handleButton() {
