@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.206
+// @version      47.207
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3519,7 +3519,7 @@
     }, 5000);
 
     setInterval(() => {
-        window.location.reload(); // 刷新当前页面
+        window.location.href='https://share.coresky.com/6cjyur/tasks-rewards'
     }, 80000); // 80秒 = 80000毫秒
 })();
 
