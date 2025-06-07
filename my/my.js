@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.207
+// @version      47.208
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -925,7 +925,7 @@
         var falg =true;
         const yes = setInterval(() => {
             if (window.location.href.includes('https://app.olab.xyz/home')) {
-                const buttons = document.querySelectorAll('div.css-2zik1l');
+                const buttons = document.querySelectorAll('div');
                 buttons.forEach(button => {
                     if (button.textContent.trim().includes('Yes') &&
                         !button.hasAttribute('disabled') && falg) {
