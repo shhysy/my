@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.215
+// @version      47.216
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3151,6 +3151,17 @@
         window.location.href=url
     }, 300000);
 
+
+    const Your = setInterval(() => {
+        const buttons = document.querySelectorAll('h1');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Your On-Chain Reputation. Scored in Real Time. Powered by AI.') &&
+                !button.hasAttribute('disabled')) {
+                window.location.href='https://dashboard.monadscore.xyz/dashboard'
+                clearInterval(Your);
+            }
+        });
+    }, 5000);
 
     // setInterval(() => {
     //     if(window.location.href='https://monadscore.xyz'){
