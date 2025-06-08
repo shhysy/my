@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.210
+// @version      47.211
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3151,6 +3151,12 @@
         window.location.href=url
     }, 300000);
 
+
+    setInterval(() => {
+        if(window.location.href='https://monadscore.xyz/'){
+            window.location.href='https://dashboard.monadscore.xyz/dashboard'
+        }
+    }, 3000);
 
     const clame =setInterval(() => {
         const buttons = document.querySelectorAll('button');
