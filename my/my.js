@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.216
+// @version      47.217
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4331,64 +4331,30 @@
                         button.click();
                         await new Promise(resolve => setTimeout(resolve, 5000));
                     }
+                    
+                    await new Promise(resolve => setTimeout(resolve, 20000));
 
-                    // 检查对话是否超时（1分钟）
-                    const startTime = Date.now();
-                    let hasResponse = false;
+                    // const responseComplete = document.querySelector('.text-gray-500.text-xs');
+                    // if (responseComplete) {
+                    //     console.log('对话响应完成');
+                    //     await new Promise(resolve => setTimeout(resolve, 5000));
+                    // }
 
-                    while (Date.now() - startTime < 120000) {
-                        // 检查是否有响应完成
-                        const responseComplete = document.querySelector('.text-gray-500.text-xs');
-                        if (responseComplete) {
-                            hasResponse = true;
-                            console.log('对话响应完成');
-                             await new Promise(resolve => setTimeout(resolve, 5000));
-                            break;
-                        }
-                        // 点击停止按钮
-                        const stopButton = await waitForElement('button.bg-destructive', 10000);
-                        if (!stopButton) {
-                            console.log('停止按钮不存在');
-                             await new Promise(resolve => setTimeout(resolve, 5000));
-                            break;
-                        }
+                    const stopButton = await waitForElement('button.bg-destructive', 10000);
+                    if (!stopButton) {
                         await new Promise(resolve => setTimeout(resolve, 3000));
-                    }
-
-                    // 点击停止按钮
-                    /**
-                    const stopButton = await waitForElement('button.bg-destructive', 20000);
-                    if (stopButton) {
-                        stopButton.click();
-                        console.log('成功点击停止按钮');
-                        await new Promise(resolve => setTimeout(resolve, 6000));
-                        //确保按钮消失
-                        const stopButtonDisappear = await waitForElement('button.bg-destructive', 20000);
-                        if (!stopButtonDisappear) {
-                            console.log('停止按钮已消失');
+                        const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
+                        if (newChatButton) {
+                            newChatButton.closest('button').click();
+                            console.log('成功点击新对话按钮');
+                            await new Promise(resolve => setTimeout(resolve, 5000));
                         } else {
-                            console.log('停止按钮未消失');
-                            //点击停止按钮
-                            stopButton.click();
-                            console.log('成功点击停止按钮');
-                            await new Promise(resolve => setTimeout(resolve, 6000));
+                            console.log('未找到新对话按钮');
                         }
-                    } else {
-                        console.log('未找到停止按钮或等待超时');
+                    }else{
+                        await new Promise(resolve => setTimeout(resolve, 20000));
                     }
-                    */
-                    const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
-                    if (newChatButton) {
-                        newChatButton.closest('button').click();
-                        console.log('成功点击新对话按钮');
-                        await new Promise(resolve => setTimeout(resolve, 5000));
-                    } else {
-                        console.log('未找到新对话按钮');
-                    }
-
                 } else {
-
-
                     const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
                     if (newChatButton) {
                         newChatButton.closest('button').click();
@@ -4397,97 +4363,6 @@
                     } else {
                         console.log('未找到新对话按钮');
                     }
-
-                    // //检测聊天按钮
-                    // let allButtonsExist = false;
-                    // for (const xpath of conversationXPaths) {
-                    //     const element = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                    //     if (element) {
-                    //         allButtonsExist = true;
-                    //         break;
-                    //     }
-                    // }
-                    // await new Promise(resolve => setTimeout(resolve, 5000));
-
-                    // if (!allButtonsExist) {
-                    //     // 点击Discover按钮
-                    //     const discoverButton = await waitForElement('button[type="button"] svg path[d*="M12 5.75L12.6107"]', 20000);
-                    //     if (discoverButton) {
-                    //         discoverButton.closest('button').click();
-                    //         console.log('成功点击Discover按钮');
-                    //         await new Promise(resolve => setTimeout(resolve, 3000));
-
-                    //         // 定义目标Agent名称列表
-                    //         const targetAgents = [
-                    //             'Token Analytics Agent',
-                    //             'Caila Agent',
-                    //             'Market Sentiment Radar',
-                    //             'Meme Coin Radar'
-                    //         ];
-
-                    //         // 查找并点击目标Agent卡片
-                    //         let agentFound = false;
-                    //         for (const agentName of targetAgents) {
-                    //             // 查找所有可能的Agent卡片
-                    //             const agentCards = document.querySelectorAll('div.cursor-pointer.group.p-3.sm\\:p-4.rounded-xl');
-                    //             for (const card of agentCards) {
-                    //                 const agentTitle = card.querySelector('h3');
-                    //                 if (agentTitle && agentTitle.textContent.includes(agentName)) {
-                    //                     card.click();
-                    //                     console.log(`成功点击 ${agentName} 卡片`);
-                    //                     agentFound = true;
-                    //                     await new Promise(resolve => setTimeout(resolve, 2000));
-                    //                     break;
-                    //                 }
-                    //             }
-                    //             if (agentFound) break;
-                    //         }
-
-                    //         if (!agentFound) {
-                    //             console.log('未找到目标Agent卡片，尝试重新点击Discover按钮');
-                    //             // 尝试重新点击Discover按钮
-                    //             const retryDiscoverButton = await waitForElement('button[type="button"] svg path[d*="M12 5.75L12.6107"]', 20000);
-                    //             if (retryDiscoverButton) {
-                    //                 retryDiscoverButton.closest('button').click();
-                    //                 console.log('重新点击Discover按钮');
-                    //                 await new Promise(resolve => setTimeout(resolve, 3000));
-
-                    //                 // 再次尝试查找目标Agent卡片
-                    //                 for (const agentName of targetAgents) {
-                    //                     const retryAgentCards = document.querySelectorAll('div.cursor-pointer.group.p-3.sm\\:p-4.rounded-xl');
-                    //                     for (const card of retryAgentCards) {
-                    //                         const agentTitle = card.querySelector('h3');
-                    //                         if (agentTitle && agentTitle.textContent.includes(agentName)) {
-                    //                             card.click();
-                    //                             console.log(`成功点击 ${agentName} 卡片`);
-                    //                             agentFound = true;
-                    //                             await new Promise(resolve => setTimeout(resolve, 2000));
-                    //                             break;
-                    //                         }
-                    //                     }
-                    //                     if (agentFound) break;
-                    //                 }
-                    //             }
-                    //         }
-
-                    //         if (!agentFound) {
-                    //             console.log('仍然未找到目标Agent卡片，跳过当前对话');
-                    //             continue;
-                    //         }
-
-                    //         // 点击Try Agent按钮
-                    //         const tryAgentButton = await waitForElement('div[class*="relative z-10"] p.absolute', 20000);
-                    //         if (tryAgentButton) {
-                    //             tryAgentButton.click();
-                    //             console.log('成功点击Try Agent按钮');
-                    //             await new Promise(resolve => setTimeout(resolve, 2000));
-                    //         } else {
-                    //             console.log('未找到Try Agent按钮或等待超时');
-                    //         }
-                    //     } else {
-                    //         console.log('未找到Discover按钮或等待超时');
-                    //     }
-                    //}
                 }
 
                 // 移动到下一个对话按钮
@@ -4500,7 +4375,7 @@
         }
 
         console.log(`总共完成了 ${successCount} 次对话`);
-        return successCount >= 10;
+        return successCount >= targetSuccessCount;
     }
 
     // 执行签到
