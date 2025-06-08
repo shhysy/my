@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.214
+// @version      47.215
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4176,7 +4176,7 @@
     }
 
     // Initialize the timer to check and click every 3 seconds
-    setInterval(clickOpenButton, 3000);
+    // setInterval(clickOpenButton, 3000);
 
     // Initial attempt after DOM loads
     window.addEventListener('load', clickOpenButton);
@@ -4382,7 +4382,7 @@
                     if (newChatButton) {
                         newChatButton.closest('button').click();
                         console.log('成功点击新对话按钮');
-                        await new Promise(resolve => setTimeout(resolve, 5000));
+                        await new Promise(resolve => setTimeout(resolve, 15000));
                     } else {
                         console.log('未找到新对话按钮');
                     }
