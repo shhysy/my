@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.213
+// @version      47.214
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3152,11 +3152,11 @@
     }, 300000);
 
 
-    setInterval(() => {
-        if(window.location.href='https://monadscore.xyz'){
-            window.location.href='https://dashboard.monadscore.xyz/dashboard'
-        }
-    }, 30000);
+    // setInterval(() => {
+    //     if(window.location.href='https://monadscore.xyz'){
+    //         window.location.href='https://dashboard.monadscore.xyz/dashboard'
+    //     }
+    // }, 30000);
 
     const clame =setInterval(() => {
         const buttons = document.querySelectorAll('button');
@@ -4301,7 +4301,7 @@
                 while (!element && Date.now() - startTime < 20000) {
                     element = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                     if (!element) {
-                        await new Promise(resolve => setTimeout(resolve, 1000)); // 每500ms检查一次
+                        await new Promise(resolve => setTimeout(resolve, 5000)); // 每500ms检查一次
                     }
                 }
 
