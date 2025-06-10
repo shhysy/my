@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.220
+// @version      47.221
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3132,7 +3132,7 @@
 
 (function() {
     'use strict';
-    if (window.location.hostname !== 'dashboard.monadscore.xyz' || window.location.hostname !== 'https://monadscore.xyz' ) {
+    if (window.location.hostname !== 'dashboard.monadscore.xyz') {
         return;
     }
     
