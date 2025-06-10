@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.219
+// @version      47.220
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3604,7 +3604,7 @@
         buttons.forEach(button => {
             if (button.textContent.includes('Claim') &&
                 button.hasAttribute('disabled')) {
-                window.location.href = 'https://cess.network/deshareairdrop/';
+                window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
                 clearInterval(notClaim);
             }
         });
