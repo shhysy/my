@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.223
+// @version      47.224
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6753,20 +6753,25 @@
         });
     }, 5000);
 
+    var falg = false;
+
     const Keplr = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
             if (button.textContent.trim().includes('keplr') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
+                falg=true
                 clearInterval(Keplr);
             }
         });
     }, 5000);
 
+
+
     const modalButton = setInterval(() => {
         const button = document.evaluate('//*[@id="modal-container"]/div/div/div/button', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-        if (button && !button.hasAttribute('disabled')) {
+        if (button && !button.hasAttribute('disabled') && falg) {
             button.click();
             clearInterval(modalButton);
         }
