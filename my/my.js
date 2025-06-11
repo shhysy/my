@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.222
+// @version      47.223
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6756,7 +6756,7 @@
     const Keplr = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.trim().includes('Keplr') &&
+            if (button.textContent.trim().includes('keplr') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(Keplr);
@@ -6764,6 +6764,27 @@
         });
     }, 5000);
 
+    const modalButton = setInterval(() => {
+        const button = document.evaluate('//*[@id="modal-container"]/div/div/div/button', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (button && !button.hasAttribute('disabled')) {
+            button.click();
+            clearInterval(modalButton);
+        }
+    }, 15000);
+
+    const H3 = setInterval(() => {
+        const buttons = document.querySelectorAll('h3');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Transfer Successful!') &&
+                !button.hasAttribute('disabled')) {
+                window.location.href=='https://www.360.com/'
+                clearInterval(H3);
+            }
+        });
+    }, 5000);
+
+
+    
     const wallet = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
