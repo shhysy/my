@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.224
+// @version      47.225
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6778,11 +6778,12 @@
     }, 15000);
 
     const H3 = setInterval(() => {
-        const buttons = document.querySelectorAll('h3');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('Transfer Successful!') &&
-                !button.hasAttribute('disabled')) {
-                window.location.href=='https://www.360.com/'
+        const headings = document.querySelectorAll('h3');
+        headings.forEach(heading => {
+            if (heading.textContent.trim().includes('Transfer Successful!')) {
+                // Redirect to the specified URL
+                window.location.href = 'https://www.360.com/';
+                // Clear the interval to stop checking
                 clearInterval(H3);
             }
         });
