@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.225
+// @version      47.226
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -893,7 +893,8 @@
 
             // 检查是否找到了元素
             if (element) {
-                window.location.href = "https://www.magicnewton.com/portal/rewards";
+                //window.location.href = "https://www.magicnewton.com/portal/rewards";
+                window.location.href = "https://sosovalue.com/ja/exp";
                 // 停止定时器
                 clearInterval(this);
             }
