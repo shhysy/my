@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.227
+// @version      47.228
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6783,7 +6783,7 @@
         headings.forEach(heading => {
             if (heading.textContent.trim().includes('Transfer Successful!')) {
                 // Redirect to the specified URL
-                //window.location.href = 'https://www.360.com/';
+                window.location.href = 'https://www.360.com/';
                 // Clear the interval to stop checking
                 clearInterval(H3);
             }
