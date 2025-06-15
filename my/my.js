@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.230
+// @version      47.231
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -56,7 +56,7 @@
     var falg = true;
     var isCompleted = GM_getValue('isCompleted', false);
 
-    if (window.location.hostname == 'klokapp.ai' || window.location.hostname == 'accounts.google.com' || window.location.hostname == 'x.com' || window.location.hostname == 'app.galxe.com') {
+    if (window.location.hostname == 'klokapp.ai' || window.location.hostname == 'accounts.google.com' || window.location.hostname == 'x.com' || window.location.hostname == 'app.galxe.com' || window.location.hostname == 'web.telegram.org' || document.title == 'Banana Rush') {
         return;
     }
 
