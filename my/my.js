@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.231
+// @version      47.232
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1960,24 +1960,45 @@
         const delay = Math.floor(Math.random() * (max - min + 1)) + min;
         return new Promise(resolve => setTimeout(resolve, delay));
     }
-
     async function fillInForm() {
-        GM_xmlhttpRequest({
-            method: 'GET',
-            url: 'http://apiai.natapp1.cc/',
-            onload: function(response) {
-                if (response.status === 200) {
-                    const { title, description, modelIdeaOverview } = JSON.parse(response.responseText).data;
-                    inputText('input[placeholder="Enter the title of your model idea"]', title);
-                    inputText('textarea[placeholder="Enter a brief summary of your model idea"]', description);
-                    Textt(modelIdeaOverview);
-                }
-            },
-            onerror: function(error) {
-                console.error('API request failed:', error);
+        // 生成随机字符串的函数
+        function generateRandomString(length = 10) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
             }
-        });
+            return result;
+        }
+
+        // 生成不同长度的随机字符串
+        const title = generateRandomString(15);  // 标题使用15个字符
+        const description = generateRandomString(50);  // 描述使用50个字符
+        const modelIdeaOverview = generateRandomString(100);  // 概述使用100个字符
+
+        // 填充表单
+        await inputText('input[placeholder="Enter the title of your model idea"]', title);
+        await inputText('textarea[placeholder="Enter a brief summary of your model idea"]', description);
+        await Textt(modelIdeaOverview);
     }
+
+    // async function fillInForm() {
+    //     GM_xmlhttpRequest({
+    //         method: 'GET',
+    //         url: 'http://apiai.natapp1.cc/',
+    //         onload: function(response) {
+    //             if (response.status === 200) {
+    //                 const { title, description, modelIdeaOverview } = JSON.parse(response.responseText).data;
+    //                 inputText('input[placeholder="Enter the title of your model idea"]', title);
+    //                 inputText('textarea[placeholder="Enter a brief summary of your model idea"]', description);
+    //                 Textt(modelIdeaOverview);
+    //             }
+    //         },
+    //         onerror: function(error) {
+    //             console.error('API request failed:', error);
+    //         }
+    //     });
+    // }
 })();
 
 //rediotest
