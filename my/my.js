@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.239
+// @version      47.240
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -5416,6 +5416,8 @@
         });
     }, 3000);
 
+
+
     //选择小狐狸
     const SelectMetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
@@ -5480,6 +5482,18 @@
             clearInterval(StakeButton);
         }
     }, 3000);
+
+    const Stake = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Stake') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Stake);
+            }
+        });
+    }, 5000);
+    
 
     const StakeButton1 = setInterval(() => {
         const xpath = '/html/body/div/div[1]/main/section[1]/div[1]/div[4]/div[2]/div/button';
