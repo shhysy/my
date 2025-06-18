@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.238
+// @version      47.239
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7472,3 +7472,22 @@
 
 
 })();
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'quest.somnia.network') {
+        return;
+    }
+
+    const OKXWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Connect Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(OKXWallet);
+            }
+        });
+    }, 5000);
+
+})();
+
