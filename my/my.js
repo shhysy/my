@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.251
+// @version      47.252
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6557,7 +6557,7 @@
 
     const clickInterval1 = setInterval(() => {
         // Select the target div element
-        const targetDiv = document.querySelector('div.map-point.map-animal[data-v-2499a22b][data-v-b0d2019a]');
+        const targetDiv = document.querySelector('div.map-point.map-animal');
 
         if (targetDiv) {
             try {
