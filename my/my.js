@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.245
+// @version      47.246
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7214,7 +7214,7 @@
                 clicked3_1 = await clickElement(selectors.element3_1, '元素3-1', elementTimeout);
                 if (clicked3_1) break;
                 log(`元素3-1 未找到，等待2秒后重试...`);
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                c
             }
             if (!clicked3_1) {
                 log('循环因元素3-1 最终未找到而终止');
@@ -7244,6 +7244,7 @@
         if (!await clickElement(selectors.element5, '元素5')) return false;
 
         log(`第 ${loopCount + 1}/${maxLoops} 次循环成功完成`);
+        await new Promise(resolve => setTimeout(resolve, 30003000));
         return true;
     }
 
