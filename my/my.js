@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.248
+// @version      47.249
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6789,19 +6789,19 @@
         });
     }, 5000);
 
-    // var falg = false;
+    var falg = false;
 
-    // const Keplr = setInterval(() => {
-    //     const buttons = document.querySelectorAll('button');
-    //     buttons.forEach(button => {
-    //         if (button.textContent.trim().includes('keplr') &&
-    //             !button.hasAttribute('disabled')) {
-    //             button.click();
-    //             falg=true
-    //             clearInterval(Keplr);
-    //         }
-    //     });
-    // }, 5000);
+    const Keplr = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('keplr') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                falg=true
+                clearInterval(Keplr);
+            }
+        });
+    }, 5000);
 
 
 
