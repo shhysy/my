@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.249
+// @version      47.250
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -923,20 +923,35 @@
         }, 5000);
 
 
-        var falg =true;
+        // var falg =true;
+        // const yes = setInterval(() => {
+        //     if (window.location.href.includes('https://app.olab.xyz/home')) {
+        //         const buttons = document.querySelectorAll('div');
+        //         buttons.forEach(button => {
+        //             if (button.textContent.trim().includes('Yes') &&
+        //                 !button.hasAttribute('disabled') && falg) {
+        //                 falg = false;
+        //                 button.click();
+        //                 clearInterval(yes);
+        //             }
+        //         });
+        //     }
+        // }, 5000);
+
+        var falg = true;
         const yes = setInterval(() => {
             if (window.location.href.includes('https://app.olab.xyz/home')) {
-                const buttons = document.querySelectorAll('div.css-7clpog');
-                buttons.forEach(button => {
-                    if (button.textContent.trim().includes('Yes') &&
-                        !button.hasAttribute('disabled') && falg) {
-                        falg = false;
-                        button.click();
-                        clearInterval(yes);
-                    }
-                });
+                const xpath = '//*[@id="homeContents"]/div/div[1]/div[4]/div/div[2]/div[2]/div[1]/div[2]/div[1]';
+                const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+                const targetDiv = result.singleNodeValue;
+                if (targetDiv && !targetDiv.hasAttribute('disabled') && falg) {
+                    falg = false;
+                    targetDiv.click();
+                    clearInterval(yes);
+                }
             }
         }, 5000);
+        
         const inputInterval = setInterval(() => {
             const input = document.querySelector('input.chakra-input.css-1qqw0he');
             if (input) {
