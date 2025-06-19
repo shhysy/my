@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.250
+// @version      47.251
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -951,7 +951,7 @@
                 }
             }
         }, 5000);
-        
+
         const inputInterval = setInterval(() => {
             const input = document.querySelector('input.chakra-input.css-1qqw0he');
             if (input) {
@@ -6602,7 +6602,6 @@
         attempts++;
         if (attempts >= maxAttempts) {
             console.log(`[${new Date().toLocaleTimeString()}] Timeout: Only ${document.querySelectorAll('svg path[fill="#F7FF98"]').length} of 2 SVG buttons found after ${maxAttempts} attempts`);
-            clearInterval(clickInterval);
             clearInterval(timeoutInterval);
         }
     }, 5000);
