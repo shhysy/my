@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.242
+// @version      47.243
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6864,7 +6864,7 @@
     };
 
     // 循环设置
-    const maxLoops = 50; // 最大循环次数
+    const maxLoops = 10; // 最大循环次数
     let loopCount = 0; // 当前循环次数
     const loopInterval = 3000; // 3秒间隔（毫秒）
     const elementTimeout = 20000; // 元素等待超时20秒
