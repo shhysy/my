@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.254
+// @version      47.255
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3216,6 +3216,22 @@
                 setTimeout(() => {
                     window.location.href=url
                 },30000);
+            }
+        });
+    }, 5000);
+
+
+    const Claimed =setInterval(() => {
+        var i = 0;
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            // 检查按钮是否包含 "Continue with Google" 文本并且没有 disabled 属性
+            if (button.textContent.includes('Claimed')) {
+                    i++;
+                    if(i>6){
+                        window.location.href='https://signup.billions.network/'
+                        clearInterval(Claimed)
+                    }
             }
         });
     }, 5000);
