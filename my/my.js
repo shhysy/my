@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.255
+// @version      47.256
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7391,7 +7391,7 @@
             const timeRegex = /^\d{1,2}h\s\d{1,2}m\s\d{1,2}s$/;
             
             if (timeRegex.test(textContent)) {
-                checkaf=false
+                Window.location.href='https://www.360.com'
             }
         });
     }, 5000); // Check every 5 seconds
