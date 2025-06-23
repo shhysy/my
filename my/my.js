@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.258
+// @version      47.259
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -965,9 +965,10 @@
                     input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
                 }else if(input.value==2.0000){
                     //<button type="button" class="chakra-button css-1lkk2aw">Buy Yes 14.5¢</button>
+                    //<button type="button" class="chakra-button css-1dp987l">Buy No 37.2¢</button>
                     const buttons = document.querySelectorAll('button.chakra-button.css-1lkk2aw');
                     buttons.forEach(button => {
-                        if (button.textContent.trim().includes('Buy Yes')) {
+                        if (button.textContent.trim().includes('Buy Yes') || button.textContent.trim().includes('Buy No')) {
                             button.click();
                             clearInterval(inputInterval);
                         }
