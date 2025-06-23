@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.256
+// @version      47.257
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6497,12 +6497,14 @@
         });
     }, 2000);
 
+    var metamaskfalg = true;
     const MetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('div');
         buttons.forEach(button => {
             if (button.textContent.trim().includes('MetaMask') &&
-                !button.hasAttribute('disabled')) {
+                !button.hasAttribute('disabled') && metamaskfalg) {
                 button.click();
+                metamaskfalg=false
                 clearInterval(MetaMask);
             }
         });
