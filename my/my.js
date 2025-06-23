@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.257
+// @version      47.258
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6499,15 +6499,26 @@
 
     var metamaskfalg = true;
     const MetaMask = setInterval(() => {
-        const buttons = document.querySelectorAll('div');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('MetaMask') &&
-                !button.hasAttribute('disabled') && metamaskfalg) {
-                button.click();
-                metamaskfalg=false
-                clearInterval(MetaMask);
-            }
-        });
+        if (!metamaskfalg) return;
+        // 通过 XPath 获取目标元素
+        var result = document.evaluate(
+            '/html/body/div[2]/div/div[2]/div/div[1]/div/div/div/div/div[3]/div/div[1]',
+            document,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+        );
+        var target = result.singleNodeValue;
+        // 判断是否存在且包含指定文本
+        if (
+            target &&
+            !target.hasAttribute('disabled') &&
+            target.textContent.includes('MetaMask')
+        ) {
+            target.click();
+            metamaskfalg = false;
+            clearInterval(MetaMask);
+        }
     }, 5000);
 
     const claim = setInterval(() => {
