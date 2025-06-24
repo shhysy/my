@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.259
+// @version      47.260
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7550,3 +7550,81 @@
 
 })();
 
+(function() {
+    'use strict';
+    
+    // Exit if not on the correct domain
+    if (window.location.hostname !== 'monad.talentum.id') {
+        console.log('Script only runs');
+        return;
+    }
+
+    // Generic function to attempt clicking a button with retry logic
+    function attemptClickButton({ selector, xpath, textCheck, retryInterval = 5000 }) {
+        let timer;
+
+        function tryClick() {
+            let element;
+            
+            // Select element based on selector or xpath
+            if (selector) {
+                element = document.querySelector(selector);
+            } else if (xpath) {
+                element = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            }
+
+            // Check if element exists
+            if (!element) {
+                console.log(`${selector || xpath}: Element not found`);
+                return false;
+            }
+
+            // Check text content if provided
+            if (textCheck) {
+                const elementText = element.textContent || element.innerText;
+                if (!elementText.includes(textCheck)) {
+                    console.log(`${selector || xpath}: Text does not contain "${textCheck}"`);
+                    return false;
+                }
+            }
+
+            // Check if element is clickable (visible and not disabled)
+            const isClickable = element.offsetParent !== null && !element.disabled;
+            if (!isClickable) {
+                console.log(`${selector || xpath}: Element is not clickable`);
+                return false;
+            }
+
+            // Click the element
+            element.click();
+            console.log(`${selector || xpath}: Clicked successfully`);
+            return true;
+        }
+
+        // Initial attempt
+        if (tryClick()) {
+            return; // Exit if successful
+        }
+
+        // Retry every retryInterval (5 seconds) if initial attempt fails
+        timer = setInterval(() => {
+            if (tryClick()) {
+                clearInterval(timer); // Clear timer on success
+            }
+        }, retryInterval);
+    }
+
+    // Click the Sign In button
+    attemptClickButton({
+        xpath: '//*[@id="__nuxt"]/div[2]/header/div[2]/div/div[1]',
+        textCheck: 'Sign In',
+        retryInterval: 5000
+    });
+
+    // Click the first button inside socials-btn
+    attemptClickButton({
+        selector: 'div.socials-btn button',
+        retryInterval: 5000
+    });
+
+})();
