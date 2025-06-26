@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.263
+// @version      47.264
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7390,6 +7390,9 @@
             if (button.textContent.trim().includes('Okay') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
+                setTimeout(() => {
+                    location.href='https://www.360.com/'
+                }, 5000);
             }
         });
     }, 5000);
