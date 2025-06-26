@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.260
+// @version      47.261
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -912,7 +912,7 @@
     //等待页面加载完成运行
     document.addEventListener('DOMContentLoaded', () => {
         const OKXWallet = setInterval(() => {
-            const buttons = document.querySelectorAll('button.chakra-button.css-1azazgw');
+            const buttons = document.querySelectorAll('button');
             buttons.forEach(button => {
                 if (button.textContent.trim().includes('OKX Wallet') &&
                     !button.hasAttribute('disabled')) {
