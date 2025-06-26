@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.261
+// @version      47.262
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -953,7 +953,7 @@
         }, 5000);
 
         const inputInterval = setInterval(() => {
-            const input = document.querySelector('input.chakra-input.css-1qqw0he');
+            const input = document.querySelector('input.chakra-input');
             if (input) {
                 if (input.value==0.0000) {
                     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
@@ -966,7 +966,7 @@
                 }else if(input.value==2.0000){
                     //<button type="button" class="chakra-button css-1lkk2aw">Buy Yes 14.5¢</button>
                     //<button type="button" class="chakra-button css-1dp987l">Buy No 37.2¢</button>
-                    const buttons = document.querySelectorAll('button.chakra-button.css-1lkk2aw');
+                    const buttons = document.querySelectorAll('button.chakra-button');
                     buttons.forEach(button => {
                         if (button.textContent.trim().includes('Buy Yes') || button.textContent.trim().includes('Buy No')) {
                             button.click();
@@ -979,14 +979,11 @@
         }, 5000);
 
         var falgsuss = true;
-        //<p class="chakra-text css-1nb4kym">Order placed successfully</p>
         const success = setInterval(() => {
             const buttons = document.querySelectorAll('p');
             buttons.forEach(button => {
-                if (button.textContent.trim().includes('Order placed successfully') &&
-                    !button.hasAttribute('disabled')) {
-                    //<div class="css-11v1nyq">Done</div>
-                    const buttons = document.querySelectorAll('div.css-11v1nyq');
+                if (button.textContent.trim().includes('Order placed successfully')) {
+                    const buttons = document.querySelectorAll('div');
                     buttons.forEach(button => {
                         if (button.textContent.trim().includes('Done')) {
                             button.click();
