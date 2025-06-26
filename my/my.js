@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.262
+// @version      47.263
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7327,6 +7327,7 @@
     if (window.location.hostname !== 'app.yala.org') {
         return;
     }
+
     var confalg = false;
     setInterval(() => {
         const buttons = document.querySelectorAll('div.Header_headerConnect__HqGFX');
@@ -7337,6 +7338,18 @@
             }
         });
     }, 1000);
+
+    const checkin = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Check in') &&
+                !button.hasAttribute('disabled') && !confalg) {
+                button.click();
+                clearInterval(checkin);
+            }
+        });
+    }, 8000);
+
 
     const Header_headerConnect__HqGFX = setInterval(() => {
         const buttons = document.querySelectorAll('div.Header_headerConnect__HqGFX');
@@ -7370,16 +7383,6 @@
         }
     }, 5000);
 
-    const checkin = setInterval(() => {
-        const buttons = document.querySelectorAll('div');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('Check in') &&
-                !button.hasAttribute('disabled') && !confalg) {
-                button.click();
-                clearInterval(checkin);
-            }
-        });
-    }, 8000);
 
     const Okay = setInterval(() => {
         const buttons = document.querySelectorAll('button');
@@ -7402,7 +7405,7 @@
             const timeRegex = /^\d{1,2}h\s\d{1,2}m\s\d{1,2}s$/;
             
             if (timeRegex.test(textContent)) {
-                Window.location.href='https://www.360.com'
+                location.href='https://www.360.com/'
             }
         });
     }, 5000); // Check every 5 seconds
