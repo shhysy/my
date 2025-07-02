@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.267
+// @version      47.268
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1466,10 +1466,12 @@
                 console.log("Buttons found, attempting to click...");
                 for (let i = 0; i < buttons.length; i++) {
                     if (!buttons[i].disabled) {
-                        if(i!=0){
-                            buttons[i].click();
-                            allDisabled = 0; // Reset
-                        }
+                        // if(i!=0){
+                        //     buttons[i].click();
+                        //     allDisabled = 0; // Reset
+                        // }
+                        buttons[i].click();
+                        allDisabled = 0; // Reset
                     } else {
                         allDisabled++;
                         console.log(`Button ${i} is disabled.`);
