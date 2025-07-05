@@ -6920,7 +6920,7 @@
     };
 
     // 循环设置
-    const maxLoops = 10; // 最大循环次数
+    const maxLoops = 100; // 最大循环次数
     let loopCount = 0; // 当前循环次数
     const loopInterval = 3000; // 3秒间隔（毫秒）
     const elementTimeout = 20000; // 元素等待超时20秒
