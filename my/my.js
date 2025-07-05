@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.269
+// @version      47.270
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7301,7 +7301,7 @@
 
     // 执行循环
     async function runLoop() {
-        if (loopCount >= 5) {
+        if (loopCount >= 50) {
             log(`已完成 ${maxLoops} 次循环，脚本停止`);
             window.open('https://www.360.com/', '_self');
         }
