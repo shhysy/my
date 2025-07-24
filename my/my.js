@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.273
+// @version      47.274
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7662,7 +7662,7 @@
           if (text.includes('DeFi DEX') && text.includes('Resets in')) {
             console.log('按钮已禁用，且文本匹配:', text);
             // 这里可以执行你需要的操作
-            window.location.href = 'https://www.360.com/';
+            window.location.href = 'https://chat.chainopera.ai';
           } else {
             console.log('按钮已禁用，但文本不匹配:', text);
           }
