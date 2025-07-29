@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.277
+// @version      47.278
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8198,7 +8198,8 @@
         const buttons = document.querySelectorAll('div');
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Swap submitted')) {
-                window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+                //window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+                window.location.href = 'https://www.360.com';
                 clearInterval(Swapsubmitted); // Stop the interval
             }
         });
