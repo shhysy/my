@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.275
+// @version      47.276
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -958,7 +958,7 @@
                 if (input.value==0.0000) {
                     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
                     nativeInputValueSetter.call(input, 2.0000);
-        
+
                     input.dispatchEvent(new Event('input', { bubbles: true }));
                     input.dispatchEvent(new Event('change', { bubbles: true }));
                     input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
@@ -973,7 +973,7 @@
                             clearInterval(inputInterval);
                         }
                     });
-                    
+
                 }
             }
         }, 5000);
@@ -3172,7 +3172,7 @@
     if (window.location.hostname !== 'dashboard.monadscore.xyz') {
         return;
     }
-    
+
     var url = 'https://signup.billions.network/'
     const Task =setInterval(() => {
         const buttons = document.querySelectorAll('button');
@@ -4384,7 +4384,7 @@
                         button.click();
                         await new Promise(resolve => setTimeout(resolve, 5000));
                     }
-                    
+
                     await new Promise(resolve => setTimeout(resolve, 20000));
 
                     // const responseComplete = document.querySelector('.text-gray-500.text-xs');
@@ -5524,7 +5524,7 @@
             }
         });
     }, 5000);
-    
+
 
     setInterval(() => {
         const buttons = document.querySelectorAll('button');
@@ -6800,7 +6800,7 @@
                         foundContinue = true;
                     }
                 });
-                
+
                 if (!foundContinue) {
                     const buttons = document.querySelectorAll('button.ring-1.ring-inset');
                     buttons.forEach(button => {
@@ -6819,7 +6819,7 @@
                     });
                 }
             }, 25000);
-        
+
     });
 })();
 
@@ -6831,7 +6831,7 @@
         return;
     }
 
-    
+
 
 
     const MetaMask = setInterval(() => {
@@ -6882,7 +6882,7 @@
     }, 5000);
 
 
-    
+
     const wallet = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
@@ -7156,7 +7156,7 @@
     async function scrollAndClick(xpath, parentSelector, maxScroll = 10) {
         let parent = document.querySelector(parentSelector);
         if (!parent) parent = document.body; // 兜底
-    
+
         for (let i = 0; i < maxScroll; i++) {
             // 尝试查找目标按钮
             let button = document.evaluate(
@@ -7166,7 +7166,7 @@
                 XPathResult.FIRST_ORDERED_NODE_TYPE,
                 null
             ).singleNodeValue;
-    
+
             if (button) {
                 button.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 await new Promise(r => setTimeout(r, 500));
@@ -7179,7 +7179,7 @@
         }
         return false;
     }
-    
+
 
     // 主流程
     async function runAutomation() {
@@ -7411,12 +7411,12 @@
     const checkTime = setInterval(() => {
         // Query all <div> elements
         const divs = document.querySelectorAll('div');
-        
+
         divs.forEach(div => {
             const textContent = div.textContent.trim();
             // Regular expression to match time format (e.g., "23h 59m 43s")
             const timeRegex = /^\d{1,2}h\s\d{1,2}m\s\d{1,2}s$/;
-            
+
             if (timeRegex.test(textContent)) {
                 location.href='https://www.360.com/'
             }
@@ -7443,7 +7443,7 @@
     ];
     let submissionCount = 0; // Counter for submissions
     let lastUploadElement = null; // Track the last seen upload element
-    
+
     // Function to fetch an image and set it to the file input
     function fetchAndSetImage(url, fileName, fileInput) {
         console.log(`Fetching image: ${url}`);
@@ -7467,7 +7467,7 @@
                 console.error(`Failed to fetch image ${fileName}:`, error);
             });
     }
-    
+
     // Check for the upload select element and trigger image upload
     const uploadCheckInterval = setInterval(() => {
         if (submissionCount >= 5) {
@@ -7475,10 +7475,10 @@
             clearInterval(uploadCheckInterval);
             return;
         }
-    
+
         const uploadSelect = document.querySelector('.FeedbackModal_uploadSelect__3pc32');
         const fileInput = document.querySelector('input[name="file"]');
-    
+
         if (uploadSelect && fileInput && fileInput.files.length === 0 && uploadSelect !== lastUploadElement) {
             console.log('New upload select element found, setting image...');
             const randomFileName = imageNames[Math.floor(Math.random() * imageNames.length)];
@@ -7491,7 +7491,7 @@
             console.log('File input already has a file, waiting for reset...');
         }
     }, 1000);
-    
+
     // Handle form submission
     const sendFeedbackInterval = setInterval(() => {
         if (submissionCount >= 8) {
@@ -7501,10 +7501,10 @@
             clearInterval(uploadCheckInterval); // Ensure upload interval stops
             return;
         }
-    
+
         const input = document.querySelector('input.FeedbackModal_rowEmailDiv__BUfTT');
         const textarea = document.querySelector('textarea.FeedbackModal_rowEmailDiv__BUfTT');
-    
+
         if (input && textarea && textarea.value !== '' && input.value !== '') {
             const buttons = document.querySelectorAll('button');
             buttons.forEach(button => {
@@ -7526,7 +7526,7 @@
         if (textarea && textarea.value === '') {
             // 随机选择一个反馈消息
             const randomFeedback = feedbackMessages[Math.floor(Math.random() * feedbackMessages.length)];
-            
+
             // 设置 textarea 的值
             const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
             nativeInputValueSetter.call(textarea, randomFeedback);
@@ -7564,7 +7564,7 @@
 
 (function() {
     'use strict';
-    
+
     // Exit if not on the correct domain
     if (window.location.hostname !== 'monad.talentum.id') {
         console.log('Script only runs');
@@ -7577,7 +7577,7 @@
 
         function tryClick() {
             let element;
-            
+
             // Select element based on selector or xpath
             if (selector) {
                 element = document.querySelector(selector);
@@ -7640,9 +7640,6 @@
     });
 
 })();
-
-
-
 
 (function() {
     'use strict';
@@ -7807,4 +7804,643 @@
         log('页面加载完成，开始执行脚本', 'info');
         monitorElements();
     });
+})();
+
+
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'testnet.pharosnetwork.xyz') {
+        return;
+    }
+    const Connect = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Connect Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Connect);
+            }
+        });
+    }, 5000);
+
+    const Switch = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Switch') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Switch);
+            }
+        });
+    }, 5000);
+
+    const Continue = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Continue') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Continue);
+            }
+        });
+    }, 5000);
+
+    const Checked = setInterval(() => {
+        // Ensure the DOM is ready
+        if (document.readyState === 'complete') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                // Normalize case for text comparison
+                if (button.textContent.trim().toLowerCase().includes('checked')) {
+                    // Only redirect if not already on the target page
+                    if (window.location.href !== 'https://testnet.zenithfinance.xyz/swap') {
+                        window.location.href = 'https://testnet.zenithfinance.xyz/swap';
+                    }
+                    clearInterval(Checked); // Stop the interval
+                }
+            });
+        }
+    }, 5000);
+
+    const OKXWallet = setInterval(() => {
+        try {
+            // 1. Use XPath to locate <w3m-modal> in the main DOM
+            const w3mModal = document.evaluate(
+                '/html/body/w3m-modal',
+                document,
+                null,
+                XPathResult.FIRST_ORDERED_NODE_TYPE,
+                null
+            ).singleNodeValue;
+
+            if (!w3mModal || !w3mModal.shadowRoot) {
+                console.log('w3m-modal or its shadowRoot not found');
+                return;
+            }
+
+            // 2. Navigate w3m-modal's Shadow DOM
+            const w3mRouter = w3mModal.shadowRoot.querySelector('wui-flex > wui-card > w3m-router');
+            if (!w3mRouter || !w3mRouter.shadowRoot) {
+                console.log('w3m-router or its shadowRoot not found');
+                return;
+            }
+
+            // 3. Navigate w3m-router's Shadow DOM
+            const connectView = w3mRouter.shadowRoot.querySelector('div > w3m-connect-view');
+            if (!connectView || !connectView.shadowRoot) {
+                console.log('w3m-connect-view or its shadowRoot not found');
+                return;
+            }
+
+            // 4. Navigate w3m-connect-view's Shadow DOM
+            const walletLoginList = connectView.shadowRoot.querySelector('wui-flex > w3m-wallet-login-list');
+            if (!walletLoginList || !walletLoginList.shadowRoot) {
+                console.log('w3m-wallet-login-list or its shadowRoot not found');
+                return;
+            }
+
+            // 5. Navigate w3m-wallet-login-list's Shadow DOM
+            const connectorList = walletLoginList.shadowRoot.querySelector('wui-flex > w3m-connector-list');
+            if (!connectorList || !connectorList.shadowRoot) {
+                console.log('w3m-connector-list or its shadowRoot not found');
+                return;
+            }
+
+            // 6. Navigate w3m-connector-list's Shadow DOM
+            const announcedWidget = connectorList.shadowRoot.querySelector('wui-flex > w3m-connect-announced-widget');
+            if (!announcedWidget || !announcedWidget.shadowRoot) {
+                console.log('w3m-connect-announced-widget or its shadowRoot not found');
+                return;
+            }
+
+            // 7. Navigate w3m-connect-announced-widget's Shadow DOM
+            const listWallet = announcedWidget.shadowRoot.querySelector('wui-flex > wui-list-wallet');
+            if (!listWallet || !listWallet.shadowRoot) {
+                console.log('wui-list-wallet or its shadowRoot not found');
+                return;
+            }
+
+            // 8. Find the button in wui-list-wallet's Shadow DOM
+            const buttons = listWallet.shadowRoot.querySelectorAll('button');
+            for (const button of buttons) {
+                if (button.textContent.trim().includes('OKX Wallet') && !button.hasAttribute('disabled')) {
+                    button.click();
+                    console.log('OKX Wallet button found and is not disabled');
+                    clearInterval(OKXWallet);
+                    break;
+                }
+            }
+        } catch (error) {
+            console.error('Error navigating Shadow DOM:', error);
+        }
+    }, 5000);
+
+    const checkConditions = setInterval(() => {
+        try {
+            const buttons = document.querySelectorAll('button');
+            let connectWalletExists = false;
+            let switchExists = false;
+            let continueExists = false;
+
+            for (const button of buttons) {
+                const text = button.textContent.trim();
+                if (text.includes('Connect Wallet') && !button.hasAttribute('disabled')) {
+                    connectWalletExists = true;
+                }
+                if (text.includes('Switch') && !button.hasAttribute('disabled')) {
+                    switchExists = true;
+                }
+                if (text.includes('Continue') && !button.hasAttribute('disabled')) {
+                    continueExists = true;
+                }
+            }
+
+            if (connectWalletExists || switchExists || continueExists) {
+                console.log('One or more buttons ("Connect Wallet", "Switch", "Continue") exist and are enabled, retrying...');
+                return;
+            }else{
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(button => {
+                    if (button.textContent.trim().includes('Check in') &&
+                        !button.hasAttribute('disabled')) {
+                        const classExists = document.querySelector('.sc-hmdnzv.fgJarU');
+                        if (classExists) {
+                            button.click();
+                            //clearInterval(checkConditions);
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error checking conditions:', error);
+        }
+    }, 5000);
+
+    // Your code here...
+})();
+
+
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'testnet.zenithfinance.xyz') {
+        return;
+    }
+    const Connect = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Connect wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Connect);
+            }
+        });
+    }, 5000);
+
+    const okx = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('OKX Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(okx);
+            }
+        });
+    }, 5000);
+
+    const Select = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Select token') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Select);
+            }
+        });
+    }, 5000);
+
+    const USDCoin = setInterval(() => {
+        const buttons = document.querySelectorAll('div[data-testid="common-base-USDC"]');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('USD Coin') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(USDCoin);
+            }
+        });
+    }, 5000);
+
+    const Swap = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Swap') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Swap);
+            }
+        });
+    }, 5000);
+
+    const Confirmswap = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Confirm swap') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Confirmswap);
+            }
+        });
+    }, 5000);
+
+    const Switch = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Switch') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Switch);
+            }
+        });
+    }, 5000);
+
+    const Continue = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Continue') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Continue);
+            }
+        });
+    }, 5000);
+
+    const Swap_success = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Swap success!')) {
+                window.location.href = 'https://faroswap.xyz/swap';
+                clearInterval(Swap_success); // Stop the interval
+            }
+        });
+    }, 5000);
+
+    const inputInterval = setInterval(() => {
+        const input = document.querySelector('input#swap-currency-input.token-amount-input');
+        if (input) {
+            if (input.value === '' || parseFloat(input.value) === 0 || parseFloat(input.value) > 0.1) {
+                const min = 0.001, max = 0.003;
+                const randomValue = (Math.random() * (max - min) + min).toFixed(3);
+
+                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                nativeInputValueSetter.call(input, randomValue);
+
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
+                input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
+
+                console.log('已向输入框输入:', randomValue);
+                clearInterval(inputInterval);
+            }
+        }
+    }, 3000);
+    // Your code here...
+})();
+
+
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'faroswap.xyz') {
+        return;
+    }
+
+    const Connect = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Connect a wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Connect);
+            }
+        });
+    }, 5000);
+
+    const okx = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('OKX Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                setInterval(() => {
+                    location.reload();
+                }, 5000);
+                clearInterval(okx);
+            }
+        });
+    }, 5000);
+
+
+    const USDT = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('USDT') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(USDT);
+            }
+        });
+    }, 5000);
+
+    const WBTC = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('WBTC') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(WBTC);
+            }
+        });
+    }, 5000);
+
+    const USDC = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('USDC') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(USDC);
+            }
+        });
+    }, 5000);
+
+     const ReviewSwap = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Review Swap') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(ReviewSwap);
+            }
+        });
+    }, 5000);
+
+    const Confirmswap = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Confirm swap') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Confirmswap);
+            }
+        });
+    }, 5000);
+
+    const Swapsubmitted = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Swap submitted')) {
+                window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+                clearInterval(Swapsubmitted); // Stop the interval
+            }
+        });
+    }, 5000);
+
+    const inputInterval = setInterval(() => {
+        const input = document.querySelector('input.base-Input-input.css-1fkmsfz');
+        if (input) {
+            if (input.value === '' || parseFloat(input.value) === 0 || parseFloat(input.value) > 0.1) {
+                const min = 0.001, max = 0.003;
+                const randomValue = (Math.random() * (max - min) + min).toFixed(3);
+
+                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                nativeInputValueSetter.call(input, randomValue);
+
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '0' }));
+                input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: '0' }));
+
+                console.log('已向输入框输入:', randomValue);
+            }
+        }
+    }, 3000);
+
+    // Your code here...
+})();
+
+
+
+(function() {
+    'use strict';
+    // 多层抽象类封装，包含冗余验证和日志逻辑
+    class AbstractNumberContainer {
+        constructor(value) {
+        this._value = this.#validateAndSanitize(value);
+        this.#logCreation();
+        }
+    
+        #validateAndSanitize(input) {
+        if (typeof input !== 'number') throw new Error('Invalid type');
+        if (Number.isNaN(input)) throw new Error('Cannot be NaN');
+        if (!Number.isFinite(input)) throw new Error('Must be finite');
+        return Math.floor(input * 1000) / 1000; // 冗余精度处理
+        }
+    
+        #logCreation() {
+        const timestamp = new Date().toISOString();
+        const logEntry = `[${timestamp}] Container initialized with value: ${this._value}`;
+        // 仅打印不影响流程的日志
+        console.log(logEntry);
+        }
+    
+        getValue() {
+        return this._value;
+        }
+    
+        setValue(newValue) {
+        this._value = this.#validateAndSanitize(newValue);
+        }
+    }
+    
+    class AdvancedAccumulator extends AbstractNumberContainer {
+        constructor(initial) {
+        super(initial);
+        this.#history = [this.getValue()];
+        this.#complexityLevel = 3; // 无意义的复杂度标记
+        }
+    
+        #history;
+        #complexityLevel;
+    
+        #updateHistory(newValue) {
+        this.#history.push(newValue);
+        // 冗余的历史记录修剪（始终保留全部）
+        if (this.#history.length > 1000) {
+            this.#history = [...this.#history]; // 无意义的复制
+        }
+        }
+    
+        #applyComplexCalculation(a, b) {
+        // 复杂但等价于 a + b 的计算
+        const sum = (() => {
+            let result = 0;
+            for (let i = 0; i < Math.abs(a); i += 0.1) result += 0.1;
+            for (let i = 0; i < Math.abs(b); i += 0.1) result += 0.1;
+            return a < 0 ? -result : result;
+        })();
+        return sum;
+        }
+    
+        add(value) {
+        const validator = new AbstractNumberContainer(value); // 冗余的二次验证
+        const current = this.getValue();
+        const newValue = this.#applyComplexCalculation(current, validator.getValue());
+        this.setValue(newValue);
+        this.#updateHistory(newValue);
+        return this;
+        }
+    
+        getTotal() {
+        // 冗余的递归求和（实际直接返回当前值）
+        const calculateTotal = (index) => {
+            if (index === 0) return this.#history[0];
+            return this.#history[index] + calculateTotal(index - 1) - this.#history[index - 1];
+        };
+        return calculateTotal(this.#history.length - 1);
+        }
+    }
+    
+    // 实际使用：简单累加，代码复杂但结果正确
+    const accumulator = new AdvancedAccumulator(0);
+    accumulator.add(5).add(3).add(2);
+    console.log(accumulator.getTotal()); // 输出：10
+
+    // 包含大量无关配置和冗余步骤的字符串处理器
+    const StringProcessor = (() => {
+        // 无意义的常量定义
+        const CHAR_CODE_OFFSET = 32;
+        const MAGIC_NUMBER = 0x000F;
+        const EMPTY_CONFIG = Object.freeze({
+        caseSensitive: true,
+        trimWhitespace: true,
+        encoding: 'utf-8',
+        unusedFlag: false,
+        });
+    
+        // 冗余的工具函数
+        const isEven = (num) => (num & 1) === 0;
+        const delay = (ms) => new Promise(res => setTimeout(res, ms));
+        const randomizeArray = (arr) => [...arr].sort(() => Math.random() - 0.5);
+    
+        class Processor {
+        constructor(config = {}) {
+            this.config = { ...EMPTY_CONFIG, ...config };
+            this.#init();
+        }
+    
+        async #init() {
+            // 无意义的异步初始化（不影响结果）
+            await delay(0);
+            this.#secretState = Math.random(); // 未使用的状态
+        }
+    
+        #secretState;
+    
+        #processCharacter(char, index) {
+            // 复杂但等价于原字符的处理
+            const code = char.charCodeAt(0);
+            const transformed = (code ^ MAGIC_NUMBER) ^ MAGIC_NUMBER; // 异或两次抵消
+            const adjusted = isEven(index) ? transformed : transformed; // 无意义的条件
+            return String.fromCharCode(adjusted);
+        }
+    
+        #complexJoin(chars) {
+            // 复杂但等价于 chars.join('') 的逻辑
+            let result = '';
+            const reversed = randomizeArray(chars).reverse(); // 打乱再反转回原顺序
+            for (const char of reversed) {
+            result = result.concat(char);
+            }
+            return result;
+        }
+    
+        process(str) {
+            if (typeof str !== 'string') throw new Error('Input must be string');
+            
+            // 冗余的预处理步骤
+            let processed = str;
+            if (this.config.trimWhitespace) {
+            processed = processed.trim();
+            processed = processed.replace(/\s+/g, ' '); // 重复trim的效果
+            }
+    
+            // 拆分字符并逐个处理（实际无变化）
+            const chars = processed.split('').map((char, i) => this.#processCharacter(char, i));
+            
+            // 冗余的后处理
+            const final = this.#complexJoin(chars);
+            return this.config.caseSensitive ? final : final.toLowerCase().toUpperCase();
+        }
+        }
+    
+        return Processor;
+    })();
+    
+    // 实际使用：字符串处理结果与输入一致，代码复杂但功能正常
+    const processor = new StringProcessor();
+    console.log(processor.process('  Hello World  '));
+
+    // 用多层闭包和冗余条件实现简单的数组过滤
+    const createComplexFilter = (threshold) => {
+        // 外层闭包：无意义的参数转换
+        const normalizedThreshold = (() => {
+        let value = threshold;
+        for (let i = 0; i < 3; i++) {
+            value = Math.round(value); // 重复.round不改变结果
+        }
+        return value;
+        })();
+    
+        // 中层闭包：定义过滤逻辑的装饰器
+        const withLogging = (fn) => {
+        return (...args) => {
+            const start = performance.now();
+            const result = fn(...args);
+            const end = performance.now();
+            console.log(`Filter took ${end - start}ms`); // 冗余的性能日志
+            return result;
+        };
+        };
+    
+        // 内层闭包：复杂但等价于 item > threshold 的过滤
+        const filterFn = withLogging((arr) => {
+        if (!Array.isArray(arr)) return [];
+        
+        const filtered = [];
+        const temp = [...arr]; // 复制数组（无必要）
+        
+        // 冗余的索引映射
+        const indices = temp.map((_, i) => i);
+        for (const i of indices) {
+            const item = temp[i];
+            // 复杂的条件判断（实际等价于 item > normalizedThreshold）
+            const isGreater = (() => {
+            if (typeof item !== 'number') return false;
+            const diff = item - normalizedThreshold;
+            return diff > 0 ? diff / diff === 1 : false; // 冗余的正数验证
+            })();
+            if (isGreater) filtered.push(item);
+        }
+        
+        return filtered;
+        });
+    
+        return filterFn;
+    };
+    
+    // 实际使用：过滤出大于5的数字，代码复杂但结果正确
+    const filter = createComplexFilter(5);
+    console.log(filter([3, 7, 2, 9, 5, 10])); // 输出：[7, 9, 10]
+
+
+    
 })();
