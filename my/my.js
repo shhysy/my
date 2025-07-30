@@ -8198,8 +8198,8 @@
         const buttons = document.querySelectorAll('div');
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Swap submitted')) {
-                //window.location.href = 'https://speedrun.enso.build/categories/de-fi';
-                window.location.href = 'https://www.360.com';
+                window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+                //window.location.href = 'https://www.360.com';
                 clearInterval(Swapsubmitted); // Stop the interval
             }
         });
