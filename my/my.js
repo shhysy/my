@@ -8124,6 +8124,18 @@
         });
     }, 5000);
 
+
+    const Quotenotavailable = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Quote not available')) {
+                    location.reload();
+                clearInterval(Quotenotavailable);
+            }
+        });
+    }, 15000);
+
+
     const okx = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
