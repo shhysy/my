@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.316
+// @version      47.317
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8197,38 +8197,38 @@
     }, 5000);
 
 
-    const USDT = setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('USDT') &&
-                !button.hasAttribute('disabled')) {
-                button.click();
-                clearInterval(USDT);
-            }
-        });
-    }, 5000);
+    // const USDT = setInterval(() => {
+    //     const buttons = document.querySelectorAll('button');
+    //     buttons.forEach(button => {
+    //         if (button.textContent.trim().includes('USDT') &&
+    //             !button.hasAttribute('disabled')) {
+    //             button.click();
+    //             clearInterval(USDT);
+    //         }
+    //     });
+    // }, 5000);
 
-    const WBTC = setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('WBTC') &&
-                !button.hasAttribute('disabled')) {
-                button.click();
-                clearInterval(WBTC);
-            }
-        });
-    }, 5000);
+    // const WBTC = setInterval(() => {
+    //     const buttons = document.querySelectorAll('button');
+    //     buttons.forEach(button => {
+    //         if (button.textContent.trim().includes('WBTC') &&
+    //             !button.hasAttribute('disabled')) {
+    //             button.click();
+    //             clearInterval(WBTC);
+    //         }
+    //     });
+    // }, 5000);
 
-    const USDC = setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('USDC') &&
-                !button.hasAttribute('disabled')) {
-                button.click();
-                clearInterval(USDC);
-            }
-        });
-    }, 5000);
+    // const USDC = setInterval(() => {
+    //     const buttons = document.querySelectorAll('button');
+    //     buttons.forEach(button => {
+    //         if (button.textContent.trim().includes('USDC') &&
+    //             !button.hasAttribute('disabled')) {
+    //             button.click();
+    //             clearInterval(USDC);
+    //         }
+    //     });
+    // }, 5000);
 
      const ReviewSwap = setInterval(() => {
         const buttons = document.querySelectorAll('button');
