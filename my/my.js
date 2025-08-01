@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.313
+// @version      47.314
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8147,16 +8147,39 @@
         });
     }, 5000);
 
+    const clickRandomToken = setInterval(() => {
+        const tokenList = document.querySelector('.token-list');
+        if (tokenList) {
+            const tokenItems = tokenList.querySelectorAll('[data-testid="token-picker-item"]');
+            if (tokenItems.length > 0) {
+                const randomIndex = Math.floor(Math.random() * tokenItems.length);
+                tokenItems[randomIndex].click();
+                clearInterval(clickRandomToken);
+            }
+        }
+    }, 5000);
 
-    // const Quotenotavailable = setInterval(() => {
-    //     const buttons = document.querySelectorAll('button');
-    //     buttons.forEach(button => {
-    //         if (button.textContent.trim().includes('Quote not available')) {
-    //                 location.reload();
-    //             clearInterval(Quotenotavailable);
-    //         }
-    //     });
-    // }, 15000);
+    const Quotenotavailable = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        let quoteNotAvailableFound = false;
+    
+        // Check for "Quote not available" button
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Quote not available')) {
+                quoteNotAvailableFound = true;
+            }
+        });
+    
+        // If condition is met, click the button at the specified XPath
+        if (quoteNotAvailableFound) {
+            const xpath = `/html/body/div/div[2]/main/div[1]/div[1]/div/div/div[2]/div/div[3]/div[1]/button`;
+            const targetButton = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            if (targetButton && targetButton.tagName === 'BUTTON' && !targetButton.hasAttribute('disabled')) {
+                targetButton.click();
+                clearInterval(Quotenotavailable);
+            }
+        }
+    }, 5000);
 
 
     const okx = setInterval(() => {
