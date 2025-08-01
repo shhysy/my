@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.328
+// @version      47.329
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
