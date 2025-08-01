@@ -8165,9 +8165,9 @@
             if (button.textContent.trim().includes('OKX Wallet') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
-                // setInterval(() => {
-                //     location.reload();
-                // }, 5000);
+                setInterval(() => {
+                    location.reload();
+                }, 5000);
                 clearInterval(okx);
             }
         });
@@ -8191,7 +8191,7 @@
             if (button.textContent.trim().includes('WBTC') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
-                //clearInterval(WBTC);
+                clearInterval(WBTC);
             }
         });
     }, 5000);
