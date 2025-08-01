@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.299
+// @version      47.300
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8141,15 +8141,15 @@
     }, 5000);
 
 
-    const Quotenotavailable = setInterval(() => {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            if (button.textContent.trim().includes('Quote not available')) {
-                    location.reload();
-                clearInterval(Quotenotavailable);
-            }
-        });
-    }, 15000);
+    // const Quotenotavailable = setInterval(() => {
+    //     const buttons = document.querySelectorAll('button');
+    //     buttons.forEach(button => {
+    //         if (button.textContent.trim().includes('Quote not available')) {
+    //                 location.reload();
+    //             clearInterval(Quotenotavailable);
+    //         }
+    //     });
+    // }, 15000);
 
 
     const okx = setInterval(() => {
