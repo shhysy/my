@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.286
+// @version      47.290
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7985,6 +7985,12 @@
     if (window.location.hostname !== 'testnet.zenithfinance.xyz') {
         return;
     }
+
+
+    setTimeout(() => {
+        window.location.href = 'https://faroswap.xyz/swap';
+    }, 200000);
+
     const Connect = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
@@ -8112,6 +8118,10 @@
     if (window.location.hostname !== 'faroswap.xyz') {
         return;
     }
+
+    setTimeout(() => {
+        window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+    }, 200000);
 
     const Connect = setInterval(() => {
         const buttons = document.querySelectorAll('button');
