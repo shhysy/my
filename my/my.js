@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.298
+// @version      47.299
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -20,13 +20,14 @@
 // @downloadURL  https://raw.githubusercontent.com/shhysy/my/main/my/my.js
 // @supportURL   https://github.com/shhysy/my/issues
 // ==/UserScript==
-// (function() {
-//     setInterval(() => {
-//         if(location.hostname = 'testnet.pharosscan.xyz'){
-//             window.close();
-//         }
-//     }, 1000);
-// })();
+(function() {
+    setInterval(() => {
+        // 检查当前域名是否为 testnet.pharosscan.xyz 且 URL 包含 /tx
+        if (location.hostname === 'testnet.pharosscan.xyz' && location.pathname.startsWith('/tx')) {
+            window.close();
+        }
+    }, 1000);
+})();
 (function() {
     'use strict';
     //脚本超时
