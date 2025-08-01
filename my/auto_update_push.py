@@ -1,7 +1,10 @@
 import re
 import subprocess
+import os
 
-SCRIPT_FILE = "SlowDao.js"
+# 获取脚本所在目录的路径
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_FILE = os.path.join(SCRIPT_DIR, "my.js")
 
 def bump_version(version):
     parts = version.split('.')
@@ -32,6 +35,8 @@ def update_version_in_file(filename):
     return new_version
 
 def git_commit_and_push(filename, version):
+    # 切换到git仓库根目录
+    os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     subprocess.run(["git", "add", filename])
     subprocess.run(["git", "commit", "-m", f"auto: 升级 SlowDao.js 到 v{version}"])
     subprocess.run(["git", "push"])
