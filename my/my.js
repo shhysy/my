@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.295
+// @version      47.296
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -20,13 +20,13 @@
 // @downloadURL  https://raw.githubusercontent.com/shhysy/my/main/my/my.js
 // @supportURL   https://github.com/shhysy/my/issues
 // ==/UserScript==
-(function() {
-    setInterval(() => {
-        if(location.hostname = 'testnet.pharosscan.xyz'){
-            window.close();
-        }
-    }, 1000);
-})();
+// (function() {
+//     setInterval(() => {
+//         if(location.hostname = 'testnet.pharosscan.xyz'){
+//             window.close();
+//         }
+//     }, 1000);
+// })();
 (function() {
     'use strict';
     //脚本超时
