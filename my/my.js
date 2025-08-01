@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.308
+// @version      47.309
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -27,13 +27,13 @@
             window.close();
         }
     }, 1000);
-    setInterval(() => {
-        if (window.location.hostname == 'faroswap.xyz' ){
-            if (document.body.style.zoom != '75%'){
-                document.body.style.zoom = '75%'
-            }
-        }
-    }, 3000);
+    // setInterval(() => {
+    //     if (window.location.hostname == 'faroswap.xyz' ){
+    //         if (document.body.style.zoom != '75%'){
+    //             document.body.style.zoom = '75%'
+    //         }
+    //     }
+    // }, 3000);
 })();
 (function() {
     'use strict';
