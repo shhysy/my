@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.300
+// @version      47.301
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8158,9 +8158,9 @@
             if (button.textContent.trim().includes('OKX Wallet') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
-                setInterval(() => {
-                    location.reload();
-                }, 5000);
+                // setInterval(() => {
+                //     location.reload();
+                // }, 5000);
                 clearInterval(okx);
             }
         });
