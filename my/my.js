@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.310
+// @version      47.311
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8186,7 +8186,7 @@
     }, 5000);
 
     const WBTC = setInterval(() => {
-        const buttons = document.querySelectorAll('div');
+        const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
             if (button.textContent.trim().includes('WBTC') &&
                 !button.hasAttribute('disabled')) {
@@ -8197,7 +8197,7 @@
     }, 5000);
 
     const USDC = setInterval(() => {
-        const buttons = document.querySelectorAll('div');
+        const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
             if (button.textContent.trim().includes('USDC') &&
                 !button.hasAttribute('disabled')) {
