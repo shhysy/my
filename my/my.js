@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.346
+// @version      47.351
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1465,7 +1465,7 @@
     setInterval(() => {
         clickButtons();
         if (allDisabled>=5) {
-            window.location.href = 'https://node.securitylabs.xyz/';
+            window.location.href = 'https://www.starpower.world/wallet';
         }
     }, 3000);
 
@@ -2615,9 +2615,9 @@
         }
     }, 5000);
 
-    // setInterval(() => {
-    //     location.reload();
-    // }, 300000);
+    setInterval(() => {
+        window.location.href='https://sosovalue.com/ja/exp'
+    }, 1000000);
 
     // Utility to wait for an element with a selector
     function waitForElement(selector, timeout = 15000) {
@@ -2762,7 +2762,7 @@
                 const randomIndex = Math.floor(Math.random() * buttons.length);
                 simulateClick(buttons[randomIndex]);
                 console.log('随机点击第', randomIndex + 1, '个按钮');
-                await new Promise(resolve => setTimeout(resolve, 1000)); // 等待1秒让页面响应
+                await new Promise(resolve => setTimeout(resolve, 10000)); // 等待1秒让页面响应
             } else {
                 console.log('未找到按钮');
                 return false;
@@ -2771,7 +2771,7 @@
             console.log('等待加载完成...');
             await waitForLoadingToFinish();
             console.log('加载完成');
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 15000));
             return true; // 表示周期成功完成
         } catch (error) {
             await new Promise(resolve => setTimeout(resolve, 5000));
@@ -8546,7 +8546,7 @@
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Mining Active') &&
                 button.hasAttribute('disabled')) {
-                    window.location.href='https://0xvm.com/honor'
+                    window.location.href='http://www.360.com/'
                     clearInterval(Active);
             }
         });
