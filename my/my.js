@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.338
+// @version      47.339
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8187,7 +8187,7 @@
     }, 5000);
 
     setInterval(() => {
-        const xpath = `/html/body/div[4]/div[2]/main/div[1]/div[1]/div/div/div[2]/div/div[1]/div[1]/button`;
+        const xpath = `/html/body/div/div[2]/main/div[1]/div[1]/div/div/div[2]/div/div[1]/div[1]/button`;
         const targetButton = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
         
         // Check if button exists, is a BUTTON element, is not disabled, and does not contain "PHRS" in text
