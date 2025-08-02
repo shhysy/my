@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.337
+// @version      47.338
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8152,9 +8152,15 @@
         if (tokenList) {
             const tokenItems = tokenList.querySelectorAll('[data-testid="token-picker-item"]');
             if (tokenItems.length > 0) {
-                const randomIndex = Math.floor(Math.random() * tokenItems.length);
-                tokenItems[randomIndex].click();
-                // clearInterval(clickRandomToken);
+                for (const item of tokenItems) {
+                    if (item.textContent.trim().includes('PHRS') && !item.hasAttribute('disabled')) {
+                        item.click();
+                        break;
+                    }else{
+                        const randomIndex = Math.floor(Math.random() * tokenItems.length);
+                        tokenItems[randomIndex].click();
+                    }
+                }
             }
         }
     }, 5000);
@@ -8190,13 +8196,16 @@
             targetButton.tagName === 'BUTTON' &&
             !targetButton.hasAttribute('disabled') &&
             !targetButton.textContent.trim().includes('PHRS')) {
+
                 //查找元素是否存在//<button type="button" class="base-Button-root  MuiBox-root css-1fic6k0"><svg data-testid="ArrowBackIcon" viewBox="0 0 24 24" width="24px" height="24px" class="MuiBox-root css-19rsff" sx="[object Object]"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2Z"></path></svg></button>
                 const backButton = document.querySelector('button[type="button"].base-Button-root.MuiBox-root.css-1fic6k0');
                 if (backButton) {
                     backButton.click();
                 }
             }
-    }, 5000);
+    }, 3000);
+
+
 
     const okx = setInterval(() => {
         const buttons = document.querySelectorAll('button');
