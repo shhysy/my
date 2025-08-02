@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.336
+// @version      47.337
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8180,6 +8180,23 @@
         }
     }, 5000);
 
+    setInterval(() => {
+        const xpath = `/html/body/div[4]/div[2]/main/div[1]/div[1]/div/div/div[2]/div/div[1]/div[1]/button`;
+        const targetButton = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        
+        // Check if button exists, is a BUTTON element, is not disabled, and does not contain "PHRS" in text
+        if (
+            targetButton &&
+            targetButton.tagName === 'BUTTON' &&
+            !targetButton.hasAttribute('disabled') &&
+            !targetButton.textContent.trim().includes('PHRS')) {
+                //查找元素是否存在//<button type="button" class="base-Button-root  MuiBox-root css-1fic6k0"><svg data-testid="ArrowBackIcon" viewBox="0 0 24 24" width="24px" height="24px" class="MuiBox-root css-19rsff" sx="[object Object]"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2Z"></path></svg></button>
+                const backButton = document.querySelector('button[type="button"].base-Button-root.MuiBox-root.css-1fic6k0');
+                if (backButton) {
+                    backButton.click();
+                }
+            }
+    }, 5000);
 
     const okx = setInterval(() => {
         const buttons = document.querySelectorAll('button');
