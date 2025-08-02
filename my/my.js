@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.351
+// @version      47.352
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2617,7 +2617,7 @@
 
     setInterval(() => {
         window.location.href='https://sosovalue.com/ja/exp'
-    }, 1000000);
+    }, 1500000);
 
     // Utility to wait for an element with a selector
     function waitForElement(selector, timeout = 15000) {
