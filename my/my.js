@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.345
+// @version      47.346
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -3641,7 +3641,8 @@
 
     //500秒跳转下一个
     setInterval(() => {
-        window.location.href = 'https://app.mahojin.ai/my/point';
+        //window.location.href = 'https://app.mahojin.ai/my/point';
+        window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
     }, 500000);
 
     // 随机字符串生成函数
@@ -3994,7 +3995,7 @@
                 if (successElement) {
                     const textContent = successElement.textContent.trim();
                     if (textContent === '✅ Token created successfully' && window.location.pathname === '/swap') {
-                        window.location.href = 'https://app.mahojin.ai/my/point';
+                        window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
                     }
                 }
             }, 1000);
