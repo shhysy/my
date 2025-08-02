@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.340
+// @version      47.343
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1924,7 +1924,7 @@
                 for (const button of saveButtons) {
                     if (button.textContent.includes('Save')) {
                         setTimeout(() => {
-                            window.open('https://0xvm.com/honor', '_self');
+                            window.open('https://wizolayer.app/dashboard', '_self');
                         }, 8000);
                         button.click();
                         break;
@@ -2141,7 +2141,7 @@
                         if(!isDisabled){
                             claim.dispatchEvent(event);
                             setTimeout(() => {
-                                window.open('https://0xvm.com/honor', '_self');
+                                window.open('https://wizolayer.app/dashboard', '_self');
                            }, 60000);
                             s = false;
                             setTimeout(() => {
@@ -2153,7 +2153,7 @@
                             const alertMessage = document.querySelector('.MuiAlert-message.css-1xsto0d');
                             if (alertMessage && alertMessage.textContent=='Claim failed') {
                                 setTimeout(() => {
-                                     window.open('https://0xvm.com/honor', '_self');
+                                     window.open('https://wizolayer.app/dashboard', '_self');
                                 }, 2000);
                             }
                         }, 1000);
@@ -2176,7 +2176,7 @@
             var sussmsg = document.querySelector("div > div > div.MuiAlert-message.css-1xsto0d")
             if(sussmsg && sussmsg.innerHTML==="Deposit done, please wait for a few minutes for the deposit to arrive" && t){
                 t=false;
-                window.open('https://0xvm.com/honor', '_self');
+                window.open('https://wizolayer.app/dashboard', '_self');
             }
             if(sussmsg && sussmsg.innerHTML==="Withdrawal completed, please wait a few minutes before claiming" && w){
                 falg = true;
@@ -8523,4 +8523,78 @@
     // 实际使用：过滤出大于5的数字，代码复杂但结果正确
     const filter = createComplexFilter(5);
     console.log(filter([3, 7, 2, 9, 5, 10])); // 输出：[7, 9, 10]
+})();
+
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'wizolayer.app') {
+        return;
+    }
+
+    setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Complete Task') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+            }
+        });
+    }, 5000);
+
+    setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Verify') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+            }
+        });
+    }, 5000);
+
+
+    const Connect = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Connect Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Connect);
+            }
+        });
+    }, 5000);
+
+    const OKXWallet = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('OKX Wallet') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(OKXWallet);
+            }
+        });
+    }, 5000);
+
+    const Mining = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Start Mining') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Mining);
+            }
+        });
+    }, 5000);
+
+    const Active = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Mining Active') &&
+                button.hasAttribute('disabled')) {
+                    window.location.href='https://0xvm.com/honor'
+                    clearInterval(Active);
+            }
+        });
+    }, 5000);
+
+
 })();
