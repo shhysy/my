@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.343
+// @version      47.345
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2615,9 +2615,9 @@
         }
     }, 5000);
 
-    setInterval(() => {
-        location.reload();
-    }, 300000);
+    // setInterval(() => {
+    //     location.reload();
+    // }, 300000);
 
     // Utility to wait for an element with a selector
     function waitForElement(selector, timeout = 15000) {
@@ -2740,31 +2740,7 @@
         }
     }
 
-    // 跳转检查函数
-    function checkAndRedirect() {
-        return new Promise(async (resolve) => {
-            try {
-                const counterElement = await waitForXPath('/html/body/div[1]/div[2]/div[2]/div[1]/div/div[1]/div[1]/div[2]/div[1]', 5000);
-                const counterText = counterElement ? counterElement.textContent.trim() : '';
-                const counter = parseInt(counterText) || 0;
-                console.log('当前计数器值:', counterText, '解析为:', counter);
 
-                if (counter === 10 || counter === 50) {
-                    const nextPageUrl = 'https://earn.taker.xyz';
-                    window.location.href = nextPageUrl;
-                    console.log('计数器为10，跳转到:', nextPageUrl);
-                    await new Promise(resolve => setTimeout(resolve, 2000)); // 等待2秒确认跳转
-                    resolve();
-                } else {
-                    console.log('计数器不为10，无需跳转');
-                    resolve();
-                }
-            } catch (error) {
-                console.error('跳转检查出错:', error);
-                resolve();
-            }
-        });
-    }
 
     // 一次完整流程的执行
     async function runChatCycle() {
@@ -2791,15 +2767,11 @@
                 console.log('未找到按钮');
                 return false;
             }
-
             // 等待加载指示器消失
             console.log('等待加载完成...');
             await waitForLoadingToFinish();
             console.log('加载完成');
             await new Promise(resolve => setTimeout(resolve, 5000));
-
-            // 检查跳转
-            await checkAndRedirect();
             return true; // 表示周期成功完成
         } catch (error) {
             await new Promise(resolve => setTimeout(resolve, 5000));
@@ -2810,7 +2782,7 @@
 
     // 主逻辑 - 循环执行
     (async () => {
-        let maxCycles = 10; // 最大循环次数
+        let maxCycles = 20; // 最大循环次数
         let cycleCount = 0;
         let consecutiveFailures = 0;
         const maxFailures = 5; // 最大连续失败次数
@@ -2828,32 +2800,15 @@
                 console.log(`本周期成功，完成 ${cycleCount} 次循环`);
                 await new Promise(resolve => setTimeout(resolve, 30000));
             }
-
-            // 单独检查计数器并跳转
-            try {
-                const counterElement = await waitForXPath('/html/body/div[1]/div[2]/div[2]/div[1]/div/div[1]/div[1]/div[2]/div[1]', 5000);
-                const counterText = counterElement ? counterElement.textContent.trim() : '';
-                const counter = parseInt(counterText) || 0;
-                if (counter === 10) {
-                    console.log('检测到计数器为10，准备跳转');
-                    await checkAndRedirect();
-                    break; // 跳转后退出循环
-                }
-            } catch (error) {
-                await new Promise(resolve => setTimeout(resolve, 5000));
-                console.error('计数器检查超时:', error);
-            }
         }
 
         if (consecutiveFailures >= maxFailures) {
+            window.location.href='https://sosovalue.com/ja/exp'
             console.error('连续失败次数达到上限，脚本终止');
         } else {
             console.log('脚本执行结束，总计完成', cycleCount, '次循环');
         }
     })();
-
-    // 提供手动触发跳转的接口
-    window.checkAndRedirect = checkAndRedirect;
 })();
 
 
