@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.361
+// @version      47.362
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7659,6 +7659,36 @@
         return;
     }
 
+    if (window.location.href == 'https://speedrun.enso.build/apps') {
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        async function automate() {
+            while (true) {
+            let links = document.querySelectorAll('a.w-full');
+            console.log(`Found ${links.length} links on this page`);
+        
+            for (let link of links) {
+                link.click();
+                await wait(3000);
+            }
+        
+            let nextButton = document.querySelector('.rc-pagination-next button');
+            if (nextButton.hasAttribute('disabled')) {
+                console.log('No more pages');
+                break;
+            } else {
+                console.log('Going to next page');
+                nextButton.click();
+                await wait(5000);
+            }
+            }
+        }
+        
+        automate();
+    }
+
     setInterval(() => {
         // 选择按钮，可以根据class或其他特征更精确
         const btn = document.querySelector('button[disabled]');
@@ -7822,6 +7852,8 @@
     if (window.location.hostname !== 'testnet.pharosnetwork.xyz') {
         return;
     }
+
+
     const Connect = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
