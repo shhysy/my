@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.359
+// @version      47.360
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7855,22 +7855,114 @@
         });
     }, 5000);
 
-    const Checked = setInterval(() => {
-        // Ensure the DOM is ready
+    const suss = setInterval(() => {
         if (document.readyState === 'complete') {
-            const buttons = document.querySelectorAll('button');
+            const buttons = document.querySelectorAll('div');
             buttons.forEach(button => {
-                // Normalize case for text comparison
-                if (button.textContent.trim().toLowerCase().includes('checked')) {
-                    // Only redirect if not already on the target page
+                if (button.textContent.trim().toLowerCase().includes('Send successfully!')) {
                     if (window.location.href !== 'https://testnet.zenithfinance.xyz/swap') {
                         window.location.href = 'https://testnet.zenithfinance.xyz/swap';
                     }
-                    clearInterval(Checked); // Stop the interval
+                    clearInterval(suss); // Stop the interval
+                }
+            });
+        }
+    }, 1000);
+
+    let falg = false;
+    let timersCompleted = {
+        Checked: false,
+        Send: false,
+        clickRandomDiv: false,
+        inputInterval: false
+    };
+
+    // Helper function to check if all other timers are cleared
+    const allOtherTimersCleared = () => {
+        return timersCompleted.Checked && 
+            timersCompleted.Send && 
+            timersCompleted.clickRandomDiv && 
+            timersCompleted.inputInterval;
+    };
+
+    const Checked = setInterval(() => {
+        if (document.readyState === 'complete') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().toLowerCase().includes('checked')) {
+                    falg = true;
+                    clearInterval(Checked);
+                    timersCompleted.Checked = true; // Mark as completed
                 }
             });
         }
     }, 5000);
+
+    const Send = setInterval(() => {
+        if (document.readyState === 'complete') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Send') &&
+                    !button.hasAttribute('disabled') && falg) {
+                    button.click();
+                    clearInterval(Send);
+                    timersCompleted.Send = true; // Mark as completed
+                }
+            });
+        }
+    }, 5000);
+
+    const clickRandomDiv = setInterval(() => {
+        if (document.readyState === 'complete') {
+            const divs = document.querySelectorAll('div');
+            const targetTexts = ['0.001PHRS', '0.005PHRS'];
+            const matchingDivs = Array.from(divs).filter(div => 
+                targetTexts.includes(div.textContent.trim())
+            );
+        
+            if (matchingDivs.length > 0) {
+                const randomIndex = Math.floor(Math.random() * matchingDivs.length);
+                matchingDivs[randomIndex].click();
+                clearInterval(clickRandomDiv);
+                timersCompleted.clickRandomDiv = true; // Mark as completed
+            }
+        }
+    }, 2000);
+
+    const inputInterval = setInterval(() => {
+        const input = document.querySelector('input.sc-jaXxZZ.dotVkw[placeholder="Enter Address"]');
+        if (input && input.value === '') {
+            const address = '0x1b740d2d3aa59268d1dd9f0856799855fa1d476d';
+
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+            nativeInputValueSetter.call(input, address);
+
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+            input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: 'Enter' }));
+
+            console.log('已向输入框输入地址:', address);
+            clearInterval(inputInterval);
+            timersCompleted.inputInterval = true; // Mark as completed
+        }
+    }, 2000);
+
+    const SendPHRS = setInterval(() => {
+        if (document.readyState === 'complete' && allOtherTimersCleared()) {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Send PHRS') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(SendPHRS);
+                    console.log('Send PHRS button clicked');
+                }
+            });
+        }
+    }, 5000);
+
+
 
     const OKXWallet = setInterval(() => {
         try {
