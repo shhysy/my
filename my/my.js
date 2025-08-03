@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.358
+// @version      47.359
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7087,7 +7087,7 @@
             } else {
                 log(`${name} 不包含BABY文本，尝试点击替代按钮`);
                 let button = document.evaluate(
-                    '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[3]',
+                    '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[1]',
                     document,
                     null,
                     XPathResult.FIRST_ORDERED_NODE_TYPE,
