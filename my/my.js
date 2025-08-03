@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.360
+// @version      47.361
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7859,7 +7859,7 @@
         if (document.readyState === 'complete') {
             const buttons = document.querySelectorAll('div');
             buttons.forEach(button => {
-                if (button.textContent.trim().toLowerCase().includes('Send successfully!')) {
+                if (button.textContent.trim().includes('Send successfully!')) {
                     if (window.location.href !== 'https://testnet.zenithfinance.xyz/swap') {
                         window.location.href = 'https://testnet.zenithfinance.xyz/swap';
                     }
