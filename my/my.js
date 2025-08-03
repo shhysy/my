@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.356
+// @version      47.357
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2620,13 +2620,20 @@
     setInterval(() => {
         window.location.href='https://sosovalue.com/ja/exp'
     }, 1500000);
-
-    const rate_limit_exceeded =  setInterval(() => {
-        const targetElement = document.querySelector('div');
-        if (targetElement && targetElement.textContent.includes('rate_limit_exceeded')) {
-            window.location.href='https://sosovalue.com/ja/exp'
-            clearInterval(rate_limit_exceeded);
-        }
+    
+    // 检测所有 div，包含目标文本则跳转
+    const checkRateLimit = setInterval(() => {
+        // 获取页面所有 div 元素
+        const allDivs = document.querySelectorAll('div');
+        
+        // 遍历所有 div，检查文本内容
+        allDivs.forEach(div => {
+            if (div.textContent.includes('rate_limit_exceeded')) {
+                window.location.href = 'https://sosovalue.com/ja/exp';
+                clearInterval(checkRateLimit); // 清除定时器
+                return; // 找到后停止遍历
+            }
+        });
     }, 1000);
 
     // Utility to wait for an element with a selector
