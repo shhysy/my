@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.357
+// @version      47.358
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -308,6 +308,7 @@
                     console.log(`重试次数超过 ${maxAttempts}，重新定向到 https://hub.beamable.network/modules/questsold`);
                     window.location.href = 'https://hub.beamable.network/modules/questsold';
                 }
+                
                 return false;
             }
 
@@ -2620,7 +2621,7 @@
     setInterval(() => {
         window.location.href='https://sosovalue.com/ja/exp'
     }, 1500000);
-    
+
     // 检测所有 div，包含目标文本则跳转
     const checkRateLimit = setInterval(() => {
         // 获取页面所有 div 元素
@@ -6823,7 +6824,7 @@
     const MetaMask = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.trim().includes('MetaMask') &&
+            if (button.textContent.trim().includes('OKX Wallet') &&
                 !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(MetaMask);
@@ -6883,9 +6884,9 @@
     // 元素选择器
     const selectors = {
         element1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/button/div/div' },
-        element1_1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div/div[2]/button[7]' },
+        element1_1: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/button[2]' },
         element1_2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[1]' },
-        element2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/button/div/div' },
+        element2: { xpath: '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/button' },
         inputBox: { css: 'input#amount' },
         element3: { css: 'button.bg-sky-600' },
         element3_1: {
@@ -7077,6 +7078,29 @@
         if (!element) {
             return false; // 超时已在 waitForElement 中处理
         }
+        if(name=='元素1-2'){
+            if (element.textContent.includes('Sei')) {
+                log(`${name} 已找到，执行点击`);
+                element.click();
+                await getRandomDelay();
+                return true;
+            } else {
+                log(`${name} 不包含BABY文本，尝试点击替代按钮`);
+                let button = document.evaluate(
+                    '/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/div/div/button[3]',
+                    document,
+                    null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE,
+                    null
+                ).singleNodeValue;
+                if(button){
+                    button.click();
+                    await getRandomDelay();
+                    return true;
+                }
+                return false;
+            }
+        }
         // 滚动到可见
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         await new Promise(resolve => setTimeout(resolve, 500)); // 等待滚动
@@ -7191,7 +7215,7 @@
             return null;
         }
 
-        const element2_1XPath ='/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[2]'
+        const element2_1XPath ='/html/body/div[1]/div[2]/main/div[2]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div/div[1]/div/button[4]'
 
         // 步骤1-5：点击元素1, 1-1, 1-2, 2, 2-1
         const steps = [
