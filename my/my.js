@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.373
+// @version      47.374
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8266,7 +8266,7 @@
     }
 
     setTimeout(() => {
-        window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+        window.location.href = 'https://chat.chainopera.ai';
     }, 200000);
 
     const Connect = setInterval(() => {
