@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.374
+// @version      47.376
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8731,4 +8731,49 @@
     }, 15000);
 
 
+})();
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'of.apr.io') {
+        return;
+    }
+
+    const sigin = setInterval(() => {
+        if (document.readyState === 'complete') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Sign in') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(sigin);
+                }
+            });
+        }
+    }, 5000);
+
+    const OKXWallet = setInterval(() => {
+        if (document.readyState === 'complete') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('OKX Wallet') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(OKXWallet);
+                }
+            });
+        }
+    }, 5000);
+
+    const checkin = setInterval(() => {
+        if (document.readyState === 'complete') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Check-in') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(checkin);
+                }
+            });
+        }
+    }, 5000);
 })();
