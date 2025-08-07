@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.379
+// @version      47.380
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8774,6 +8774,43 @@
                     clearInterval(checkin);
                 }
             });
+        }
+    }, 5000);
+
+    const checkNumber = setInterval(() => {
+        if (document.readyState === 'complete') {
+            // Use XPath to locate the button
+            const button = document.evaluate(
+                '//*[@id="root"]/div/div/div[2]/div[2]/div/div[5]/div/div[2]/div/div[2]/div[2]/button',
+                document,
+                null,
+                XPathResult.FIRST_ORDERED_NODE_TYPE,
+                null
+            ).singleNodeValue;
+    
+            if (button) {
+                // Check if the button text contains any digits
+                const buttonText = button.textContent.trim();
+                const hasNumber = /\d/.test(buttonText); // Checks for any digit (0-9)
+                if (hasNumber) {
+                    console.log(`Button found with text containing numbers: ${buttonText}`);
+                    
+                    // Optional: Perform an action if the button is enabled
+                    if (!button.hasAttribute('disabled')) {
+                        console.log(`Button is enabled. Performing action...`);
+                        // Replace with your desired action, e.g., redirect
+                        // 
+                    } else {
+                        window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+                        console.log(`Button with text ${buttonText} is disabled.`);
+                    }
+                    
+                    // Uncomment the line below to stop the interval after the first detection
+                    // clearInterval(checkNumber);
+                }
+            } else {
+                console.log('Button not found at the specified XPath. Retrying...');
+            }
         }
     }, 5000);
 })();
