@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.380
+// @version      47.381
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8801,8 +8801,10 @@
                         // Replace with your desired action, e.g., redirect
                         // 
                     } else {
+                        
                         window.location.href = 'https://speedrun.enso.build/categories/de-fi';
                         console.log(`Button with text ${buttonText} is disabled.`);
+                        clearInterval(checkNumber);
                     }
                     
                     // Uncomment the line below to stop the interval after the first detection
