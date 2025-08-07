@@ -1,7 +1,7 @@
 import re
 import subprocess
 
-SCRIPT_FILE = "SlowDao.js"
+SCRIPT_FILE = r"C:\Users\SuShiLiang\Documents\GitHub\my\my\my.js"
 
 def bump_version(version):
     parts = version.split('.')
@@ -33,7 +33,7 @@ def update_version_in_file(filename):
 
 def git_commit_and_push(filename, version):
     subprocess.run(["git", "add", filename])
-    subprocess.run(["git", "commit", "-m", f"auto: 升级 SlowDao.js 到 v{version}"])
+    subprocess.run(["git", "commit", "-m", f"auto: 升级 my.js 到 v{version}"])
     subprocess.run(["git", "push"])
 
 if __name__ == "__main__":
