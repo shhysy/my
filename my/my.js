@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.363
+// @version      47.379
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -24,6 +24,9 @@
     setInterval(() => {
         // 检查当前域名是否为 testnet.pharosscan.xyz 且 URL 包含 /tx
         if (location.hostname === 'testnet.pharosscan.xyz' && location.pathname.startsWith('/tx')) {
+            window.close();
+        }
+        if (location.hostname=='pay.primuslabs.xyz') {
             window.close();
         }
     }, 1000);
@@ -7699,7 +7702,7 @@
           if (text.includes('DeFi DEX') && text.includes('Resets in')) {
             console.log('按钮已禁用，且文本匹配:', text);
             // 这里可以执行你需要的操作
-            window.location.href = 'https://chat.chainopera.ai';
+            window.location.href = 'https://testnet.pharosnetwork.xyz/experience';
           } else {
             console.log('按钮已禁用，但文本不匹配:', text);
           }
@@ -7987,7 +7990,7 @@
                 if (button.textContent.trim().includes('Send PHRS') &&
                     !button.hasAttribute('disabled')) {
                     button.click();
-                    clearInterval(SendPHRS);
+                    //clearInterval(SendPHRS);
                     console.log('Send PHRS button clicked');
                 }
             });
@@ -8135,7 +8138,16 @@
             }
         });
     }, 5000);
-
+    const Tryagain = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Try again') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Tryagain);
+            }
+        });
+    }, 5000);
     const okx = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
@@ -8254,7 +8266,7 @@
     }
 
     setTimeout(() => {
-        window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+        window.location.href = 'https://chat.chainopera.ai';
     }, 200000);
 
     const Connect = setInterval(() => {
@@ -8402,8 +8414,9 @@
         const buttons = document.querySelectorAll('div');
         buttons.forEach(button => {
             if (button.textContent.trim().includes('Swap submitted')) {
-                window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+                //window.location.href = 'https://speedrun.enso.build/categories/de-fi';
                 //window.location.href = 'https://www.360.com';
+                window.location.href = 'https://chat.chainopera.ai';
                 clearInterval(Swapsubmitted); // Stop the interval
             }
         });
@@ -8718,4 +8731,49 @@
     }, 15000);
 
 
+})();
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'of.apr.io') {
+        return;
+    }
+
+    const sigin = setInterval(() => {
+        if (document.readyState === 'complete') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Sign in') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(sigin);
+                }
+            });
+        }
+    }, 5000);
+
+    const OKXWallet = setInterval(() => {
+        if (document.readyState === 'complete') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('OKX Wallet') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(OKXWallet);
+                }
+            });
+        }
+    }, 5000);
+
+    const checkin = setInterval(() => {
+        if (document.readyState === 'complete') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.trim().includes('Check-in') &&
+                    !button.hasAttribute('disabled')) {
+                    button.click();
+                    clearInterval(checkin);
+                }
+            });
+        }
+    }, 5000);
 })();
