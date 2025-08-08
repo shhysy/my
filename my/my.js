@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.385
+// @version      47.386
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -6429,214 +6429,214 @@
 // })();
 
 
-// (function() {
-//     'use strict';
-//     if (window.location.hostname !== 'legends.saharalabs.ai') {
-//         return;
-//     }
+(function() {
+    'use strict';
+    if (window.location.hostname !== 'legends.saharalabs.ai') {
+        return;
+    }
 
-//     setTimeout(() => {
-//         location.reload
-//     }, 60000); // Check every 5 seconds
-
-
-
-//     setInterval(() => {
-//         // Select all potential SVG elements
-//         const targetSvgs = [
-//             ...document.querySelectorAll('svg[data-v-a13dd1c6][width="26"][height="26"] path[fill="#F7FF98"]'),
-//             ...document.querySelectorAll('svg path[fill="#F7FF98"]'),
-//             ...document.querySelectorAll('svg path[d*="M19.3333 13.3333"]'),
-//             document.evaluate('/html/body/div[3]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[1]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue,
-//             document.evaluate('/html/body/div[2]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[2]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
-//         ].filter((svg, index, self) => svg && self.indexOf(svg) === index); // Remove duplicates and null
-
-//         if (targetSvgs.length >= 2) {
-//             try {
-//                 targetSvgs.slice(0, 2).forEach((svg, index) => {
-//                     const clickableElement = svg.tagName.toLowerCase() === 'svg' ? svg : svg.closest('svg');
-//                     if (!clickableElement) {
-//                         console.error(`[${new Date().toLocaleTimeString()}] No valid SVG element for clicking at index ${index + 1}`);
-//                         return;
-//                     }
-
-//                     // Try native click
-//                     try {
-//                         clickableElement.click();
-//                         console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked SVG button ${index + 1} (native click)`);
-//                     } catch (error) {
-//                         console.warn(`[${new Date().toLocaleTimeString()}] Native click failed for SVG ${index + 1}, trying MouseEvent:`, error);
-//                         // Fallback to MouseEvent
-//                         const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-//                         clickableElement.dispatchEvent(clickEvent);
-//                         console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked SVG button ${index + 1} (MouseEvent)`);
-//                     }
-//                 });
-//                 console.log(`[${new Date().toLocaleTimeString()}] All required SVG buttons (2) clicked successfully`);
-//             } catch (error) {
-//                 console.error(`[${new Date().toLocaleTimeString()}] Error clicking SVGs:`, error);
-//             }
-//         } else {
-//             // Debug: Log all SVGs for inspection
-//             const allSvgs = document.querySelectorAll('svg');
-//             console.log(`[${new Date().toLocaleTimeString()}] Found ${targetSvgs.length} of 2 required SVG buttons. Total SVGs on page: ${allSvgs.length}. Checking again...`);
-//             allSvgs.forEach((svg, index) => {
-//                 console.log(`SVG ${index + 1}:`, svg.outerHTML.slice(0, 100) + (svg.outerHTML.length > 100 ? '...' : ''));
-//             });
-//         }
-//     }, 5000); // Check every 5 seconds
-
-//     //<a data-v-b0d2019a="" class="login-button" style="width: 175px; height: 64px; font-size: 24px;"><img data-v-b0d2019a="" alt="" src="/assets/logo-BeXmBXM3.png" style="width: 70px; height: 37px; position: absolute; right: 0px; bottom: 0px;"><span data-v-b0d2019a="" style="z-index: 1;"> Sign In </span></a>
-//     const Login = setInterval(() => {
-//         const buttons = document.querySelectorAll('a');
-//         buttons.forEach(button => {
-//             if (button.textContent.trim().includes('Sign In') &&
-//                 !button.hasAttribute('disabled')) {
-//                 button.click();
-//                 clearInterval(Login);
-//             }
-//         });
-//     }, 2000);
-
-//     var metamaskfalg = true;
-//     const MetaMask = setInterval(() => {
-//         if (!metamaskfalg) return;
-//         // 通过 XPath 获取目标元素
-//         var result = document.evaluate(
-//             '/html/body/div[2]/div/div[2]/div/div[1]/div/div/div/div/div[3]/div/div[1]',
-//             document,
-//             null,
-//             XPathResult.FIRST_ORDERED_NODE_TYPE,
-//             null
-//         );
-//         var target = result.singleNodeValue;
-//         // 判断是否存在且包含指定文本
-//         if (
-//             target &&
-//             !target.hasAttribute('disabled') &&
-//             target.textContent.includes('MetaMask')
-//         ) {
-//             target.click();
-//             metamaskfalg = false;
-//             clearInterval(MetaMask);
-//         }
-//     }, 5000);
-
-//     const claim = setInterval(() => {
-//         const buttons = document.querySelectorAll('div');
-//         buttons.forEach(button => {
-//             if (button.textContent.trim().includes(' claim ') &&
-//                 !button.hasAttribute('disabled')) {
-//                 button.click();
-//                 clearInterval(claim);
-//             }
-//         });
-//     }, 5000);
-
-//     const claimtoto = setInterval(() => {
-//         const buttons = document.querySelectorAll('div.task-button'); // Select only divs with class="task-button"
-//         let matchCount = 0;
-
-//         buttons.forEach(button => {
-//             if (button.textContent.trim() === 'claimed' && !button.hasAttribute('disabled')) {
-//                 matchCount++;
-//             }
-//         });
-
-//         if (matchCount >= 1) { // Exactly 3 matches
-//             setTimeout(() => {
-//                 location.href = 'https://chat.chainopera.ai';
-//             }, 15000);
-//             clearInterval(claimtoto);
-//         }
-//     }, 5000);
-
-//     setInterval(() => {
-//         // Select all divs with class 'task-button-plus' and text 'claim'
-//         const claimButtons = Array.from(document.querySelectorAll('div.task-button-plus')).filter(div =>
-//             div.textContent.trim().toLowerCase() === 'claim'
-//         );
-
-//         if (claimButtons.length > 0) {
-//             claimButtons.forEach((button, index) => {
-//                 try {
-//                     // Try native click
-//                     button.click();
-//                     console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked 'claim' button ${index + 1} (native click)`);
-//                 } catch (error) {
-//                     console.warn(`[${new Date().toLocaleTimeString()}] Native click failed for 'claim' button ${index + 1}, trying MouseEvent:`, error);
-//                     // Fallback to MouseEvent
-//                     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
-//                     button.dispatchEvent(clickEvent);
-//                     console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked 'claim' button ${index + 1} (MouseEvent)`);
-//                 }
-//             });
-//         } else {
-//             console.log(`[${new Date().toLocaleTimeString()}] No 'claim' buttons found, checking again...`);
-//             // Debug: Log all task-button-plus elements
-//             const allTaskButtons = document.querySelectorAll('div.task-button-plus');
-//             if (allTaskButtons.length > 0) {
-//                 console.log(`[${new Date().toLocaleTimeString()}] Found ${allTaskButtons.length} 'task-button-plus' elements:`);
-//                 allTaskButtons.forEach((div, index) => {
-//                     console.log(`Div ${index + 1}:`, div.outerHTML.slice(0, 100) + (div.outerHTML.length > 100 ? '...' : ''));
-//                 });
-//             }
-//         }
-//     }, 3000); // Check every 3 seconds
-
-
-//     const clickInterval1 = setInterval(() => {
-//         // Select the target div element
-//         const targetDiv = document.querySelector('div.map-point.map-animal');
-
-//         if (targetDiv) {
-//             try {
-//                 targetDiv.click();
-//                 console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked the map-animal div`);
-//             } catch (error) {
-//                 console.error(`[${new Date().toLocaleTimeString()}] Error clicking the div:`, error);
-//             }
-//         } else {
-//             console.log(`[${new Date().toLocaleTimeString()}] Map-animal div not found, checking again...`);
-//         }
-//     }, 15000);
-
-//     //<div data-v-a13dd1c6="" class="task-info"><div data-v-a13dd1c6="" class="task-simple" style="height: 72px;"><div data-v-a13dd1c6="" style="flex-grow: 1;"><div data-v-a13dd1c6="" class="task-title"><img data-v-a13dd1c6="" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABFlJREFUWAmVV8tOE2EYLRcV5CJyk0u5CQov5FpfQ1fdEgyQ0jId2tJIXPUB3PICbl2zkBgSokChF9wcc+abr98/UzAzJE3Yzcn5zu3P/IX/voXSVRslxH7nTfifGvC3Ojh620Flo4PD120crLVRWWnDXwbK2SaqC03483cov7rF8UwDhSng8CWwNwHkx4HiKHAyAuwOn6E29AO5p0BuEEB/hn9tlM5iH3aBNO57AJTX2igEAFrIZ5s4WACKcwgA5Gca+DwNVCaB2sRv5McvsT0G7AQAgPwzA5DrB9BHAO4He/6PAvDXhYHCSgvFJReAMEAA/vQNdievAga+RhggAIQM1FEfADJJARTCExCAy0A5C1QDBgSANwsUpghAGZAT+M95AqA2BNS7J0gMoIHDzQ5Kb0wDyoBp4Bb8uGjgJjwBNXCJ6livBk4HkY4BirC40YG/DnirFKGcoJxtwVu8Q3FOT0AGKEKeQDVwgZORnz0M8AQpNHDTZYAn8FYVAEUoLtgPXeBPKwBl4MIRIU9wGrgglQaUAdpQNGAiNA3wBC4DgIjQAKgNeYKULhAGTIQtHC+1oCKszQHe7C3yXQAqQrGhiPAMOUeEBJDABR0cblKEUQB6AskBaoAAhIEvU8wB14bGQDwHEgKQJKQI7QRMQs0BTUJxAXOAAGphEqoL6kESag4kPoFF8UMAaENJQrpAASgDf+C/AKpjxgBzwH8iUZzwBJaEYkMRoXRBlAG6QDSgOSA2JAPxIEopwgaYhG4OaBCJBuI2vA7KiCdgDxRHmQO/AhAWxXKCBBowBpiErgvYBd4iT6AiFAYoQrahlJEA2AmDiAAkiut4l6YL3Dp2k9Bb1CR0bRg/ARkA6sNWRoEOunXc04BuQzZwsNUJTsA9YAyICx4TYTyKlQG3jBJGsbhA21AHiauBanCCO4gIWccaxRQhXaBlJAzwBPx4wiRkEDEHJIiOw0XEM+wvaxJqDlADcQBsQ7Uhk9AdJLqI/nsCEyFdkA/3QDQJCUCTkJNM9wBzQOpYF5Ge4HQwsQgf1gABSBe4bShBpJuQIaSb0O0CN4gS1LF0geWATjIRIW1oo9SSUET4cB0rgPpA4hNIED3sAk6yJvbmRYTerG5C5oAA2A41oDbUPZAiii0JxQVXwSoyEdoisk1obVgfFREagO/SB8lywEQYfRfoIhIG9F1AF4gICUDKSN8FBPDNScKEi8hE6JZR9F3g2lBWsbwLdBH15gAfJilOIEnILlAbRtuQDxMdpWSAZWQMWA5YEKUAYAxUNq57ojgfvAusDeMPE7WhdYEbRIkmmWmAJ7BFZKNU2lAY4LvAXkYSROoCfZioDZHmaaZdwDLi49Q0YDa0RSSTjI/T+CqmCHNPIy545GWs8XxuZVQMTiAPk8IKwrdh3AUyy1WEUkZqQ76OOckUQPgw8T488kJu3OPoo51AbVheYw4IAJnl6gImob4LbJCICG0RsQ11kmX6/gGGPFgGjrejcAAAAABJRU5ErkJggg==" style="width: 16px; height: 16px;"><div data-v-a13dd1c6="" class="task-name" style="font-size: 18px;">Visit the Sahara AI blog</div><!----><!----></div><!----><!----></div></div><!----></div
-//     // 启动定时器，每秒检查一次
-//     // const timerId = setInterval(() => {
-//     //     // 查找所有 class="task-info" 元素
-//     //     const taskInfoElements = document.querySelectorAll('.task-info');
-
-//     //     // 检查是否至少有 9 个元素
-//     //     if (taskInfoElements.length >= 8) {
-//     //         // 点击第一个元素
-//     //         if (taskInfoElements[0]) {
-//     //             taskInfoElements[0].click();
-//     //             console.log('Clicked first task-info element');
-//     //         }
-//     //         // 清除定时器
-//     //         clearInterval(timerId);
-//     //         console.log('Timer cleared');
-//     //     } else {
-//     //         console.log(`Condition not met: Found ${taskInfoElements.length} task-info elements`);
-//     //     }
-//     // }, 1000); // 每 1000ms (1秒) 检查一次
+    setTimeout(() => {
+        location.reload
+    }, 60000); // Check every 5 seconds
 
 
 
+    setInterval(() => {
+        // Select all potential SVG elements
+        const targetSvgs = [
+            ...document.querySelectorAll('svg[data-v-a13dd1c6][width="26"][height="26"] path[fill="#F7FF98"]'),
+            ...document.querySelectorAll('svg path[fill="#F7FF98"]'),
+            ...document.querySelectorAll('svg path[d*="M19.3333 13.3333"]'),
+            document.evaluate('/html/body/div[3]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[1]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue,
+            document.evaluate('/html/body/div[2]/div/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div/div[4]/div[2]/div[2]/div[2]/div/svg', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
+        ].filter((svg, index, self) => svg && self.indexOf(svg) === index); // Remove duplicates and null
 
-//     // Timeout mechanism
-//     let attempts = 0;
-//     const maxAttempts = 12; // 60 seconds
-//     const timeoutInterval = setInterval(() => {
-//         attempts++;
-//         if (attempts >= maxAttempts) {
-//             console.log(`[${new Date().toLocaleTimeString()}] Timeout: Only ${document.querySelectorAll('svg path[fill="#F7FF98"]').length} of 2 SVG buttons found after ${maxAttempts} attempts`);
-//             clearInterval(timeoutInterval);
-//         }
-//     }, 5000);
-//     // Your code here...
-// })();
+        if (targetSvgs.length >= 2) {
+            try {
+                targetSvgs.slice(0, 2).forEach((svg, index) => {
+                    const clickableElement = svg.tagName.toLowerCase() === 'svg' ? svg : svg.closest('svg');
+                    if (!clickableElement) {
+                        console.error(`[${new Date().toLocaleTimeString()}] No valid SVG element for clicking at index ${index + 1}`);
+                        return;
+                    }
+
+                    // Try native click
+                    try {
+                        clickableElement.click();
+                        console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked SVG button ${index + 1} (native click)`);
+                    } catch (error) {
+                        console.warn(`[${new Date().toLocaleTimeString()}] Native click failed for SVG ${index + 1}, trying MouseEvent:`, error);
+                        // Fallback to MouseEvent
+                        const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+                        clickableElement.dispatchEvent(clickEvent);
+                        console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked SVG button ${index + 1} (MouseEvent)`);
+                    }
+                });
+                console.log(`[${new Date().toLocaleTimeString()}] All required SVG buttons (2) clicked successfully`);
+            } catch (error) {
+                console.error(`[${new Date().toLocaleTimeString()}] Error clicking SVGs:`, error);
+            }
+        } else {
+            // Debug: Log all SVGs for inspection
+            const allSvgs = document.querySelectorAll('svg');
+            console.log(`[${new Date().toLocaleTimeString()}] Found ${targetSvgs.length} of 2 required SVG buttons. Total SVGs on page: ${allSvgs.length}. Checking again...`);
+            allSvgs.forEach((svg, index) => {
+                console.log(`SVG ${index + 1}:`, svg.outerHTML.slice(0, 100) + (svg.outerHTML.length > 100 ? '...' : ''));
+            });
+        }
+    }, 5000); // Check every 5 seconds
+
+    //<a data-v-b0d2019a="" class="login-button" style="width: 175px; height: 64px; font-size: 24px;"><img data-v-b0d2019a="" alt="" src="/assets/logo-BeXmBXM3.png" style="width: 70px; height: 37px; position: absolute; right: 0px; bottom: 0px;"><span data-v-b0d2019a="" style="z-index: 1;"> Sign In </span></a>
+    const Login = setInterval(() => {
+        const buttons = document.querySelectorAll('a');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Sign In') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Login);
+            }
+        });
+    }, 2000);
+
+    var metamaskfalg = true;
+    const MetaMask = setInterval(() => {
+        if (!metamaskfalg) return;
+        // 通过 XPath 获取目标元素
+        var result = document.evaluate(
+            '/html/body/div[2]/div/div[2]/div/div[1]/div/div/div/div/div[3]/div/div[1]',
+            document,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+        );
+        var target = result.singleNodeValue;
+        // 判断是否存在且包含指定文本
+        if (
+            target &&
+            !target.hasAttribute('disabled') &&
+            target.textContent.includes('MetaMask')
+        ) {
+            target.click();
+            metamaskfalg = false;
+            clearInterval(MetaMask);
+        }
+    }, 5000);
+
+    const claim = setInterval(() => {
+        const buttons = document.querySelectorAll('div');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes(' claim ') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(claim);
+            }
+        });
+    }, 5000);
+
+    const claimtoto = setInterval(() => {
+        const buttons = document.querySelectorAll('div.task-button'); // Select only divs with class="task-button"
+        let matchCount = 0;
+
+        buttons.forEach(button => {
+            if (button.textContent.trim() === 'claimed' && !button.hasAttribute('disabled')) {
+                matchCount++;
+            }
+        });
+
+        if (matchCount >= 1) { // Exactly 3 matches
+            setTimeout(() => {
+                location.href = 'https://chat.chainopera.ai';
+            }, 15000);
+            clearInterval(claimtoto);
+        }
+    }, 5000);
+
+    setInterval(() => {
+        // Select all divs with class 'task-button-plus' and text 'claim'
+        const claimButtons = Array.from(document.querySelectorAll('div.task-button-plus')).filter(div =>
+            div.textContent.trim().toLowerCase() === 'claim'
+        );
+
+        if (claimButtons.length > 0) {
+            claimButtons.forEach((button, index) => {
+                try {
+                    // Try native click
+                    button.click();
+                    console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked 'claim' button ${index + 1} (native click)`);
+                } catch (error) {
+                    console.warn(`[${new Date().toLocaleTimeString()}] Native click failed for 'claim' button ${index + 1}, trying MouseEvent:`, error);
+                    // Fallback to MouseEvent
+                    const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+                    button.dispatchEvent(clickEvent);
+                    console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked 'claim' button ${index + 1} (MouseEvent)`);
+                }
+            });
+        } else {
+            console.log(`[${new Date().toLocaleTimeString()}] No 'claim' buttons found, checking again...`);
+            // Debug: Log all task-button-plus elements
+            const allTaskButtons = document.querySelectorAll('div.task-button-plus');
+            if (allTaskButtons.length > 0) {
+                console.log(`[${new Date().toLocaleTimeString()}] Found ${allTaskButtons.length} 'task-button-plus' elements:`);
+                allTaskButtons.forEach((div, index) => {
+                    console.log(`Div ${index + 1}:`, div.outerHTML.slice(0, 100) + (div.outerHTML.length > 100 ? '...' : ''));
+                });
+            }
+        }
+    }, 3000); // Check every 3 seconds
+
+
+    const clickInterval1 = setInterval(() => {
+        // Select the target div element
+        const targetDiv = document.querySelector('div.map-point.map-animal');
+
+        if (targetDiv) {
+            try {
+                targetDiv.click();
+                console.log(`[${new Date().toLocaleTimeString()}] Successfully clicked the map-animal div`);
+            } catch (error) {
+                console.error(`[${new Date().toLocaleTimeString()}] Error clicking the div:`, error);
+            }
+        } else {
+            console.log(`[${new Date().toLocaleTimeString()}] Map-animal div not found, checking again...`);
+        }
+    }, 15000);
+
+    //<div data-v-a13dd1c6="" class="task-info"><div data-v-a13dd1c6="" class="task-simple" style="height: 72px;"><div data-v-a13dd1c6="" style="flex-grow: 1;"><div data-v-a13dd1c6="" class="task-title"><img data-v-a13dd1c6="" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABFlJREFUWAmVV8tOE2EYLRcV5CJyk0u5CQov5FpfQ1fdEgyQ0jId2tJIXPUB3PICbl2zkBgSokChF9wcc+abr98/UzAzJE3Yzcn5zu3P/IX/voXSVRslxH7nTfifGvC3Ojh620Flo4PD120crLVRWWnDXwbK2SaqC03483cov7rF8UwDhSng8CWwNwHkx4HiKHAyAuwOn6E29AO5p0BuEEB/hn9tlM5iH3aBNO57AJTX2igEAFrIZ5s4WACKcwgA5Gca+DwNVCaB2sRv5McvsT0G7AQAgPwzA5DrB9BHAO4He/6PAvDXhYHCSgvFJReAMEAA/vQNdievAga+RhggAIQM1FEfADJJARTCExCAy0A5C1QDBgSANwsUpghAGZAT+M95AqA2BNS7J0gMoIHDzQ5Kb0wDyoBp4Bb8uGjgJjwBNXCJ6livBk4HkY4BirC40YG/DnirFKGcoJxtwVu8Q3FOT0AGKEKeQDVwgZORnz0M8AQpNHDTZYAn8FYVAEUoLtgPXeBPKwBl4MIRIU9wGrgglQaUAdpQNGAiNA3wBC4DgIjQAKgNeYKULhAGTIQtHC+1oCKszQHe7C3yXQAqQrGhiPAMOUeEBJDABR0cblKEUQB6AskBaoAAhIEvU8wB14bGQDwHEgKQJKQI7QRMQs0BTUJxAXOAAGphEqoL6kESag4kPoFF8UMAaENJQrpAASgDf+C/AKpjxgBzwH8iUZzwBJaEYkMRoXRBlAG6QDSgOSA2JAPxIEopwgaYhG4OaBCJBuI2vA7KiCdgDxRHmQO/AhAWxXKCBBowBpiErgvYBd4iT6AiFAYoQrahlJEA2AmDiAAkiut4l6YL3Dp2k9Bb1CR0bRg/ARkA6sNWRoEOunXc04BuQzZwsNUJTsA9YAyICx4TYTyKlQG3jBJGsbhA21AHiauBanCCO4gIWccaxRQhXaBlJAzwBPx4wiRkEDEHJIiOw0XEM+wvaxJqDlADcQBsQ7Uhk9AdJLqI/nsCEyFdkA/3QDQJCUCTkJNM9wBzQOpYF5Ge4HQwsQgf1gABSBe4bShBpJuQIaSb0O0CN4gS1LF0geWATjIRIW1oo9SSUET4cB0rgPpA4hNIED3sAk6yJvbmRYTerG5C5oAA2A41oDbUPZAiii0JxQVXwSoyEdoisk1obVgfFREagO/SB8lywEQYfRfoIhIG9F1AF4gICUDKSN8FBPDNScKEi8hE6JZR9F3g2lBWsbwLdBH15gAfJilOIEnILlAbRtuQDxMdpWSAZWQMWA5YEKUAYAxUNq57ojgfvAusDeMPE7WhdYEbRIkmmWmAJ7BFZKNU2lAY4LvAXkYSROoCfZioDZHmaaZdwDLi49Q0YDa0RSSTjI/T+CqmCHNPIy545GWs8XxuZVQMTiAPk8IKwrdh3AUyy1WEUkZqQ76OOckUQPgw8T488kJu3OPoo51AbVheYw4IAJnl6gImob4LbJCICG0RsQ11kmX6/gGGPFgGjrejcAAAAABJRU5ErkJggg==" style="width: 16px; height: 16px;"><div data-v-a13dd1c6="" class="task-name" style="font-size: 18px;">Visit the Sahara AI blog</div><!----><!----></div><!----><!----></div></div><!----></div
+    // 启动定时器，每秒检查一次
+    // const timerId = setInterval(() => {
+    //     // 查找所有 class="task-info" 元素
+    //     const taskInfoElements = document.querySelectorAll('.task-info');
+
+    //     // 检查是否至少有 9 个元素
+    //     if (taskInfoElements.length >= 8) {
+    //         // 点击第一个元素
+    //         if (taskInfoElements[0]) {
+    //             taskInfoElements[0].click();
+    //             console.log('Clicked first task-info element');
+    //         }
+    //         // 清除定时器
+    //         clearInterval(timerId);
+    //         console.log('Timer cleared');
+    //     } else {
+    //         console.log(`Condition not met: Found ${taskInfoElements.length} task-info elements`);
+    //     }
+    // }, 1000); // 每 1000ms (1秒) 检查一次
+
+
+
+
+    // Timeout mechanism
+    let attempts = 0;
+    const maxAttempts = 12; // 60 seconds
+    const timeoutInterval = setInterval(() => {
+        attempts++;
+        if (attempts >= maxAttempts) {
+            console.log(`[${new Date().toLocaleTimeString()}] Timeout: Only ${document.querySelectorAll('svg path[fill="#F7FF98"]').length} of 2 SVG buttons found after ${maxAttempts} attempts`);
+            clearInterval(timeoutInterval);
+        }
+    }, 5000);
+    // Your code here...
+})();
 
 (function() {
     'use strict';
@@ -8266,7 +8266,7 @@
     }
 
     setTimeout(() => {
-        window.location.href = 'https://of.apr.io/dashboard';
+        window.location.href = 'https://chat.chainopera.ai';
     }, 200000);
 
     const Connect = setInterval(() => {
@@ -8416,7 +8416,7 @@
             if (button.textContent.trim().includes('Swap submitted')) {
                 //window.location.href = 'https://speedrun.enso.build/categories/de-fi';
                 //window.location.href = 'https://www.360.com';
-                window.location.href = 'https://of.apr.io/dashboard';
+                window.location.href = 'https://chat.chainopera.ai';
                 clearInterval(Swapsubmitted); // Stop the interval
             }
         });
@@ -8764,18 +8764,44 @@
         }
     }, 5000);
 
+
+
     const checkin = setInterval(() => {
         if (document.readyState === 'complete') {
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('Check-in') &&
-                    !button.hasAttribute('disabled')) {
-                    button.click();
-                    clearInterval(checkin);
+            // Use XPath to locate the button
+            const button = document.evaluate(
+                '//*[@id="root"]/div/div/div[2]/div[2]/div/div[5]/div/div[2]/div/div[2]/div[2]/button',
+                document,
+                null,
+                XPathResult.FIRST_ORDERED_NODE_TYPE,
+                null
+            ).singleNodeValue;
+    
+            if (button) {
+                // Define buttonText by getting the button's text content
+                const buttonText = button.textContent.trim();
+    
+                // Check if the button text is exactly "Check-in"
+                if (buttonText.includes('Check-in')) {
+                    console.log(`Button found with text: ${buttonText}`);
+                    
+                    // Perform action if the button is enabled
+                    if (!button.hasAttribute('disabled')) {
+                        button.click();
+                        console.log('Button clicked.');
+                        clearInterval(checkin);
+                    } else {
+                        console.log(`Button with text "${buttonText}" is disabled.`);
+                    }
+                } else {
+                    console.log(`Button found but text does not include "Check-in". Actual text: ${buttonText}`);
                 }
-            });
+            } else {
+                console.log('Button not found at the specified XPath. Retrying...');
+            }
         }
     }, 5000);
+
 
     const checkNumber = setInterval(() => {
         if (document.readyState === 'complete') {
