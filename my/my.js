@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.382
+// @version      47.384
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1740,33 +1740,63 @@
         });
     }, 5000);
 
-    // 处理按钮的函数
-    function handleButton() {
-        const buttons = document.getElementsByTagName('a');
+
+    setInterval(() => {
+        // 仅选择 class 为 checkin-btn-new 的按钮
+        const buttons = document.querySelectorAll('button.checkin-btn-new');
+        const targetTexts = ['立即签到', 'Daily Check-In', '일일 체크인', 'デイリーチェックイン', '每日签到'];
+    
+        for (let button of buttons) {
+            // 获取按钮文本或子 <span> 的文本
+            const buttonText = button.textContent.trim();
+            const spanText = button.querySelector('span')?.textContent.trim();
+    
+            for (let text of targetTexts) {
+                if (buttonText === text || spanText === text) {
+                    console.log(`找到并点击按钮: ${text}`);
+                    button.click();
+                    const nextPage = 'https://cryptopond.xyz/modelfactory/detail/306250?tab=4';
+                    setTimeout(() => {
+                        window.location.href = nextPage;
+                        console.log('跳转到页面: ' + nextPage);
+                    }, 3000); // 缩短延迟到 3 秒
+                    return; // 找到并点击后退出循环
+                }
+            }
+        }
+        console.log('未找到匹配的按钮');
+    }, 15000);
+
+
+
+    const gogo = setInterval(function() {
+        const buttons = document.getElementsByTagName('button');
         let targetButton = null;
-        const targetTexts = ['立即签到', 'Sign In Now', '지금 체크인', '今すぐサインイン'];
+        const targetTexts = ['スピン', '立即旋转', '스핀 시작', 'Spin'];
 
         for (let button of buttons) {
             for (let text of targetTexts) {
                 if (button.textContent.trim() === text) {
                     button.click();
-                    const nextPage = 'https://cryptopond.xyz/modelfactory/detail/306250?tab=4';
-                    setTimeout(function() {
-                        window.location.href = nextPage;
-                        console.log('Jumping to next page: ' + nextPage);
-                    }, 5000);
+                    clearInterval(gogo);
                 }
             }
         }
-    }
+    }, 5000); // 5000 毫秒 = 5 秒
 
+    const s = setInterval(function() {
+        const buttons = document.getElementsByTagName('a');
+        let targetButton = null;
+        const targetTexts = ['立即旋转', 'Spin', '스핀 시작', 'スピン'];
 
-    // 初始化时检查按钮
-    handleButton();
-
-    // 每 5 秒检查一次
-    setInterval(function() {
-        handleButton();
+        for (let button of buttons) {
+            for (let text of targetTexts) {
+                if (button.textContent.trim() === text) {
+                    button.click();
+                    clearInterval(s);
+                }
+            }
+        }
     }, 5000); // 5000 毫秒 = 5 秒
 
     console.log('Interval check started (every 5 seconds) on ' + targetDomain);
