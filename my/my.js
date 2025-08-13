@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.384
+// @version      47.390
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -9,6 +9,7 @@
 // @exclude      https://hcaptcha.com/*
 // @exclude      https://www.cloudflare.com/*
 // @exclude      https://cloudflare.com/*
+// @exclude      https://testnet.sodex.com/*
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @grant        GM_download
@@ -8794,18 +8795,44 @@
         }
     }, 5000);
 
+
+
     const checkin = setInterval(() => {
         if (document.readyState === 'complete') {
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('Check-in') &&
-                    !button.hasAttribute('disabled')) {
-                    button.click();
-                    clearInterval(checkin);
+            // Use XPath to locate the button
+            const button = document.evaluate(
+                '//*[@id="root"]/div/div/div[2]/div[2]/div/div[5]/div/div[2]/div/div[2]/div[2]/button',
+                document,
+                null,
+                XPathResult.FIRST_ORDERED_NODE_TYPE,
+                null
+            ).singleNodeValue;
+    
+            if (button) {
+                // Define buttonText by getting the button's text content
+                const buttonText = button.textContent.trim();
+    
+                // Check if the button text is exactly "Check-in"
+                if (buttonText.includes('Check-in')) {
+                    console.log(`Button found with text: ${buttonText}`);
+                    
+                    // Perform action if the button is enabled
+                    if (!button.hasAttribute('disabled')) {
+                        button.click();
+                        console.log('Button clicked.');
+                        clearInterval(checkin);
+                    } else {
+                        console.log(`Button with text "${buttonText}" is disabled.`);
+                    }
+                } else {
+                    console.log(`Button found but text does not include "Check-in". Actual text: ${buttonText}`);
                 }
-            });
+            } else {
+                console.log('Button not found at the specified XPath. Retrying...');
+            }
         }
     }, 5000);
+
 
     const checkNumber = setInterval(() => {
         if (document.readyState === 'complete') {
@@ -8832,7 +8859,7 @@
                         // 
                     } else {
                         
-                        window.location.href = 'https://speedrun.enso.build/categories/de-fi';
+                        window.location.href = 'https://chat.chainopera.ai/';
                         console.log(`Button with text ${buttonText} is disabled.`);
                         clearInterval(checkNumber);
                     }

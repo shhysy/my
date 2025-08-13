@@ -1,7 +1,7 @@
 import re
 import subprocess
 
-SCRIPT_FILE = r"C:\Users\SuShiLiang\Documents\GitHub\my\my\my.js"
+SCRIPT_FILE = r"C:\Users\Administrator\Documents\GitHub\my\my\my.js"
 
 def bump_version(version):
     parts = version.split('.')
