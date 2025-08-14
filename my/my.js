@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.391
+// @version      47.392
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1728,7 +1728,7 @@
     }
     setTimeout(() => {
         window.location.href = 'https://cryptopond.xyz/modelfactory/detail/306250?tab=4';
-    }, 30000);
+    }, 300000);
 
     const OKXWallet = setInterval(() => {
         const buttons = document.querySelectorAll('button');
@@ -1760,7 +1760,7 @@
                     setTimeout(() => {
                         window.location.href = nextPage;
                         console.log('跳转到页面: ' + nextPage);
-                    }, 3000); // 缩短延迟到 3 秒
+                    }, 30000); // 缩短延迟到 3 秒
                     return; // 找到并点击后退出循环
                 }
             }
@@ -1779,7 +1779,7 @@
             for (let text of targetTexts) {
                 if (button.textContent.trim() === text) {
                     button.click();
-                    clearInterval(gogo);
+                    //clearInterval(gogo);
                 }
             }
         }
@@ -1794,7 +1794,7 @@
             for (let text of targetTexts) {
                 if (button.textContent.trim() === text) {
                     button.click();
-                    clearInterval(s);
+                    //clearInterval(s);
                 }
             }
         }
