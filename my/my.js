@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.392
+// @version      47.393
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1741,6 +1741,16 @@
         });
     }, 5000);
 
+    const O =  setInterval(() => {
+        const errorPopup = document.querySelector('.el-message--error .el-message__content');
+        if (errorPopup && errorPopup.textContent.includes('旋转次数不足')) {
+            console.log('检测到错误提示: 旋转次数不足，跳转到目标页面');
+            const nextPage = 'https://cryptopond.xyz/modelfactory/detail/306250?tab=4';
+            window.location.href = nextPage;
+            console.log('跳转到页面: ' + nextPage);
+            clearInterval(O);
+        }
+    }, 1000);
 
     setInterval(() => {
         // 仅选择 class 为 checkin-btn-new 的按钮
@@ -1783,7 +1793,7 @@
                 }
             }
         }
-    }, 5000); // 5000 毫秒 = 5 秒
+    }, 10000); // 5000 毫秒 = 5 秒
 
     const s = setInterval(function() {
         const buttons = document.getElementsByTagName('a');
@@ -1798,7 +1808,7 @@
                 }
             }
         }
-    }, 5000); // 5000 毫秒 = 5 秒
+    }, 10000); // 5000 毫秒 = 5 秒
 
     console.log('Interval check started (every 5 seconds) on ' + targetDomain);
 })();
