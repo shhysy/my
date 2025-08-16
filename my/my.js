@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.397
+// @version      47.398
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4270,8 +4270,6 @@
         }
     }
 
-    // Initialize the timer to check and click every 3 seconds
-    // setInterval(clickOpenButton, 3000);
 
     // Initial attempt after DOM loads
     window.addEventListener('load', clickOpenButton);
@@ -4299,31 +4297,6 @@
             await new Promise(resolve => setTimeout(resolve, config.checkInterval));
         }
         return null;
-    }
-
-    // 重试函数
-    async function retryOperation(operation, maxRetries = config.maxRetries) {
-        let lastError;
-        for (let i = 0; i < maxRetries; i++) {
-            try {
-                return await operation();
-            } catch (error) {
-                console.log(`尝试 ${i + 1}/${maxRetries} 失败:`, error.message);
-                lastError = error;
-                if (i < maxRetries - 1) {
-                    await new Promise(resolve => setTimeout(resolve, config.retryDelay));
-                }
-            }
-        }
-        throw lastError;
-    }
-
-    // 检查域名
-    function checkDomain() {
-        if (window.location.hostname !== 'chat.chainopera.ai') {
-            throw new Error('不在正确的域名上');
-        }
-        console.log('检测到正确的域名，开始自动化流程');
     }
 
     // 点击MetaMask按钮
@@ -4486,7 +4459,6 @@
     // 主流程
     async function main() {
         try {
-            checkDomain();
 
             // 检查钱包是否已经连接
             const connectedWalletButton = await waitForElement('button.inline-flex.items-center.justify-center span.flex.gap-2.items-center.text-xs svg.lucide-wallet', 5000);
@@ -4494,7 +4466,7 @@
                 console.log('钱包已经连接，跳过MetaMask连接步骤');
             } else {
                 // 执行MetaMask连接
-                await retryOperation(clickMetaMask);
+                await clickMetaMask();
 
                 // 等待一段时间让钱包连接完成
                 await new Promise(resolve => setTimeout(resolve, 13000));
@@ -4505,7 +4477,7 @@
             await new Promise(resolve => setTimeout(resolve, 3000));
 
             // 点击钱包按钮
-            await retryOperation(handleWalletConnection);
+            await handleWalletConnection();
 
             // 执行签到
             await performSignIn();
