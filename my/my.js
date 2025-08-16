@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.396
+// @version      47.397
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4449,20 +4449,16 @@
                         newChatButton.closest('button').click();
                         console.log('成功点击新对话按钮');
                         await new Promise(resolve => setTimeout(resolve, 15000));
+                        successCount++;
                     } else {
                         console.log('未找到新对话按钮');
                     }
                 }
 
-                // 移动到下一个对话按钮
-                successCount++;
-
             } catch (error) {
                 console.error(`开始对话时出错:`, error);
-                successCount++;
             }
         }
-
         console.log(`总共完成了 ${successCount} 次对话`);
         return successCount >= targetSuccessCount;
     }
@@ -4527,7 +4523,6 @@
                 }
             });
 
-
             // 等待10秒让元素出现
             console.log('等待10秒让返回按钮出现');
             await new Promise(resolve => setTimeout(resolve, 30000));
@@ -4541,9 +4536,9 @@
             }
 
 
-        await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
 
-           if (backButton) {
+            if (backButton) {
                 backButton.closest('button').click();
                 console.log('成功点击返回按钮');
                 await new Promise(resolve => setTimeout(resolve, 2000));
@@ -4555,7 +4550,7 @@
             console.log('开始对话流程');
 
             // 执行对话
-            const conversationSuccess = await retryOperation(performConversations);
+            const conversationSuccess = await performConversations();
 
             if (conversationSuccess) {
                 window.location.href = 'https://testnet.somnia.network/';
