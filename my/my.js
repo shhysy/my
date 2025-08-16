@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.401
+// @version      47.402
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1470,7 +1470,7 @@
     setInterval(() => {
         clickButtons();
         if (allDisabled>=5) {
-            window.location.href = 'https://www.starpower.world/wallet';
+            window.location.href = 'https://x.ink/airdrop';
         }
     }, 3000);
 
