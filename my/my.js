@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.399
+// @version      47.400
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4411,6 +4411,7 @@
                         const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
                         if (newChatButton) {
                             newChatButton.closest('button').click();
+                            successCount++;
                             console.log('成功点击新对话按钮');
                             await new Promise(resolve => setTimeout(resolve, 5000));
                         } else {
