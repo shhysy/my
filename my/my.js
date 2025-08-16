@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.395
+// @version      47.396
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4368,14 +4368,14 @@
     async function performConversations() {
         // 对话按钮的XPath列表
         const conversationXPaths = [
-            '/html/body/div[2]/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[2]',
-            '/html/body/div[2]/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[1]',
-            '/html/body/div[2]/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[3]',
-            '/html/body/div[2]/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[4]',
-            '/html/body/div[2]/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[5]',
-            '/html/body/div[2]/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[6]',
-            '/html/body/div[2]/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[7]',
-            '/html/body/div[2]/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[8]'
+            '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[1]',
+            '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[2]',
+            '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[3]',
+            '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[4]',
+            '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[5]',
+            '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[6]',
+            '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[7]',
+            '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[8]'
         ];
 
         // 随机打乱XPath顺序
@@ -4383,13 +4383,13 @@
 
         // 点击对话按钮进行对话
         let successCount = 0;
-        let currentIndex = 0;
 
         const targetSuccessCount = Math.floor(Math.random() * 6) + 13; // 生成13-18之间的随机数
         while (successCount < targetSuccessCount) {
             try {
                 // 获取当前要点击的按钮
-                const xpath = shuffledXPaths[currentIndex % shuffledXPaths.length];
+
+                const xpath = shuffledXPaths[random(1,8) % shuffledXPaths.length];
                 let element = null;
                 const startTime = Date.now();
                 // 添加20秒超时机制
@@ -4401,29 +4401,34 @@
                 }
 
                 if (element) {
-                    successCount++;
-                    console.log(`准备进行第 ${successCount} 次对话`);
                     element.click();
-
                     // 等待对话开始
                     await new Promise(resolve => setTimeout(resolve, 5000));
+                    const buttonXPath = '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[1]/div/div[2]/button';
+                    const button = document.evaluate(buttonXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
-                    const buttonXPath = '/html/body/div/div[3]/div[2]/div/div[2]/div/div[1]/div/div[2]/button';
-                    const button = document.evaluate(buttonXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
-                    || document.querySelector('button.inline-flex.items-center.justify-center.rounded-full.p-1.5.size-7');
                     if (button) {
-                        button.click();
-                        await new Promise(resolve => setTimeout(resolve, 5000));
+                        // Check if the button is clickable (not disabled and visible)
+                        const isClickable = !button.disabled && button.offsetParent !== null;
+                        
+                        if (isClickable) {
+                            try {
+                                button.click();
+                                await new Promise(resolve => setTimeout(resolve, 5000));
+                                console.log('Button clicked successfully.');
+                            } catch (error) {
+                                console.error('Error clicking button:', error);
+                            }
+                        } else {
+                            console.warn('Button is not clickable (disabled or not visible).');
+                        }
+                    } else {
+                        console.warn('Button not found.');
                     }
 
-                    await new Promise(resolve => setTimeout(resolve, 20000));
+                    await new Promise(resolve => setTimeout(resolve, 10000));
 
-                    // const responseComplete = document.querySelector('.text-gray-500.text-xs');
-                    // if (responseComplete) {
-                    //     console.log('对话响应完成');
-                    //     await new Promise(resolve => setTimeout(resolve, 5000));
-                    // }
-
+                    
                     const stopButton = await waitForElement('button.bg-destructive', 10000);
                     if (!stopButton) {
                         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -4450,11 +4455,11 @@
                 }
 
                 // 移动到下一个对话按钮
-                currentIndex++;
+                successCount++;
 
             } catch (error) {
                 console.error(`开始对话时出错:`, error);
-                currentIndex++;
+                successCount++;
             }
         }
 
@@ -4553,7 +4558,7 @@
             const conversationSuccess = await retryOperation(performConversations);
 
             if (conversationSuccess) {
-                //window.location.href = 'https://testnet.somnia.network/';
+                window.location.href = 'https://testnet.somnia.network/';
                 console.log('所有对话完成');
             } else {
                 console.log('对话未全部完成');
