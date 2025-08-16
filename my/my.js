@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.398
+// @version      47.399
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4246,6 +4246,10 @@
     if (window.location.hostname !== 'chat.chainopera.ai') {
         return;
     }
+    
+    function random(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
     function clickOpenButton() {
         // Select the BUTTON element that contains an SVG with lucide-panel-left-open
@@ -4337,6 +4341,8 @@
         return null;
     }
 
+    let successCount = 0;
+
     // 执行对话
     async function performConversations() {
         // 对话按钮的XPath列表
@@ -4354,11 +4360,8 @@
         // 随机打乱XPath顺序
         const shuffledXPaths = [...conversationXPaths].sort(() => Math.random() - 0.5);
 
-        // 点击对话按钮进行对话
-        let successCount = 0;
-
         const targetSuccessCount = Math.floor(Math.random() * 6) + 13; // 生成13-18之间的随机数
-        while (successCount < targetSuccessCount) {
+        if (successCount < targetSuccessCount) {
             try {
                 // 获取当前要点击的按钮
 
@@ -4528,7 +4531,7 @@
                 window.location.href = 'https://testnet.somnia.network/';
                 console.log('所有对话完成');
             } else {
-                console.log('对话未全部完成');
+                performConversations();
             }
         } catch (error) {
             console.error('自动化流程失败:', error.message);
