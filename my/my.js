@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.407
+// @version      47.408
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4343,7 +4343,7 @@
 
     let successCount = 1;
 
-    const targetSuccessCount = Math.floor(Math.random() * 6) + 8; // 生成13-18之间的随机数
+    const targetSuccessCount = Math.floor(Math.random() * 6) + 10; // 生成13-18之间的随机数
 
     console.log("targetSuccessCount"+targetSuccessCount)
 
