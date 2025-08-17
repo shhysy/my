@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.404
+// @version      47.405
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4343,6 +4343,8 @@
 
     let successCount = 0;
 
+    const targetSuccessCount = Math.floor(Math.random() * 6) + 10; // 生成13-18之间的随机数
+
     // 执行对话
     async function performConversations() {
         // 对话按钮的XPath列表
@@ -4356,12 +4358,21 @@
             '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[7]',
             '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[8]'
         ];
+        const targetTexts = [
+            'Market Sentiment Radar',
+            'Crypto Opportunity Scout',
+            'ChainOpera-x1',
+            'Meme Coin Radar',
+            'Claude 3.5 Sonnet',
+            'Caila Agent',
+            'Token Analytics Agent'
+        ];
 
         // 随机打乱XPath顺序
         const shuffledXPaths = [...conversationXPaths].sort(() => Math.random() - 0.5);
 
-        const targetSuccessCount = Math.floor(Math.random() * 6) + 13; // 生成13-18之间的随机数
-        if (successCount < targetSuccessCount) {
+        
+        while (successCount < targetSuccessCount) {
             try {
                 // 获取当前要点击的按钮
 
@@ -4404,7 +4415,8 @@
 
                     await new Promise(resolve => setTimeout(resolve, 10000));
 
-                    
+
+
                     const stopButton = await waitForElement('button.bg-destructive', 10000);
                     if (!stopButton) {
                         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -4415,16 +4427,6 @@
                             console.log('成功点击新对话按钮');
                             await new Promise(resolve => setTimeout(resolve, 10000));
 
-                            const targetTexts = [
-                                'Market Sentiment Radar',
-                                'Crypto Opportunity Scout',
-                                'ChainOpera-x1',
-                                'Meme Coin Radar',
-                                'Claude 3.5 Sonnet',
-                                'Caila Agent',
-                                'Token Analytics Agent'
-                            ];
-                            
                             const buttons = document.querySelectorAll('button');
                             let targetButton = null;
                             
@@ -4483,10 +4485,53 @@
                     } else {
                         console.log('未找到新对话按钮');
                     }
+                    const buttons = document.querySelectorAll('button');
+                    let targetButton = null;
+                    
+                    for (let btn of buttons) {
+                        const spanText = btn.querySelector('span')?.textContent;
+                        if (spanText && targetTexts.includes(spanText)) {
+                            targetButton = btn;
+                            break; // 找到第一个匹配的按钮后退出循环
+                        }
+                    }
+                    
+                    if (targetButton) {
+                        targetButton.focus(); // 聚焦按钮
+                        targetButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true })); // 模拟下拉
+                        console.log(`尝试打开 ${targetButton.querySelector('span').textContent} 菜单`);
+                    } else {
+                        console.log('未找到目标按钮');
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                    
+                    const menuItems = document.querySelectorAll('[role="menuitem"]');
+                    const validMenuItems = Array.from(menuItems).filter(item => {
+                        const itemText = item.querySelector('.font-medium')?.textContent;
+                        return itemText && itemText !== 'Add'; // 排除 "Add" 按钮
+                    });
+
+                    if (validMenuItems.length > 0) {
+                        // 随机选择一个有效菜单项
+                        const randomIndex = Math.floor(Math.random() * validMenuItems.length);
+                        const selectedItem = validMenuItems[randomIndex];
+
+                        // 获取菜单项的文本（用于日志）
+                        const itemText = selectedItem.querySelector('.font-medium')?.textContent || '未知项';
+
+                        // 模拟点击
+                        selectedItem.focus(); // 聚焦
+                        selectedItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+                        console.log(`随机选择了并点击了: ${itemText}`);
+                    } else {
+                        console.log('未找到有效菜单项');
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                 }
 
             } catch (error) {
-                console.error(`开始对话时出错:`, error);
+                console.error(`开始对话时
+                    出错:`, error);
             }
         }
         console.log(`总共完成了 ${successCount} 次对话`);
@@ -4584,8 +4629,6 @@
             if (conversationSuccess) {
                 window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
                 console.log('所有对话完成');
-            } else {
-                performConversations();
             }
         } catch (error) {
             console.error('自动化流程失败:', error.message);
