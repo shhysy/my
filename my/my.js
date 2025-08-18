@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.412
+// @version      47.413
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4660,7 +4660,7 @@
         'use strict';
     
         const MENU_OPEN_DELAY = 1500; // 等待菜单打开的时间
-        const DELETE_DELAY_MIN = 5000; // 最小删除间隔（5秒）
+        const DELETE_DELAY_MIN = 8000; // 最小删除间隔（5秒）
         const DELETE_DELAY_MAX = 10000; // 最大删除间隔（10秒）
     
         const chatSelector = 'div[id^="chat-"]';
