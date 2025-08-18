@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.408
+// @version      47.410
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7776,6 +7776,13 @@
         console.log('Script only runs');
         return;
     }
+    
+    setInterval(() => {
+        const targetElement = document.querySelector('p');
+        if (targetElement && targetElement.textContent.includes('Application error: a client-side exception has occurred')) {
+            window.location.href = 'https://testnet.pharosnetwork.xyz/experience';
+        }
+    }, 5000);
 
     // if (window.location.href == 'https://speedrun.enso.build/apps') {
     //     function wait(ms) {
