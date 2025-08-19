@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.421
+// @version      47.422
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4561,9 +4561,149 @@
         return true;
     }
 
+    const MENU_OPEN_DELAY = 1500; // 等待菜单打开的时间
+    const DELETE_DELAY_MIN = 8000; // 最小删除间隔（5秒）
+    const DELETE_DELAY_MAX = 10000; // 最大删除间隔（10秒）
+
+    const chatSelector = 'div[id^="chat-"]';
+    const menuButtonSelector = 'button[aria-haspopup="menu"]';
+    const deleteButtonSelector = 'button:has(svg.lucide-trash-2)';
+    const menuSelector = '[role="menu"][data-state="open"]';
+
+    // 模拟真实鼠标点击
+    function simulateClick(element) {
+        const rect = element.getBoundingClientRect();
+        const clientX = rect.left + rect.width / 2;
+        const clientY = rect.top + rect.height / 2;
+
+        const events = [
+            new MouseEvent('mouseover', { bubbles: true, cancelable: true, view: window, clientX, clientY }),
+            new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window, clientX, clientY, button: 0 }),
+            new MouseEvent('click', { bubbles: true, cancelable: true, view: window, clientX, clientY, button: 0 }),
+            new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window, clientX, clientY, button: 0 })
+        ];
+
+        element.focus();
+        element.dispatchEvent(new Event('focus', { bubbles: true }));
+        events.forEach(event => {
+            element.dispatchEvent(event);
+            console.log(`Dispatched event: ${event.type} on button`);
+        });
+
+        // 模拟键盘 Enter 键
+        const keyEvent = new KeyboardEvent('keydown', {
+            key: 'Enter',
+            code: 'Enter',
+            bubbles: true,
+            cancelable: true
+        });
+        element.dispatchEvent(keyEvent);
+        console.log('Dispatched keydown: Enter');
+    }
+
+    // 模拟 hover 效果
+    function simulateHover(element) {
+        const hoverEvent = new MouseEvent('mouseover', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+        element.dispatchEvent(hoverEvent);
+        console.log('Dispatched hover event');
+    }
+
+    // 等待元素出现
+    async function waitForElement(selector, timeout = 2000) {
+        return new Promise((resolve) => {
+            const startTime = Date.now();
+            const checkElement = () => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    resolve(element);
+                } else if (Date.now() - startTime >= timeout) {
+                    resolve(null);
+                } else {
+                    setTimeout(checkElement, 100);
+                }
+            };
+            checkElement();
+        });
+    }
+
+    // 随机延迟（8-10秒）
+    function randomDelay() {
+        const delay = Math.floor(Math.random() * (DELETE_DELAY_MAX - DELETE_DELAY_MIN + 1)) + DELETE_DELAY_MIN;
+        console.log(`Waiting for ${delay}ms before next deletion`);
+        return new Promise(resolve => setTimeout(resolve, delay));
+    }
+
+    // 处理单个聊天项
+    async function processChat(chat) {
+        const chatId = chat.id;
+        console.log(`Processing chat ${chatId}`);
+
+        const menuButton = chat.querySelector(menuButtonSelector);
+        if (!menuButton) {
+            console.log(`Menu button not found for chat ${chatId}`);
+            return;
+        }
+
+        // 检查按钮可见性
+        if (!menuButton.offsetParent || window.getComputedStyle(menuButton).opacity === '0') {
+            console.log(`Menu button is not visible for chat ${chatId}, simulating hover`);
+            simulateHover(chat); // 触发 chat 项的 hover
+            await new Promise(resolve => setTimeout(resolve, 200)); // 等待 hover 效果
+        }
+
+        // 模拟点击
+        simulateClick(menuButton);
+
+        // 等待菜单
+        const menu = await waitForElement(menuSelector, MENU_OPEN_DELAY);
+        if (!menu) {
+            console.log(`Menu not found for chat ${chatId}`);
+            console.log(`Button state: aria-expanded=${menuButton.getAttribute('aria-expanded')}, data-state=${menuButton.getAttribute('data-state')}`);
+            return;
+        }
+
+        // 点击删除按钮
+        const deleteButton = menu.querySelector(deleteButtonSelector);
+        if (deleteButton) {
+            simulateClick(deleteButton);
+            console.log(`Delete button clicked for chat ${chatId}`);
+        } else {
+            console.log(`Delete button not found in menu for chat ${chatId}`);
+        }
+    }
+
+    // 主逻辑：处理最多10个聊天项
+    async function processAllChats() {
+        const chats = document.querySelectorAll(chatSelector);
+        if (!chats.length) {
+            console.log('No chats found');
+            return;
+        }
+
+        const maxChatsToDelete = 10; // 限制删除10条
+        const chatsToProcess = Array.from(chats).slice(0, maxChatsToDelete); // 取前10个聊天项
+        console.log(`Found ${chats.length} chats, processing up to ${maxChatsToDelete}`);
+
+        for (const chat of chatsToProcess) {
+            await processChat(chat);
+            await randomDelay(); // 等待 8-10 秒
+        }
+        console.log(`Processed ${chatsToProcess.length} chats`);
+    }
+
+
+
     // 主流程
     async function main() {
         try {
+
+            await processAllChats();
+
+            await new Promise(resolve => setTimeout(resolve, 3000));
 
             // 检查钱包是否已经连接
             const connectedWalletButton = await waitForElement('button.inline-flex.items-center.justify-center span.flex.gap-2.items-center.text-xs svg.lucide-wallet', 5000);
