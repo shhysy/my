@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.417
+// @version      47.418
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4422,13 +4422,71 @@
                     const stopButton = await waitForElement('button.bg-destructive', 10000);
                     if (!stopButton) {
                         await new Promise(resolve => setTimeout(resolve, 3000));
-                        //输入对话
+                        const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
+                        if (newChatButton) {
+                            newChatButton.closest('button').click();
+                            successCount++;
+                            console.log('成功点击新对话按钮');
+                            await new Promise(resolve => setTimeout(resolve, 10000));
 
+                            const buttons = document.querySelectorAll('button');
+                            let targetButton = null;
+                            
+                            for (let btn of buttons) {
+                                const spanText = btn.querySelector('span')?.textContent;
+                                if (spanText && targetTexts.includes(spanText)) {
+                                    targetButton = btn;
+                                    break; // 找到第一个匹配的按钮后退出循环
+                                }
+                            }
+                            
+                            if (targetButton) {
+                                targetButton.focus(); // 聚焦按钮
+                                targetButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true })); // 模拟下拉
+                                console.log(`尝试打开 ${targetButton.querySelector('span').textContent} 菜单`);
+                            } else {
+                                console.log('未找到目标按钮');
+                            }
+                            await new Promise(resolve => setTimeout(resolve, 5000));
+                            
+                            const menuItems = document.querySelectorAll('[role="menuitem"]');
+                            const validMenuItems = Array.from(menuItems).filter(item => {
+                                const itemText = item.querySelector('.font-medium')?.textContent;
+                                return itemText && itemText !== 'Add'; // 排除 "Add" 按钮
+                            });
+
+                            if (validMenuItems.length > 0) {
+                                // 随机选择一个有效菜单项
+                                const randomIndex = Math.floor(Math.random() * validMenuItems.length);
+                                const selectedItem = validMenuItems[randomIndex];
+
+                                // 获取菜单项的文本（用于日志）
+                                const itemText = selectedItem.querySelector('.font-medium')?.textContent || '未知项';
+
+                                // 模拟点击
+                                selectedItem.focus(); // 聚焦
+                                selectedItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+                                console.log(`随机选择了并点击了: ${itemText}`);
+                            } else {
+                                console.log('未找到有效菜单项');
+                            }
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                        } else {
+                            console.log('未找到新对话按钮');
+                        }
                     }else{
                         await new Promise(resolve => setTimeout(resolve, 20000));
                     }
                 } else {
-                    //输入对话
+                    const newChatButton = await waitForElement('button.relative.py-3.bg-background svg.lucide-message-square-plus', 5000);
+                    if (newChatButton) {
+                        newChatButton.closest('button').click();
+                        console.log('成功点击新对话按钮');
+                        await new Promise(resolve => setTimeout(resolve, 15000));
+                        successCount++;
+                    } else {
+                        console.log('未找到新对话按钮');
+                    }
                     const buttons = document.querySelectorAll('button');
                     let targetButton = null;
                     
@@ -4596,7 +4654,6 @@
     } else {
         main();
     }
-
 })();
 
 
