@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.424
+// @version      47.425
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4250,9 +4250,11 @@
         deleteDelayMin: 1000,
         deleteDelayMax: 3000
     };
+
     function random(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+
      async function getSignableButton() {
         const buttons = document.querySelectorAll('div[data-signed="false"]');
         for (const button of buttons) {
@@ -4584,14 +4586,12 @@
         });
     }, 5000);
 
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        if (document.readyState !== 'loading') {
-            main();
-        } else {
-            document.addEventListener('DOMContentLoaded', main);
-        }
-    }
+    setTimeout(() => {
+        main();
+    }, 5000);
 })();
+
+
 (function() {
     'use strict';
     if (window.location.hostname !== 'app.gata.xyz') {
