@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.423
+// @version      47.424
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2791,16 +2791,7 @@
         });
     }
 
-    // 模拟点击事件（使用 element.click()）
-    function simulateClick(element) {
-        try {
-            element.click();
-            console.log('成功点击元素');
-        } catch (error) {
-            console.error('点击失败:', error);
-            throw error; // 抛出错误以便上层处理
-        }
-    }
+    
 
 
 
@@ -4241,37 +4232,11 @@
 })();
 
 
-(function() {
+(function () {
     'use strict';
+
     if (window.location.hostname !== 'chat.chainopera.ai') {
         return;
-    }
-
-    function random(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function clickOpenButton() {
-        const openButton = document.querySelector('button.text-gray-400.hover\\:text-gray-800:has(svg.lucide-panel-left-open)');
-        if (!openButton) {
-            console.warn('Open button not found, will retry on next interval...');
-            return;
-        }
-        if (!(openButton instanceof HTMLButtonElement)) {
-            console.error('Selected element is not a button:', openButton);
-            return;
-        }
-        try {
-            openButton.click();
-            console.log('Successfully clicked the open button');
-        } catch (err) {
-            console.error('Failed to click the button:', err);
-        }
-    }
-
-    window.addEventListener('load', clickOpenButton);
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        setTimeout(clickOpenButton, 500);
     }
 
     const config = {
@@ -4281,61 +4246,92 @@
         timeout: 30000,
         signCheckInterval: 1000,
         maxSignCheckAttempts: 15,
-        menuOpenDelay: 1500,
-        deleteDelayMin: 8000,
-        deleteDelayMax: 10000
+        menuOpenDelay: 2000,
+        deleteDelayMin: 1000,
+        deleteDelayMax: 3000
     };
-
-    async function waitForElement(selector, timeout = config.timeout) {
-        const startTime = Date.now();
-        while (Date.now() - startTime < timeout) {
-            const element = document.querySelector(selector);
-            if (element) return element;
-            await new Promise(resolve => setTimeout(resolve, config.checkInterval));
-        }
-        return null;
+    function random(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-
-    async function clickMetaMask() {
-        const metamaskButton = await waitForElement('button[type="button"] img[src="/web3-metamask.png"]', 10000);
-        if (metamaskButton) {
-            console.log('找到MetaMask按钮，准备点击');
-            metamaskButton.parentElement.click();
-            console.log('已点击MetaMask按钮');
-            return true;
-        }
-        console.log('未找到MetaMask按钮，继续执行');
-        return false;
-    }
-
-    async function handleWalletConnection() {
-        const walletButton = await waitForElement('button.inline-flex.items-center span.flex.gap-2.items-center.text-xs', 5000);
-        if (walletButton && walletButton.textContent.includes('0x')) {
-            console.log('钱包已连接，点击钱包按钮');
-            walletButton.closest('button').click();
-            return true;
-        }
-        console.log('钱包未连接或未找到钱包按钮');
-        return false;
-    }
-
-    async function getSignableButton() {
+     async function getSignableButton() {
         const buttons = document.querySelectorAll('div[data-signed="false"]');
         for (const button of buttons) {
             const innerDiv = button.querySelector('div.border.border-co');
             if (innerDiv && !innerDiv.classList.contains('cursor-not-allowed')) {
                 const dayText = button.querySelector('.text-xs')?.textContent;
-                const day = dayText ? parseInt(dayText.replace('Day ', '')) : null;
-                if (day) return { button, day };
+                if (dayText) {
+                    const day = parseInt(dayText.replace('Day ', ''));
+                    return { button, day };
+                }
             }
         }
         return null;
     }
 
-    let successCount = 0; // Start at 0 for cleaner counting
-    const targetSuccessCount = random(10, 15); // 10-15 conversations
-    console.log(`targetSuccessCount: ${targetSuccessCount}`);
+    async function handleWalletConnection() {
+        const walletButton = await waitForElement('button.inline-flex.items-center span.flex.gap-2.items-center.text-xs');
+        if (walletButton && walletButton.textContent.includes('0x')) {
+            console.log('Wallet already connected, clicking wallet button');
+            walletButton.closest('button').click();
+            return true;
+        }
+        console.log('Wallet not connected or button not found');
+        return false;
+    }
+    
+    async function waitForElement(selector, timeout = config.timeout) {
+        const startTime = Date.now();
+        try {
+            while (Date.now() - startTime < timeout) {
+                const element = document.querySelector(selector);
+                if (element) return element;
+                await new Promise(resolve => setTimeout(resolve, config.checkInterval));
+            }
+        } catch (error) {
+            console.error(`Error in waitForElement with selector ${selector}:`, error);
+        }
+        return null;
+    }
+    async function waitForElementChat(text, timeout = config.timeout) {
+        const startTime = Date.now();
+        while (Date.now() - startTime < timeout) {
+            // Target buttons with the specified structure and text content
+            const buttons = document.querySelectorAll('button.relative.cursor-pointer.flex.items-center.justify-center.gap-2.rounded-full');
+            for (const button of buttons) {
+                const span = button.querySelector('span');
+                if (span && span.textContent.trim() === text) {
+                    let parent = button;
+                    while (parent && parent !== document.body) {
+                        if (parent.hasAttribute('aria-hidden') && parent.getAttribute('aria-hidden') === 'true') {
+                            console.warn(`Detected aria-hidden="true" in ancestor:`, parent);
+                            parent.removeAttribute('aria-hidden');
+                        }
+                        parent = parent.parentElement;
+                    }
+                    return button;
+                }
+            }
+            await new Promise(resolve => setTimeout(resolve, config.checkInterval));
+        }
+        return null;
+    }
+    async function performSignIn() {
+        await new Promise(resolve => setTimeout(resolve, 8000));
 
+        const signInfo = await getSignableButton();
+        if (!signInfo) {
+            console.log('No signable button found');
+            return false;
+        }
+
+        console.log(`Preparing to sign in: Day ${signInfo.day}`);
+        signInfo.button.click();
+        console.log('Clicked sign-in button');
+
+        await new Promise(resolve => setTimeout(resolve, 13000));
+        return true;
+    }
+    
     async function performConversations() {
         const conversationXPaths = [
             '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[1]',
@@ -4347,6 +4343,7 @@
             '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[7]',
             '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[8]'
         ];
+    
         const targetTexts = [
             'Market Sentiment Radar',
             'Crypto Opportunity Scout',
@@ -4356,280 +4353,245 @@
             'Caila Agent',
             'Token Analytics Agent'
         ];
-
+    
         const shuffledXPaths = [...conversationXPaths].sort(() => Math.random() - 0.5);
-
+        let successCount = 1;
+        const targetSuccessCount = random(10, 15);
+    
+        console.log(`targetSuccessCount: ${targetSuccessCount}`);
+    
         while (successCount < targetSuccessCount) {
             try {
-                const xpath = shuffledXPaths[random(0, 7)]; // Use 0-7 for valid indices
+                const xpath = shuffledXPaths[random(1, 8) % shuffledXPaths.length];
                 let element = null;
                 const startTime = Date.now();
-                while (!element && Date.now() - startTime < 15000) {
+    
+                while (!element && Date.now() - startTime < 20000) {
                     element = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                    if (!element) await new Promise(resolve => setTimeout(resolve, 1000));
+                    if (!element) {
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                    }
                 }
-
+    
                 if (element) {
                     element.click();
-                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+    
                     const buttonXPath = '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[1]/div/div[2]/button';
                     const button = document.evaluate(buttonXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-
-                    if (button && !button.disabled && button.offsetParent !== null) {
-                        button.click();
-                        console.log('Conversation button clicked successfully.');
-                        await new Promise(resolve => setTimeout(resolve, 3000));
-                    } else {
-                        console.warn('Conversation button not found or not clickable.');
-                    }
-
-                    await new Promise(resolve => setTimeout(resolve, 10000));
-
-                    const stopButton = await waitForElement('button.bg-destructive', 5000);
-                    if (!stopButton) {
-                        const newChatButton = await waitForElement('button.relative.cursor-pointer.flex.items-center.justify-center.gap-2.rounded-full.bg-[#DCFFF4]', 5000);
-                        if (newChatButton && newChatButton.textContent.trim() === 'Chats') {
-                            newChatButton.click(); // Simplified, no need for closest('button')
-                            console.log('成功点击新对话按钮');
-                            await new Promise(resolve => setTimeout(resolve, 5000));
-                            successCount++;
-                            const buttons = document.querySelectorAll('button');
-                            let targetButton = null;
-                            for (const btn of buttons) {
-                                const spanText = btn.querySelector('span')?.textContent;
-                                if (spanText && targetTexts.includes(spanText)) {
-                                    targetButton = btn;
-                                    break;
-                                }
-                            }
-
-                            if (targetButton) {
-                                targetButton.focus();
-                                targetButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
-                                console.log(`尝试打开 ${targetButton.querySelector('span')?.textContent} 菜单`);
-                                await new Promise(resolve => setTimeout(resolve, 3000));
-
-                                const menuItems = document.querySelectorAll('[role="menuitem"]');
-                                const validMenuItems = Array.from(menuItems).filter(item => {
-                                    const itemText = item.querySelector('.font-medium')?.textContent;
-                                    return itemText && itemText !== 'Add';
-                                });
-
-                                if (validMenuItems.length > 0) {
-                                    const randomIndex = Math.floor(Math.random() * validMenuItems.length);
-                                    const selectedItem = validMenuItems[randomIndex];
-                                    const itemText = selectedItem.querySelector('.font-medium')?.textContent || '未知项';
-                                    selectedItem.focus();
-                                    selectedItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                                    console.log(`随机选择了并点击了: ${itemText}`);
-                                    await new Promise(resolve => setTimeout(resolve, 2000));
-                                } else {
-                                    console.log('未找到有效菜单项');
-                                }
-                            } else {
-                                console.log('未找到目标按钮');
+    
+                    if (button) {
+                        const isClickable = !button.disabled && button.offsetParent !== null;
+                        if (isClickable) {
+                            try {
+                                button.click();
+                                await new Promise(resolve => setTimeout(resolve, 5000));
+                                console.log('Button clicked successfully.');
+                            } catch (error) {
+                                console.error('Error clicking button:', error);
                             }
                         } else {
-                            console.log('未找到新对话按钮');
+                            console.warn('Button is not clickable (disabled or not visible).');
                         }
                     } else {
-                        await new Promise(resolve => setTimeout(resolve, 10000));
+                        console.warn('Button not found.');
+                    }
+    
+                    await new Promise(resolve => setTimeout(resolve, 10000));
+                    const stopButton = await waitForElement('button.bg-destructive', 10000);
+                    if (!stopButton) {
+                        await new Promise(resolve => setTimeout(resolve, 3000));
+                        console.log('Conversation element not found, trying new chat button');
+                        const newChatButton = await waitForElementChat('Chats', 5000);
+    
+                        if (newChatButton) {
+                            newChatButton.click();
+                            console.log('Successfully clicked new chat button (Chats)');
+                            await new Promise(resolve => setTimeout(resolve, 5000));
+                            successCount++;
+                        } else {
+                            console.log('New chat button not found or text mismatch');
+                        }
+    
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        const buttons = document.querySelectorAll('button');
+                        let targetButton = null;
+    
+                        for (let btn of buttons) {
+                            const spanText = btn.querySelector('span')?.textContent;
+                            if (spanText && targetTexts.includes(spanText)) {
+                                targetButton = btn;
+                                break;
+                            }
+                        }
+    
+                        if (targetButton) {
+                            targetButton.focus();
+                            targetButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+                            console.log(`Attempting to open ${targetButton.querySelector('span').textContent} menu`);
+                        } else {
+                            console.log('Target button not found');
+                        }
+    
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                        const menuItems = document.querySelectorAll('[role="menuitem"]');
+                        const validMenuItems = Array.from(menuItems).filter(item => {
+                            const itemText = item.querySelector('.font-medium')?.textContent;
+                            return itemText && itemText !== 'Add';
+                        });
+    
+                        if (validMenuItems.length > 0) {
+                            const randomIndex = Math.floor(Math.random() * validMenuItems.length);
+                            const selectedItem = validMenuItems[randomIndex];
+                            const itemText = selectedItem.querySelector('.font-medium')?.textContent || 'Unknown item';
+    
+                            selectedItem.focus();
+                            selectedItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+                            console.log(`Randomly selected and clicked: ${itemText}`);
+                        } else {
+                            console.log('No valid menu items found');
+                        }
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    } else {
+                        console.log('New chat button not found');
                     }
                 } else {
+                    await new Promise(resolve => setTimeout(resolve, 3000));
                     console.log('Conversation element not found, trying new chat button');
-                    const newChatButton = await waitForElement('button.relative.cursor-pointer.flex.items-center.justify-center.gap-2.rounded-full.bg-[#DCFFF4]', 5000);
-                    if (newChatButton && newChatButton.textContent.trim() === 'Chats') {
+                    const newChatButton = await waitForElementChat('Chats', 5000);
+    
+                    if (newChatButton) {
                         newChatButton.click();
-                        console.log('成功点击新对话按钮');
+                        console.log('Successfully clicked new chat button (Chats)');
                         await new Promise(resolve => setTimeout(resolve, 5000));
                         successCount++;
                     } else {
-                        console.log('未找到新对话按钮');
+                        console.log('New chat button not found or text mismatch');
                     }
+    
+                    const buttons = document.querySelectorAll('button');
+                    let targetButton = null;
+    
+                    for (let btn of buttons) {
+                        const spanText = btn.querySelector('span')?.textContent;
+                        if (spanText && targetTexts.includes(spanText)) {
+                            targetButton = btn;
+                            break;
+                        }
+                    }
+    
+                    if (targetButton) {
+                        targetButton.focus();
+                        targetButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+                        console.log(`Attempting to open ${targetButton.querySelector('span').textContent} menu`);
+                    } else {
+                        console.log('Target button not found');
+                    }
+    
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                    const menuItems = document.querySelectorAll('[role="menuitem"]');
+                    const validMenuItems = Array.from(menuItems).filter(item => {
+                        const itemText = item.querySelector('.font-medium')?.textContent;
+                        return itemText && itemText !== 'Add';
+                    });
+    
+                    if (validMenuItems.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * validMenuItems.length);
+                        const selectedItem = validMenuItems[randomIndex];
+                        const itemText = selectedItem.querySelector('.font-medium')?.textContent || 'Unknown item';
+    
+                        selectedItem.focus();
+                        selectedItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+                        console.log(`Randomly selected and clicked: ${itemText}`);
+                    } else {
+                        console.log('No valid menu items found');
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                 }
             } catch (error) {
-                console.error(`开始对话时出错:`, error);
+                console.error('Error starting conversation:', error);
             }
         }
-        console.log(`总共完成了 ${successCount} 次对话`);
+        console.log(`Completed ${successCount} conversations`);
         return successCount >= targetSuccessCount;
     }
 
-    async function performSignIn() {
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        const signInfo = await getSignableButton();
-        if (signInfo) {
-            console.log(`准备签到: Day ${signInfo.day}`);
-            signInfo.button.click();
-            console.log('已点击签到按钮');
-            await new Promise(resolve => setTimeout(resolve, 8000));
-            return true;
-        }
-        console.log('没有找到可以签到的按钮');
-        return false;
-    }
-
-    function simulateClick(element) {
-        const rect = element.getBoundingClientRect();
-        const clientX = rect.left + rect.width / 2;
-        const clientY = rect.top + rect.height / 2;
-
-        const events = [
-            new MouseEvent('mouseover', { bubbles: true, cancelable: true, view: window, clientX, clientY }),
-            new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window, clientX, clientY, button: 0 }),
-            new MouseEvent('click', { bubbles: true, cancelable: true, view: window, clientX, clientY, button: 0 }),
-            new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window, clientX, clientY, button: 0 })
-        ];
-
-        element.focus();
-        element.dispatchEvent(new Event('focus', { bubbles: true }));
-        events.forEach(event => element.dispatchEvent(event));
-        console.log('Simulated click on element');
-
-        const keyEvent = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', bubbles: true, cancelable: true });
-        element.dispatchEvent(keyEvent);
-    }
-
-    function simulateHover(element) {
-        const hoverEvent = new MouseEvent('mouseover', { bubbles: true, cancelable: true, view: window });
-        element.dispatchEvent(hoverEvent);
-        console.log('Simulated hover event');
-    }
-
-    async function processChat(chat) {
-        const chatId = chat.id;
-        console.log(`Processing chat ${chatId}`);
-
-        const menuButton = chat.querySelector('button[aria-haspopup="menu"]');
-        if (!menuButton) {
-            console.log(`Menu button not found for chat ${chatId}`);
-            return;
-        }
-
-        if (!menuButton.offsetParent || window.getComputedStyle(menuButton).opacity === '0') {
-            console.log(`Menu button is not visible for chat ${chatId}, simulating hover`);
-            simulateHover(chat);
-            await new Promise(resolve => setTimeout(resolve, 200));
-        }
-
-        simulateClick(menuButton);
-
-        const menu = await waitForElement('[role="menu"][data-state="open"]', config.menuOpenDelay);
-        if (!menu) {
-            console.log(`Menu not found for chat ${chatId}`);
-            return;
-        }
-
-        const deleteButton = menu.querySelector('button:has(svg.lucide-trash-2)');
-        if (deleteButton) {
-            simulateClick(deleteButton);
-            console.log(`Delete button clicked for chat ${chatId}`);
+    async function clickMetaMask() {
+        const metamaskButton = await waitForElement('button[type="button"] img[src="/web3-metamask.png"]');
+        if (metamaskButton) {
+            console.log('Found MetaMask button, preparing to click');
+            metamaskButton.parentElement.click();
+            console.log('Clicked MetaMask button');
         } else {
-            console.log(`Delete button not found in menu for chat ${chatId}`);
+            console.log('MetaMask button not found, continuing execution');
         }
     }
-
-    async function processAllChats() {
-        const chats = document.querySelectorAll('div[id^="chat-"]');
-        if (!chats.length) {
-            console.log('No chats found');
-            return;
-        }
-
-        const maxChatsToDelete = 10;
-        const chatsToProcess = Array.from(chats).slice(0, maxChatsToDelete);
-        console.log(`Found ${chats.length} chats, processing up to ${maxChatsToDelete}`);
-
-        for (const chat of chatsToProcess) {
-            await processChat(chat);
-            await new Promise(resolve => setTimeout(resolve, random(config.deleteDelayMin, config.deleteDelayMax)));
-        }
-        console.log(`Processed ${chatsToProcess.length} chats`);
-    }
-
+    
     async function main() {
         try {
-            // 1. Check wallet connection
             const connectedWalletButton = await waitForElement('button.inline-flex.items-center.justify-center span.flex.gap-2.items-center.text-xs svg.lucide-wallet', 5000);
             if (connectedWalletButton && connectedWalletButton.closest('span').textContent.includes('0x')) {
-                console.log('钱包已经连接，跳过MetaMask连接步骤');
+                console.log('Wallet already connected, skipping MetaMask connection');
             } else {
                 await clickMetaMask();
-                await new Promise(resolve => setTimeout(resolve, 10000));
+                await new Promise(resolve => setTimeout(resolve, 13000));
             }
-
-            // 2. Delete up to 10 chats
-            console.log('开始删除聊天记录');
-            await processAllChats();
             await new Promise(resolve => setTimeout(resolve, 3000));
 
-            // 3. Perform sign-in
-            console.log('开始签到流程');
             await handleWalletConnection();
             await performSignIn();
-            const checkInButton = await waitForElement('button.inline-flex.items-center.justify-center.whitespace-nowrap.text-sm.font-medium.bg-primary', 5000);
-            if (checkInButton && !checkInButton.hasAttribute('disabled')) {
-                checkInButton.click();
-                console.log('Clicked Check-In button');
-                await new Promise(resolve => setTimeout(resolve, 5000));
-            } else {
-                console.log('未找到可点击的Check-In按钮');
-            }
 
-            // 4. Click back button
-            console.log('等待返回按钮');
-            const backButton = await waitForElement('button.inline-flex.items-center.justify-center.whitespace-nowrap svg rect[transform*="matrix(-1"]', 15000);
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (button.textContent.includes('Check-In') && !button.hasAttribute('disabled')) {
+                    button.click();
+                }
+            });
+
+            console.log('Waiting 30 seconds for back button');
+            await new Promise(resolve => setTimeout(resolve, 30000));
+
+            const backButton = await waitForElement('button.inline-flex.items-center.justify-center.whitespace-nowrap svg rect[transform*="matrix(-1"]', 20000);
             if (backButton) {
-                backButton.click();
-                console.log('成功点击返回按钮');
-                await new Promise(resolve => setTimeout(resolve, 3000));
-            } else {
-                console.log('未找到返回按钮');
+                backButton.closest('button').click();
+                console.log('Successfully clicked back button');
+                await new Promise(resolve => setTimeout(resolve, 5000));
             }
 
-            // 5. Click new chat button before conversations
-            const newChatButton = await waitForElement('button.relative.cursor-pointer.flex.items-center.justify-center.gap-2.rounded-full.bg-[#DCFFF4]', 5000);
-            if (newChatButton && newChatButton.textContent.trim() === 'Chats') {
-                newChatButton.click();
-                console.log('成功点击新对话按钮');
-                await new Promise(resolve => setTimeout(resolve, 3000));
-            } else {
-                console.log('未找到新对话按钮');
-            }
+            console.log('Sign-in process completed');
+            await new Promise(resolve => setTimeout(resolve, 5000));
 
-            // 6. Perform conversations
-            console.log('开始对话流程');
+            console.log('Starting conversation process');
             const conversationSuccess = await performConversations();
 
-            // 7. Redirect if conversations succeeded
             if (conversationSuccess) {
-                console.log('所有对话完成，跳转到dashboard');
                 window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
+                console.log('All conversations completed');
             }
         } catch (error) {
-            console.error('自动化流程失败:', error.message);
+            console.error('Automation process failed:', error.message);
         }
     }
 
-    const Got = setInterval(() => {
+    const gotInterval = setInterval(() => {
         const buttons = document.querySelectorAll('button');
-        for (const button of buttons) {
+        buttons.forEach(button => {
             if (button.textContent.trim().includes('Got it!') && !button.hasAttribute('disabled')) {
                 button.click();
-                console.log('Clicked Got it! button');
-                clearInterval(Got);
-                break;
+                clearInterval(gotInterval);
             }
-        }
-    }, 3000);
+        });
+    }, 5000);
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', main);
-    } else {
-        main();
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        if (document.readyState !== 'loading') {
+            main();
+        } else {
+            document.addEventListener('DOMContentLoaded', main);
+        }
     }
 })();
-
 (function() {
     'use strict';
     if (window.location.hostname !== 'app.gata.xyz') {
