@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.422
+// @version      47.423
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -4246,26 +4246,21 @@
     if (window.location.hostname !== 'chat.chainopera.ai') {
         return;
     }
-    
+
     function random(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     function clickOpenButton() {
-        // Select the BUTTON element that contains an SVG with lucide-panel-left-open
         const openButton = document.querySelector('button.text-gray-400.hover\\:text-gray-800:has(svg.lucide-panel-left-open)');
         if (!openButton) {
             console.warn('Open button not found, will retry on next interval...');
             return;
         }
-
-        // Verify the element is a button
         if (!(openButton instanceof HTMLButtonElement)) {
             console.error('Selected element is not a button:', openButton);
             return;
         }
-
-        // Simulate a click
         try {
             openButton.click();
             console.log('Successfully clicked the open button');
@@ -4274,25 +4269,20 @@
         }
     }
 
-
-    // Initial attempt after DOM loads
     window.addEventListener('load', clickOpenButton);
-
-    // Fallback for dynamic pages
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         setTimeout(clickOpenButton, 500);
     }
-    // 配置参数
+
     const config = {
         maxRetries: 3,
         retryDelay: 2000,
         checkInterval: 1000,
         timeout: 30000,
-        signCheckInterval: 1000, // 检查签到状态的间隔
-        maxSignCheckAttempts: 15 // 最大检查次数
+        signCheckInterval: 1000,
+        maxSignCheckAttempts: 15
     };
 
-    // 等待元素出现的函数
     async function waitForElement(selector, timeout = config.timeout) {
         const startTime = Date.now();
         while (Date.now() - startTime < timeout) {
@@ -4303,7 +4293,6 @@
         return null;
     }
 
-    // 点击MetaMask按钮
     async function clickMetaMask() {
         const metamaskButton = await waitForElement('button[type="button"] img[src="/web3-metamask.png"]');
         if (metamaskButton) {
@@ -4315,7 +4304,6 @@
         }
     }
 
-    // 检查钱包连接状态并点击钱包按钮
     async function handleWalletConnection() {
         const walletButton = await waitForElement('button.inline-flex.items-center span.flex.gap-2.items-center.text-xs');
         if (walletButton && walletButton.textContent.includes('0x')) {
@@ -4327,7 +4315,6 @@
         return false;
     }
 
-    // 获取当前可签到的按钮
     async function getSignableButton() {
         const buttons = document.querySelectorAll('div[data-signed="false"]');
         for (const button of buttons) {
@@ -4342,14 +4329,10 @@
     }
 
     let successCount = 1;
+    const targetSuccessCount = Math.floor(Math.random() * 6) + 10;
+    console.log("targetSuccessCount: " + targetSuccessCount);
 
-    const targetSuccessCount = Math.floor(Math.random() * 6) + 10; // 生成13-18之间的随机数
-
-    console.log("targetSuccessCount"+targetSuccessCount)
-
-    // 执行对话
     async function performConversations() {
-        // 对话按钮的XPath列表
         const conversationXPaths = [
             '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[1]',
             '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[1]/div[2]/div[2]',
@@ -4370,36 +4353,28 @@
             'Token Analytics Agent'
         ];
 
-        // 随机打乱XPath顺序
         const shuffledXPaths = [...conversationXPaths].sort(() => Math.random() - 0.5);
 
-        
         while (successCount < targetSuccessCount) {
             try {
-                // 获取当前要点击的按钮
-
-                const xpath = shuffledXPaths[random(1,8) % shuffledXPaths.length];
+                const xpath = shuffledXPaths[random(1, 8) % shuffledXPaths.length];
                 let element = null;
                 const startTime = Date.now();
-                // 添加20秒超时机制
                 while (!element && Date.now() - startTime < 20000) {
                     element = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
                     if (!element) {
-                        await new Promise(resolve => setTimeout(resolve, 5000)); // 每500ms检查一次
+                        await new Promise(resolve => setTimeout(resolve, 5000));
                     }
                 }
 
                 if (element) {
                     element.click();
-                    // 等待对话开始
                     await new Promise(resolve => setTimeout(resolve, 5000));
                     const buttonXPath = '/html/body/div[2]/div/div[3]/div[2]/div/div[2]/div/div[1]/div/div[2]/button';
                     const button = document.evaluate(buttonXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
                     if (button) {
-                        // Check if the button is clickable (not disabled and visible)
                         const isClickable = !button.disabled && button.offsetParent !== null;
-                        
                         if (isClickable) {
                             try {
                                 button.click();
@@ -4417,8 +4392,6 @@
 
                     await new Promise(resolve => setTimeout(resolve, 15000));
 
-
-
                     const stopButton = await waitForElement('button.bg-destructive', 10000);
                     if (!stopButton) {
                         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -4431,40 +4404,35 @@
 
                             const buttons = document.querySelectorAll('button');
                             let targetButton = null;
-                            
+
                             for (let btn of buttons) {
                                 const spanText = btn.querySelector('span')?.textContent;
                                 if (spanText && targetTexts.includes(spanText)) {
                                     targetButton = btn;
-                                    break; // 找到第一个匹配的按钮后退出循环
+                                    break;
                                 }
                             }
-                            
+
                             if (targetButton) {
-                                targetButton.focus(); // 聚焦按钮
-                                targetButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true })); // 模拟下拉
+                                targetButton.focus();
+                                targetButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
                                 console.log(`尝试打开 ${targetButton.querySelector('span').textContent} 菜单`);
                             } else {
                                 console.log('未找到目标按钮');
                             }
                             await new Promise(resolve => setTimeout(resolve, 5000));
-                            
+
                             const menuItems = document.querySelectorAll('[role="menuitem"]');
                             const validMenuItems = Array.from(menuItems).filter(item => {
                                 const itemText = item.querySelector('.font-medium')?.textContent;
-                                return itemText && itemText !== 'Add'; // 排除 "Add" 按钮
+                                return itemText && itemText !== 'Add';
                             });
 
                             if (validMenuItems.length > 0) {
-                                // 随机选择一个有效菜单项
                                 const randomIndex = Math.floor(Math.random() * validMenuItems.length);
                                 const selectedItem = validMenuItems[randomIndex];
-
-                                // 获取菜单项的文本（用于日志）
                                 const itemText = selectedItem.querySelector('.font-medium')?.textContent || '未知项';
-
-                                // 模拟点击
-                                selectedItem.focus(); // 聚焦
+                                selectedItem.focus();
                                 selectedItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
                                 console.log(`随机选择了并点击了: ${itemText}`);
                             } else {
@@ -4474,11 +4442,10 @@
                         } else {
                             console.log('未找到新对话按钮');
                         }
-                    }else{
+                    } else {
                         await new Promise(resolve => setTimeout(resolve, 20000));
                     }
                 } else {
-
                     const newChatButton = await waitForElement('button.relative.cursor-pointer.flex.items-center.justify-center.gap-2.rounded-full.bg-[#DCFFF4]', 5000);
                     if (newChatButton) {
                         newChatButton.closest('button').click();
@@ -4490,40 +4457,35 @@
                     }
                     const buttons = document.querySelectorAll('button');
                     let targetButton = null;
-                    
+
                     for (let btn of buttons) {
                         const spanText = btn.querySelector('span')?.textContent;
                         if (spanText && targetTexts.includes(spanText)) {
                             targetButton = btn;
-                            break; // 找到第一个匹配的按钮后退出循环
+                            break;
                         }
                     }
-                    
+
                     if (targetButton) {
-                        targetButton.focus(); // 聚焦按钮
-                        targetButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true })); // 模拟下拉
+                        targetButton.focus();
+                        targetButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
                         console.log(`尝试打开 ${targetButton.querySelector('span').textContent} 菜单`);
                     } else {
                         console.log('未找到目标按钮');
                     }
                     await new Promise(resolve => setTimeout(resolve, 5000));
-                    
+
                     const menuItems = document.querySelectorAll('[role="menuitem"]');
                     const validMenuItems = Array.from(menuItems).filter(item => {
                         const itemText = item.querySelector('.font-medium')?.textContent;
-                        return itemText && itemText !== 'Add'; // 排除 "Add" 按钮
+                        return itemText && itemText !== 'Add';
                     });
 
                     if (validMenuItems.length > 0) {
-                        // 随机选择一个有效菜单项
                         const randomIndex = Math.floor(Math.random() * validMenuItems.length);
                         const selectedItem = validMenuItems[randomIndex];
-
-                        // 获取菜单项的文本（用于日志）
                         const itemText = selectedItem.querySelector('.font-medium')?.textContent || '未知项';
-
-                        // 模拟点击
-                        selectedItem.focus(); // 聚焦
+                        selectedItem.focus();
                         selectedItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
                         console.log(`随机选择了并点击了: ${itemText}`);
                     } else {
@@ -4531,46 +4493,37 @@
                     }
                     await new Promise(resolve => setTimeout(resolve, 2000));
                 }
-
             } catch (error) {
-                console.error(`开始对话时
-                    出错:`, error);
+                console.error(`开始对话时出错:`, error);
             }
         }
         console.log(`总共完成了 ${successCount} 次对话`);
         return successCount >= targetSuccessCount;
     }
 
-    // 执行签到
     async function performSignIn() {
-        // 等待签到界面加载
         await new Promise(resolve => setTimeout(resolve, 8000));
-
         const signInfo = await getSignableButton();
         if (!signInfo) {
             console.log('没有找到可以签到的按钮');
             return false;
         }
-
         console.log(`准备签到: Day ${signInfo.day}`);
         signInfo.button.click();
         console.log('已点击签到按钮');
-
-        // 等待签到完成
         await new Promise(resolve => setTimeout(resolve, 13000));
         return true;
     }
 
-    const MENU_OPEN_DELAY = 1500; // 等待菜单打开的时间
-    const DELETE_DELAY_MIN = 8000; // 最小删除间隔（5秒）
-    const DELETE_DELAY_MAX = 10000; // 最大删除间隔（10秒）
+    const MENU_OPEN_DELAY = 1500;
+    const DELETE_DELAY_MIN = 8000;
+    const DELETE_DELAY_MAX = 10000;
 
     const chatSelector = 'div[id^="chat-"]';
     const menuButtonSelector = 'button[aria-haspopup="menu"]';
     const deleteButtonSelector = 'button:has(svg.lucide-trash-2)';
     const menuSelector = '[role="menu"][data-state="open"]';
 
-    // 模拟真实鼠标点击
     function simulateClick(element) {
         const rect = element.getBoundingClientRect();
         const clientX = rect.left + rect.width / 2;
@@ -4590,7 +4543,6 @@
             console.log(`Dispatched event: ${event.type} on button`);
         });
 
-        // 模拟键盘 Enter 键
         const keyEvent = new KeyboardEvent('keydown', {
             key: 'Enter',
             code: 'Enter',
@@ -4601,7 +4553,6 @@
         console.log('Dispatched keydown: Enter');
     }
 
-    // 模拟 hover 效果
     function simulateHover(element) {
         const hoverEvent = new MouseEvent('mouseover', {
             bubbles: true,
@@ -4612,7 +4563,6 @@
         console.log('Dispatched hover event');
     }
 
-    // 等待元素出现
     async function waitForElement(selector, timeout = 2000) {
         return new Promise((resolve) => {
             const startTime = Date.now();
@@ -4630,14 +4580,12 @@
         });
     }
 
-    // 随机延迟（8-10秒）
     function randomDelay() {
         const delay = Math.floor(Math.random() * (DELETE_DELAY_MAX - DELETE_DELAY_MIN + 1)) + DELETE_DELAY_MIN;
         console.log(`Waiting for ${delay}ms before next deletion`);
         return new Promise(resolve => setTimeout(resolve, delay));
     }
 
-    // 处理单个聊天项
     async function processChat(chat) {
         const chatId = chat.id;
         console.log(`Processing chat ${chatId}`);
@@ -4648,17 +4596,14 @@
             return;
         }
 
-        // 检查按钮可见性
         if (!menuButton.offsetParent || window.getComputedStyle(menuButton).opacity === '0') {
             console.log(`Menu button is not visible for chat ${chatId}, simulating hover`);
-            simulateHover(chat); // 触发 chat 项的 hover
-            await new Promise(resolve => setTimeout(resolve, 200)); // 等待 hover 效果
+            simulateHover(chat);
+            await new Promise(resolve => setTimeout(resolve, 200));
         }
 
-        // 模拟点击
         simulateClick(menuButton);
 
-        // 等待菜单
         const menu = await waitForElement(menuSelector, MENU_OPEN_DELAY);
         if (!menu) {
             console.log(`Menu not found for chat ${chatId}`);
@@ -4666,7 +4611,6 @@
             return;
         }
 
-        // 点击删除按钮
         const deleteButton = menu.querySelector(deleteButtonSelector);
         if (deleteButton) {
             simulateClick(deleteButton);
@@ -4676,7 +4620,6 @@
         }
     }
 
-    // 主逻辑：处理最多10个聊天项
     async function processAllChats() {
         const chats = document.querySelectorAll(chatSelector);
         if (!chats.length) {
@@ -4684,67 +4627,62 @@
             return;
         }
 
-        const maxChatsToDelete = 10; // 限制删除10条
-        const chatsToProcess = Array.from(chats).slice(0, maxChatsToDelete); // 取前10个聊天项
+        const maxChatsToDelete = 10;
+        const chatsToProcess = Array.from(chats).slice(0, maxChatsToDelete);
         console.log(`Found ${chats.length} chats, processing up to ${maxChatsToDelete}`);
 
         for (const chat of chatsToProcess) {
             await processChat(chat);
-            await randomDelay(); // 等待 8-10 秒
+            await randomDelay();
         }
         console.log(`Processed ${chatsToProcess.length} chats`);
     }
 
-
-
-    // 主流程
     async function main() {
         try {
-
-            await processAllChats();
-
-            await new Promise(resolve => setTimeout(resolve, 3000));
-
-            // 检查钱包是否已经连接
+            // 1. Check wallet connection
             const connectedWalletButton = await waitForElement('button.inline-flex.items-center.justify-center span.flex.gap-2.items-center.text-xs svg.lucide-wallet', 5000);
             if (connectedWalletButton && connectedWalletButton.closest('span').textContent.includes('0x')) {
                 console.log('钱包已经连接，跳过MetaMask连接步骤');
             } else {
-                // 执行MetaMask连接
                 await clickMetaMask();
-
-                // 等待一段时间让钱包连接完成
                 await new Promise(resolve => setTimeout(resolve, 13000));
-
-
             }
 
+            // 2. Delete up to 10 chats (moved before conversations)
+            await processAllChats();
             await new Promise(resolve => setTimeout(resolve, 3000));
 
-            // 点击钱包按钮
+
+            const newChatButton = await waitForElement('button.relative.cursor-pointer.flex.items-center.justify-center.gap-2.rounded-full.bg-[#DCFFF4]', 5000);
+            if (newChatButton) {
+                newChatButton.closest('button').click();
+                console.log('成功点击新对话按钮');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            // 3. Perform conversations
+            console.log('开始对话流程');
+            const conversationSuccess = await performConversations();
+
+            // 4. Click wallet button
             await handleWalletConnection();
 
-            // 执行签到
+            // 5. Perform sign-in
             await performSignIn();
 
-
+            // 6. Click Check-In button
             await new Promise(resolve => setTimeout(resolve, 5000));
-            //<button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 border-none bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 active:bg-primary active:ring-0 h-10 rounded-md px-8 hover:ring-4 hover:ring-primary/40 w-full">Check-In</button>
-            //点击签到
             const buttons = document.querySelectorAll('button');
             buttons.forEach(button => {
-                if (button.textContent.includes('Check-In') &&
-                    !button.hasAttribute('disabled')) {
+                if (button.textContent.includes('Check-In') && !button.hasAttribute('disabled')) {
                     button.click();
-                    return
+                    console.log('Clicked Check-In button');
                 }
             });
 
-            // 等待10秒让元素出现
+            // 7. Click back button
             console.log('等待10秒让返回按钮出现');
             await new Promise(resolve => setTimeout(resolve, 30000));
-
-            // 点击返回按钮
             const backButton = await waitForElement('button.inline-flex.items-center.justify-center.whitespace-nowrap svg rect[transform*="matrix(-1"]', 20000);
             if (backButton) {
                 backButton.closest('button').click();
@@ -4752,9 +4690,7 @@
                 await new Promise(resolve => setTimeout(resolve, 5000));
             }
 
-
-            await new Promise(resolve => setTimeout(resolve, 5000));
-
+            // 8. Click back button again (if needed)
             if (backButton) {
                 backButton.closest('button').click();
                 console.log('成功点击返回按钮');
@@ -4762,13 +4698,7 @@
             }
             console.log('签到流程完成');
 
-            await new Promise(resolve => setTimeout(resolve, 5000));
-
-            console.log('开始对话流程');
-
-            // 执行对话
-            const conversationSuccess = await performConversations();
-
+            // 9. Redirect if conversations succeeded
             if (conversationSuccess) {
                 window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
                 console.log('所有对话完成');
@@ -4781,15 +4711,13 @@
     const Got = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
-            if (button.textContent.trim().includes('Got it!') &&
-                !button.hasAttribute('disabled')) {
+            if (button.textContent.trim().includes('Got it!') && !button.hasAttribute('disabled')) {
                 button.click();
                 clearInterval(Got);
             }
         });
     }, 5000);
 
-    // 等待页面加载完成后执行
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', main);
     } else {
