@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.426
+// @version      47.428
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -7720,7 +7720,7 @@
                 window.location.href = 'https://testnet.pharosnetwork.xyz/experience';
             }
         }
-    }, 5000);
+    }, 15000);
 
     // if (window.location.href == 'https://speedrun.enso.build/apps') {
     //     function wait(ms) {
@@ -7905,7 +7905,10 @@
     // 页面加载后启动监控
     window.addEventListener('load', () => {
         log('页面加载完成，开始执行脚本', 'info');
-        monitorElements();
+        setTimeout(() => {
+            monitorElements();
+        }, 15000);
+       
     });
 })();
 
