@@ -1484,12 +1484,12 @@
                 console.log("Buttons found, attempting to click...");
                 for (let i = 0; i < buttons.length; i++) {
                     if (!buttons[i].disabled) {
-                        // if(i!=0){
-                        //     buttons[i].click();
-                        //     allDisabled = 0; // Reset
-                        // }
-                        buttons[i].click();
-                        allDisabled = 0; // Reset
+                        if(i!=0){
+                            buttons[i].click();
+                            allDisabled = 0; // Reset
+                        }
+                        // buttons[i].click();
+                        // allDisabled = 0; // Reset
                     } else {
                         allDisabled++;
                         console.log(`Button ${i} is disabled.`);
