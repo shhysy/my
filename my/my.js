@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.431
+// @version      47.432
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8870,7 +8870,7 @@
         if (document.readyState === 'complete') {
             // Use XPath to locate the button
             const button = document.evaluate(
-                '//*[@id="root"]/div/div/div[2]/div[2]/div/div[5]/div/div[2]/div/div[2]/div[2]/button',
+                '//*[@id="root"]/div/div/div[3]/div/div[2]/div/div[5]/div/div[2]/div/div[2]/div[2]/div[1]/button',
                 document,
                 null,
                 XPathResult.FIRST_ORDERED_NODE_TYPE,
