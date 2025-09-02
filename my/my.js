@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.444
+// @version      47.445
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -9,7 +9,6 @@
 // @exclude      https://hcaptcha.com/*
 // @exclude      https://www.cloudflare.com/*
 // @exclude      https://cloudflare.com/*
-// @exclude      https://testnet.sodex.com/*
 // @exclude      https://testnet.sodex.com/*
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
