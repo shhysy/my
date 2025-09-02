@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.435
+// @version      47.437
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -50,7 +50,6 @@
         'shmonad.xyz',
         'www.kuru.io',
         "app.nad.domains",
-        "testnet.mudigital.net",
         //"monad.fantasy.top"
     ];
 
@@ -107,7 +106,6 @@
         "https://www.kuru.io/swap",
         "https://bebop.xyz/?network=monad&sell=MON&buy=WMON",
         //"https://app.nad.domains/",
-        "https://testnet.mudigital.net/",
         //"https://monad.fantasy.top/shop"
     ];
 
