@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.442
+// @version      47.443
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8904,52 +8904,3 @@
     }, 5000);
 })();
 
-// ==UserScript==
-// @name         Auto Toggle Buy/Sell Buttons
-// @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  Automatically toggle Buy and Sell buttons every 5-10 seconds
-// @match        *://testnet.sodex.com/*
-// @grant        none
-// ==/UserScript==
-
-(function() {
-    'use strict';
-
-    // 确保只在指定域名运行
-    if (window.location.hostname !== 'testnet.sodex.com') {
-        return;
-    }
-
-    // 等待 DOM 加载完成
-    window.addEventListener('load', function() {
-        function clickButton(xpath) {
-            const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-            const button = result.singleNodeValue;
-            if (button) {
-                button.click(); // 模拟点击
-                console.log(`Clicked: ${button.textContent.trim()} at ${new Date().toLocaleTimeString()}`);
-            } else {
-                console.log('Button not found');
-            }
-        }
-
-        // 交替点击 Buy 和 Sell
-        let isBuy = true;
-        function toggleButtons() {
-            if (isBuy) {
-                clickButton('//*[@id="orderForm"]/div[1]/div/div/button[1]'); // Click Buy
-                isBuy = false;
-                setTimeout(toggleButtons, 5000 + Math.random() * 5000); // 5-10秒后切换
-            } else {
-                clickButton('//*[@id="orderForm"]/div[1]/div/div/button[2]'); // Click Sell
-                isBuy = true;
-                setTimeout(toggleButtons, 10000); // 10秒后切换
-            }
-        }
-
-        // 启动定时器
-        toggleButtons();
-    });
-
-})();
