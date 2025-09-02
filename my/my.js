@@ -10,6 +10,7 @@
 // @exclude      https://www.cloudflare.com/*
 // @exclude      https://cloudflare.com/*
 // @exclude      https://testnet.sodex.com/*
+// @exclude      https://testnet.sodex.com/*
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @grant        GM_download
