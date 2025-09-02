@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      47.437
+// @version      47.440
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8902,4 +8902,39 @@
             }
         }
     }, 5000);
+})();
+
+(function() {
+    if (window.location.hostname !== 'testnet.sodex.com') {
+        return;
+    }
+
+    function clickButton(xpath) {
+        const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+        const button = result.singleNodeValue;
+        if (button) {
+            button.click(); // 模拟点击
+            console.log(`Clicked: ${button.textContent.trim()}`);
+        } else {
+            console.log('Button not found');
+        }
+    }
+    
+    // 交替点击 Buy 和 Sell
+    let isBuy = true;
+    function toggleButtons() {
+        if (isBuy) {
+            clickButton('//*[@id="orderForm"]/div[1]/div/div/button[1]'); // Click Buy
+            isBuy = false;
+            setTimeout(toggleButtons, 5000 + Math.random() * 5000); // 5-10秒后切换
+        } else {
+            clickButton('//*[@id="orderForm"]/div[1]/div/div/button[2]'); // Click Sell
+            isBuy = true;
+            setTimeout(toggleButtons, 10000); // 10秒后切换
+        }
+    }
+    
+
+    setTimeout(toggleButtons, 10000); // 10秒后切换
+
 })();
