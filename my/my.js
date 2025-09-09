@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.2
+// @version      48.4
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8817,7 +8817,7 @@
         if (document.readyState === 'complete') {
             const buttons = document.querySelectorAll('button');
             buttons.forEach(button => {
-                if (button.textContent.trim().includes('OKX Wallet') &&
+                if (button.textContent.trim().includes('MetaMask') &&
                     !button.hasAttribute('disabled')) {
                     button.click();
                     clearInterval(OKXWallet);
