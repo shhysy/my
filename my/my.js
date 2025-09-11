@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.5
+// @version      48.7
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1391,11 +1391,11 @@
         return;
     }
 
-    setInterval(() => {
-        if (window.location.href !== 'https://sosovalue.com/assets/crypto-stocks?action=share&tid=soso-airdrop-exp-daily_task') {
-            window.location.href = 'https://sosovalue.com/exp';
-        }
-    }, 15000);
+    // setInterval(() => {
+    //     if (window.location.href !== 'https://sosovalue.com/assets/crypto-stocks?action=share&tid=soso-airdrop-exp-daily_task') {
+    //         window.location.href = 'https://sosovalue.com/exp';
+    //     }
+    // }, 15000);
 
     var checkP = true;
     var f =1
