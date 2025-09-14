@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.10
+// @version      48.11
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -9,8 +9,6 @@
 // @exclude      https://hcaptcha.com/*
 // @exclude      https://www.cloudflare.com/*
 // @exclude      https://cloudflare.com/*
-// @exclude      https://testnet.sodex.com/*
-// @exclude      https://testnet.sodex.com/*
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @grant        GM_download
@@ -22,6 +20,117 @@
 // @downloadURL  https://raw.githubusercontent.com/shhysy/my/main/my/my.js
 // @supportURL   https://github.com/shhysy/my/issues
 // ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Ensure script runs only on specified domain
+    if (window.location.hostname !== 'testnet.sodex.com') {
+        return;
+    }
+
+    // Wait for DOM to load
+    window.addEventListener('load', async function() {
+        // Function to click a button by XPath
+        async function clickButton(xpath) {
+            const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            const button = result.singleNodeValue;
+            if (button) {
+                button.click();
+                console.log(`Clicked: ${button.textContent.trim()} at ${new Date().toLocaleTimeString()}`);
+            } else {
+                console.log('Button not found');
+            }
+        }
+
+        // Function to generate random delay between min and max milliseconds
+        const randomDelay = (min, max) => new Promise(resolve =>
+            setTimeout(resolve, min + Math.random() * (max - min))
+        );
+
+        // Main loop to alternate button clicks with random delays
+        async function toggleButtons() {
+            while (true) {
+                await clickButton('//*[@id="orderForm"]/div[1]/div/div/button[1]'); // Click Buy
+                await randomDelay(10000, 20000); // Random delay 10-30 seconds
+                await clickButton('//*[@id="orderForm"]/div[1]/div/div/button[2]'); // Click Sell
+                await randomDelay(10000, 20000); // Random delay 10-30 seconds
+            }
+        }
+
+        // Start the loop
+        toggleButtons().catch(error => console.error('Error in toggleButtons:', error));
+    });
+})();
+
+(function() {
+    'use strict';
+
+    // 确保只在指定域名运行
+    if (window.location.hostname !== 'testnet.sodex.com') {
+        return;
+    }
+
+    function clickButton(textPrefix) {
+        const tabs = document.querySelectorAll('div[role="tab"]');
+        let tab = null;
+        for (let t of tabs) {
+            if (t.textContent.trim().startsWith(textPrefix)) {
+                tab = t;
+                break;
+            }
+        }
+        if (tab) {
+            // 模拟真实点击事件
+            tab.click();
+            console.log(`Clicked: ${tab.textContent.trim()} at ${new Date().toLocaleTimeString()}`);
+        } else {
+            console.log(`Tab with text prefix "${textPrefix}" not found`);
+        }
+    }
+
+    // 交替点击 Balances 和 Position
+    let isBalances = true;
+    function toggleTabs() {
+        if (isBalances) {
+            clickButton('Balances('); // Click Balances
+            isBalances = false;
+        } else {
+            clickButton('Position('); // Click Position
+            isBalances = true;
+        }
+        setTimeout(toggleTabs, 5000 + Math.random() * 15000); // 5-10秒后切换
+    }
+
+    // 使用 MutationObserver 检测动态加载的元素
+    const observer = new MutationObserver((mutations) => {
+        const balancesTab = Array.from(document.querySelectorAll('div[role="tab"]')).find(t => t.textContent.trim().startsWith('Balances('));
+        const positionTab = Array.from(document.querySelectorAll('div[role="tab"]')).find(t => t.textContent.trim().startsWith('Position('));
+        if (balancesTab && positionTab) {
+            observer.disconnect(); // 元素找到后停止观察
+            console.log('Tabs detected, starting toggle.');
+            toggleTabs();
+        }
+    });
+
+    // 初始检查并启动观察
+    console.log('Starting observation for tabs...');
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // 添加延时启动以确保元素加载
+    setTimeout(() => {
+        const balancesTab = Array.from(document.querySelectorAll('div[role="tab"]')).find(t => t.textContent.trim().startsWith('Balances('));
+        const positionTab = Array.from(document.querySelectorAll('div[role="tab"]')).find(t => t.textContent.trim().startsWith('Position('));
+        if (balancesTab && positionTab) {
+            observer.disconnect();
+            console.log('Tabs found on delay, starting toggle.');
+            toggleTabs();
+        }
+    }, 12000); // 2秒延时
+
+})();
+
+
 (function() {
     setInterval(() => {
         // 检查当前域名是否为 testnet.pharosscan.xyz 且 URL 包含 /tx
@@ -73,7 +182,7 @@
     var falg = true;
     var isCompleted = GM_getValue('isCompleted', false);
 
-    if (window.location.hostname == 'klokapp.ai' || window.location.hostname == 'accounts.google.com' || window.location.hostname == 'x.com' || window.location.hostname == 'web.telegram.org' || document.title == 'Banana Rush') {
+    if (window.location.hostname == 'testnet.sodex.com' || window.location.hostname == 'klokapp.ai' || window.location.hostname == 'accounts.google.com' || window.location.hostname == 'x.com' || window.location.hostname == 'web.telegram.org' || document.title == 'Banana Rush') {
         return;
     }
 
