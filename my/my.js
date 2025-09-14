@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.11
+// @version      48.12
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -21,6 +21,75 @@
 // @supportURL   https://github.com/shhysy/my/issues
 // ==/UserScript==
 
+
+(function() {
+    'use strict';
+
+    // Ensure script runs only on specified domain
+    if (window.location.href != 'https://testnet.sodex.com/points') {
+        return;
+    }
+
+    const Claim = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Claim') &&
+                !button.hasAttribute('disabled') && window.location.href == 'https://testnet.sodex.com/points') {
+                button.click();
+                clearInterval(Claim);
+            }
+        });
+    }, 5000);
+
+    //通过xpath点击 //*[@id="layoutB"]/div[2]/div/div/div[2]/div[2]/div[2]/div[2]/div[4]/div[2]/button
+    // Define the XPath
+    const xpath = '//*[@id="layoutB"]/div[2]/div/div/div[2]/div[2]/div[2]/div[2]/div[4]/div[2]/button';
+
+    // Function to evaluate XPath and return the element
+    function getElementByXPath(xpath) {
+        return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    }
+
+    // Function to attempt clicking the button
+    function tryClickButton() {
+        try {
+            // Get the button element
+            const button = getElementByXPath(xpath);
+            
+            if (button) {
+                // Verify the button's text
+                const buttonText = button.textContent.trim();
+                if (buttonText === 'Verify') {
+                    console.log("Button text is 'Verify'. Proceeding to click.");
+                    button.click();
+                    console.log("Button clicked successfully.");
+                    return true; // Indicate success
+                } else {
+                    console.log(`Button text is '${buttonText}', not 'Verify'. Retrying...`);
+                    return false; // Indicate failure to retry
+                }
+            } else {
+                console.log("Button not found. Retrying...");
+                return false; // Indicate failure to retry
+            }
+        } catch (error) {
+            console.error(`Error: ${error.message}. Retrying...`);
+            return false; // Indicate failure to retry
+        }
+    }
+
+    // Set up a timer to retry clicking every 1 second
+    const intervalId = setInterval(() => {
+        if (tryClickButton()) {
+            // Clear the timer if the click was successful
+            clearInterval(intervalId);
+            console.log("Timer cleared after successful click.");
+        }
+    }, 5000);
+
+})();
+
+
 (function() {
     'use strict';
 
@@ -28,6 +97,17 @@
     if (window.location.hostname !== 'testnet.sodex.com') {
         return;
     }
+
+    const Gotit = setInterval(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (button.textContent.trim().includes('Got it') &&
+                !button.hasAttribute('disabled')) {
+                button.click();
+                clearInterval(Gotit);
+            }
+        });
+    }, 5000);
 
     // Wait for DOM to load
     window.addEventListener('load', async function() {
