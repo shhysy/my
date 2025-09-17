@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.14
+// @version      48.15
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8182,6 +8182,7 @@
             buttons.forEach(button => {
                 if (button.textContent.trim().toLowerCase().includes('checked')) {
                     falg = true;
+                    window.location.href = 'https://testnet.zenithfinance.xyz/swap';
                     clearInterval(Checked);
                     timersCompleted.Checked = true; // Mark as completed
                 }
@@ -8189,19 +8190,8 @@
         }
     }, 5000);
 
-    const Send = setInterval(() => {
-        if (document.readyState === 'complete') {
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(button => {
-                if (button.textContent.trim().includes('Send') &&
-                    !button.hasAttribute('disabled') && falg) {
-                    button.click();
-                    clearInterval(Send);
-                    timersCompleted.Send = true; // Mark as completed
-                }
-            });
-        }
-    }, 5000);
+    
+
 
     const clickRandomDiv = setInterval(() => {
         if (document.readyState === 'complete') {
