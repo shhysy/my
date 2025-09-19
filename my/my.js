@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.15
+// @version      48.16
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -178,7 +178,7 @@
             clickButton('Position('); // Click Position
             isBalances = true;
         }
-        setTimeout(toggleTabs, 5000 + Math.random() * 15000); // 5-10秒后切换
+        setTimeout(toggleTabs, 1000 + Math.random() * 25000); // 5-10秒后切换
     }
 
     // 使用 MutationObserver 检测动态加载的元素
