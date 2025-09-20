@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.17
+// @version      48.18
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2787,8 +2787,6 @@
         return;
     }
 
-
-
     const Moresigninoptions = setInterval(() => {
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
@@ -2874,195 +2872,102 @@
         });
     }, 1000);
 
-    // Utility to wait for an element with a selector
-    function waitForElement(selector, timeout = 15000) {
+})();
+
+
+(function() {
+    'use strict';
+
+    // Verify domain is klokapp.ai
+    if (window.location.hostname !== 'klokapp.ai') {
+        console.log('This script is only for klokapp.ai, current domain: ' + window.location.hostname);
+        return;
+    }
+
+    // Configuration
+    const CONFIG = {
+        TIMEOUTS: { element: 10000, xpath: 10000 },
+        MAX_CYCLES: 10
+    };
+
+    // Simulate a click
+    function simulateClick(element) {
+        element.click();
+    }
+
+    // Wait for an element with a selector
+    function waitForElement(selector, timeout = CONFIG.TIMEOUTS.element) {
         return new Promise((resolve, reject) => {
-            const startTime = Date.now();
+            const start = Date.now();
             const interval = setInterval(() => {
                 const element = document.querySelector(selector);
                 if (element) {
                     clearInterval(interval);
                     resolve(element);
-                } else if (Date.now() - startTime > timeout) {
+                } else if (Date.now() - start > timeout) {
                     clearInterval(interval);
-                    reject(new Error(`Timeout waiting for element: ${selector}`));
+                    reject(new Error(`Timeout waiting for ${selector}`));
                 }
             }, 500);
         });
     }
 
-    // Check if the page is fully loaded
-    function isPageReady() {
-        return document.readyState === 'complete';
-    }
-
-    // Get "New Chat" button with enhanced retry and fallback
-    async function getNewChatButton() {
-        let attempts = 5; // Increased retry attempts
-        const selectors = [
-            'a[href="/app"]', // Original selector
-            'a[href*="/app"]', // Partial match for dynamic URLs
-            '[class*="new-chat"]', // Class-based fallback
-            'a[data-testid*="new-chat"]', // Data attribute fallback
-            'a[title*="New Chat"]' // Title or text-based fallback
-        ];
-
-        while (attempts > 0) {
-            try {
-                // Wait for page to be fully loaded
-                if (!isPageReady()) {
-                    console.log('Page not fully loaded, waiting...');
-                    await new Promise(resolve => setTimeout(resolve, 5000));
-                }
-
-                // Try each selector in sequence
-                for (const selector of selectors) {
-                    try {
-                        console.log(`Trying selector: ${selector}`);
-                        const button = await waitForElement(selector, 15000); // Increased timeout
-                        console.log(`Found New Chat button with selector: ${selector}`);
-                        return button;
-                    } catch (e) {
-                        console.warn(`Selector ${selector} failed:`, e.message);
-                    }
-                }
-
-                attempts--;
-                console.warn(`New Chat button not found, ${attempts} attempts left`);
-                if (attempts === 0) throw new Error('Exhausted all attempts to find New Chat button');
-                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait 3s before retry
-            } catch (e) {
-                console.error('Attempt failed:', e);
-                attempts--;
-                if (attempts === 0) throw new Error('Failed to find New Chat button after all retries');
-                await new Promise(resolve => setTimeout(resolve, 3000));
-            }
-        }
-    }
-
-    // 使用 XPath 等待元素出现的函数
-    function waitForXPath(xpath, timeout = 10000) {
-        return Promise.race([
-            new Promise((resolve) => {
-                const interval = setInterval(() => {
-                    const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-                    const element = result.singleNodeValue;
-                    if (element) {
-                        clearInterval(interval);
-                        resolve(element);
-                    }
-                }, 500);
-            }),
-            new Promise((_, reject) => {
-                setTimeout(() => reject(new Error(`等待 XPath ${xpath} 超时`)), timeout);
-            })
-        ]);
-    }
-
-    // 带超时的等待四个按钮的容器出现
-    function waitForButtons(timeout = 10000) {
-        
-        return waitForElement('.flex.flex-col.lg\\:flex-row.justify-around.items-center.gap-1.w-full.xs\\:mb-40.md\\:mb-0', timeout);
-    }
-
-    // 带超时的等待加载指示器消失
-    function waitForLoadingToFinish(timeout = 10000) {
+    // Wait for an element using XPath
+    function waitForXPath(xpath, timeout = CONFIG.TIMEOUTS.xpath) {
         return new Promise((resolve, reject) => {
-            const startTime = Date.now();
-            const checkLoading = () => {
-                const loadingDots = document.querySelector('.style_loadingDots__6shQU');
-                console.log('检查加载状态:', loadingDots ? '存在' : '不存在');
-                if (!loadingDots || loadingDots.offsetParent === null) {
+            const start = Date.now();
+            const interval = setInterval(() => {
+                const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+                const element = result.singleNodeValue;
+                if (element) {
                     clearInterval(interval);
-                    resolve();
-                } else if (Date.now() - startTime > timeout) {
+                    resolve(element);
+                } else if (Date.now() - start > timeout) {
                     clearInterval(interval);
-                    reject(new Error('等待加载指示器消失超时'));
+                    reject(new Error(`Timeout waiting for XPath ${xpath}`));
                 }
-            };
-            const interval = setInterval(checkLoading, 500);
-            checkLoading(); // 立即检查一次
+            }, 500);
         });
     }
 
+    // Click the "New Chat" button
+    async function clickNewChatButton() {
+        try {
+            const button = await waitForElement('a.ThreadList_threadTitle__odQXS[href*="/app"]');
+            simulateClick(button);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // Click a random button
     async function clickRandomButton() {
         try {
             const xpathBase = '/html/body/div[1]/div[2]/div[2]/div[2]/div[2]/button';
             const randomIndex = Math.floor(Math.random() * 4) + 1;
             const xpath = `${xpathBase}[${randomIndex}]`;
-
-            const button = await waitForXPath(xpath, 10000);
-            console.log('随机点击第', randomIndex, '个按钮');
+            const button = await waitForXPath(xpath);
             simulateClick(button);
-            await new Promise(resolve => setTimeout(resolve, 1000));
             return true;
         } catch (error) {
-            console.error('随机点击按钮时发生错误:', error);
             return false;
         }
     }
 
-
-
-    // 一次完整流程的执行
+    // Run a single chat cycle
     async function runChatCycle() {
-        try {
-            console.log('开始新聊天周期');
-
-            // 第一步：点击 "New Chat" 按钮
-            const newChatButton = await getNewChatButton();
-            console.log('找到 New Chat 按钮，准备点击');
-            simulateClick(newChatButton);
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // 第二步：等待四个按钮并随机点击
-            await waitForButtons();
-            const randomClickResult = await clickRandomButton();
-            if (!randomClickResult) {
-                throw new Error('随机点击按钮失败');
-            }
-
-            // 第三步：等待加载完成
-            console.log('等待加载完成...');
-            await waitForLoadingToFinish();
-            console.log('加载完成');
-            await new Promise(resolve => setTimeout(resolve, 2000));
+        if (await clickNewChatButton() && await clickRandomButton()) {
             return true;
-        } catch (error) {
-            console.error('聊天周期出错:', error);
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            return false;
         }
+        return false;
     }
 
-
-    // 主逻辑 - 循环执行
+    // Main loop
     (async () => {
-        let maxCycles = 20; // 最大循环次数
-        let cycleCount = 0;
-        let consecutiveFailures = 0;
-        const maxFailures = 5; // 最大连续失败次数
-
-        while (cycleCount < maxCycles && consecutiveFailures < maxFailures) {
-            console.log(`开始第 ${cycleCount + 1} 次循环`);
-            const success = await runChatCycle();
-            if (!success) {
-                consecutiveFailures++;
-                console.log(`本周期失败 (${consecutiveFailures}/${maxFailures})，暂停10秒后重试`);
-                await new Promise(resolve => setTimeout(resolve, 30000));
-            } else {
-                consecutiveFailures = 0;
-                cycleCount++;
-                console.log(`本周期成功，完成 ${cycleCount} 次循环`);
-                await new Promise(resolve => setTimeout(resolve, 30000));
-            }
-        }
-
-        if (consecutiveFailures >= maxFailures) {
-            window.location.href='https://sosovalue.com/ja/exp'
-            console.error('连续失败次数达到上限，脚本终止');
-        } else {
-            console.log('脚本执行结束，总计完成', cycleCount, '次循环');
+        for (let cycle = 1; cycle <= CONFIG.MAX_CYCLES; cycle++) {
+            await runChatCycle();
+            await new Promise(resolve => setTimeout(resolve, 3000)); // 3s delay
         }
     })();
 })();
