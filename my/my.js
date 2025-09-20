@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.16
+// @version      48.17
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2985,7 +2985,22 @@
         });
     }
 
-    
+    async function clickRandomButton() {
+        try {
+            const xpathBase = '/html/body/div[1]/div[2]/div[2]/div[2]/div[2]/button';
+            const randomIndex = Math.floor(Math.random() * 4) + 1;
+            const xpath = `${xpathBase}[${randomIndex}]`;
+
+            const button = await waitForXPath(xpath, 10000);
+            console.log('随机点击第', randomIndex, '个按钮');
+            simulateClick(button);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return true;
+        } catch (error) {
+            console.error('随机点击按钮时发生错误:', error);
+            return false;
+        }
+    }
 
 
 
@@ -2994,43 +3009,32 @@
         try {
             console.log('开始新聊天周期');
 
-            // 第一步：点击"New Chat"按钮
+            // 第一步：点击 "New Chat" 按钮
             const newChatButton = await getNewChatButton();
             console.log('找到 New Chat 按钮，准备点击');
-            await new Promise(resolve => setTimeout(resolve, 5000));
             simulateClick(newChatButton);
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 2000));
 
-            // 第二步：等待四个按钮出现并随机点击一个
-            const xpathBase = '/html/body/div[1]/div[2]/div[2]/div[2]/div[2]/button';
-            const randomIndex = Math.floor(Math.random() * 4) + 1; // 随机生成1到4
-            const xpath = `${xpathBase}[${randomIndex}]`;
-    
-            // 使用XPath查找按钮
-            const button = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    
-            if (button) {
-                console.log('随机点击第', randomIndex, '个按钮');
-                simulateClick(button);
-                await new Promise(resolve => setTimeout(resolve, 1000)); // 等待1秒
-                return true;
-            } else {
-                console.log('未找到按钮:', xpath);
-                return false;
+            // 第二步：等待四个按钮并随机点击
+            await waitForButtons();
+            const randomClickResult = await clickRandomButton();
+            if (!randomClickResult) {
+                throw new Error('随机点击按钮失败');
             }
-            
-            // 等待加载指示器消失
+
+            // 第三步：等待加载完成
             console.log('等待加载完成...');
             await waitForLoadingToFinish();
             console.log('加载完成');
-            await new Promise(resolve => setTimeout(resolve, 15000));
-            return true; // 表示周期成功完成
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return true;
         } catch (error) {
-            await new Promise(resolve => setTimeout(resolve, 5000));
             console.error('聊天周期出错:', error);
-            return false; // 表示周期失败
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            return false;
         }
     }
+
 
     // 主逻辑 - 循环执行
     (async () => {
