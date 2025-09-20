@@ -178,7 +178,7 @@
             clickButton('Position('); // Click Position
             isBalances = true;
         }
-        setTimeout(toggleTabs, 1000 + Math.random() * 25000); // 5-10秒后切换
+        setTimeout(toggleTabs, 15000 + Math.random() * 25000); // 5-10秒后切换
     }
 
     // 使用 MutationObserver 检测动态加载的元素
@@ -2961,6 +2961,7 @@
 
     // 带超时的等待四个按钮的容器出现
     function waitForButtons(timeout = 10000) {
+        
         return waitForElement('.flex.flex-col.lg\\:flex-row.justify-around.items-center.gap-1.w-full.xs\\:mb-40.md\\:mb-0', timeout);
     }
 
@@ -3001,18 +3002,23 @@
             await new Promise(resolve => setTimeout(resolve, 5000));
 
             // 第二步：等待四个按钮出现并随机点击一个
-            const buttonsContainer = await waitForButtons();
-            console.log('找到按钮容器，准备随机点击');
-            const buttons = buttonsContainer.querySelectorAll('button');
-            if (buttons.length > 0) {
-                const randomIndex = Math.floor(Math.random() * buttons.length);
-                simulateClick(buttons[randomIndex]);
-                console.log('随机点击第', randomIndex + 1, '个按钮');
-                await new Promise(resolve => setTimeout(resolve, 10000)); // 等待1秒让页面响应
+            const xpathBase = '/html/body/div[1]/div[2]/div[2]/div[2]/div[2]/button';
+            const randomIndex = Math.floor(Math.random() * 4) + 1; // 随机生成1到4
+            const xpath = `${xpathBase}[${randomIndex}]`;
+    
+            // 使用XPath查找按钮
+            const button = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    
+            if (button) {
+                console.log('随机点击第', randomIndex, '个按钮');
+                simulateClick(button);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 等待1秒
+                return true;
             } else {
-                console.log('未找到按钮');
+                console.log('未找到按钮:', xpath);
                 return false;
             }
+            
             // 等待加载指示器消失
             console.log('等待加载完成...');
             await waitForLoadingToFinish();
