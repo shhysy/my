@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.18
+// @version      48.19
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -2855,7 +2855,7 @@
 
     setInterval(() => {
         window.location.href='https://sosovalue.com/ja/exp'
-    }, 1500000);
+    }, 100000);
 
     // 检测所有 div，包含目标文本则跳转
     const checkRateLimit = setInterval(() => {
@@ -2970,6 +2970,7 @@
             await new Promise(resolve => setTimeout(resolve, 3000)); // 3s delay
         }
     })();
+
 })();
 
 
