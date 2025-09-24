@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.19
+// @version      48.20
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8990,7 +8990,7 @@
                         // 
                     } else {
                         
-                        window.location.href = 'https://chat.chainopera.ai/';
+                        window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
                         console.log(`Button with text ${buttonText} is disabled.`);
                         clearInterval(checkNumber);
                     }
