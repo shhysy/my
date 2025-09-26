@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.21
+// @version      48.22
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -769,7 +769,7 @@
         for (let i = 0; i < divs.length; i++) {
             const divText = divs[i].textContent;
             if (targetTexts.includes(divText)) {
-                window.location.href = 'https://klokapp.ai/app';
+                window.location.href = 'https://sosovalue.com/ja/exp';
                 clearInterval(targetTexts)
             }
         }
@@ -787,7 +787,7 @@
         return;
     }
     setInterval(() => {
-        window.location.href = 'https://klokapp.ai/app';
+        window.location.href = 'https://sosovalue.com/ja/exp';
     }, 30000);
 
     const LogIn =setInterval(() => {
