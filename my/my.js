@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.22
+// @version      48.23
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1663,7 +1663,7 @@
     setInterval(() => {
         clickButtons();
         if (allDisabled>=5) {
-            window.location.href = 'https://x.ink/airdrop';
+            window.location.href = 'https://cryptopond.xyz/modelfactory/detail/306250?tab=4';
         }
     }, 3000);
 
