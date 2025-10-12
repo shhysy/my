@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.24
+// @version      48.25
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -1663,7 +1663,8 @@
     setInterval(() => {
         clickButtons();
         if (allDisabled>=5) {
-            window.location.href = 'https://cryptopond.xyz/modelfactory/detail/306250?tab=4';
+            // window.location.href = 'https://cryptopond.xyz/modelfactory/detail/306250?tab=4';
+            window.location.href = 'https://blockstreet.money/dashboard?invite_code=mrRDbS';
         }
     }, 3000);
 
@@ -2162,7 +2163,7 @@
                 for (const button of saveButtons) {
                     if (button.textContent.includes('Save')) {
                         setTimeout(() => {
-                            window.open('https://wizolayer.app/dashboard', '_self');
+                            window.open('https://blockstreet.money/dashboard?invite_code=mrRDbS', '_self');
                         }, 8000);
                         button.click();
                         break;
