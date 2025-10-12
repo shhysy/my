@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DAO
 // @namespace    http://tampermonkey.net/
-// @version      48.23
+// @version      48.24
 // @description  空投
 // @author       开启数字空投财富的发掘之旅
 // @match        *://*/*
@@ -8428,7 +8428,7 @@
     }
 
     setTimeout(() => {
-        window.location.href = 'https://of.apr.io/dashboard';
+        window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
     }, 200000);
 
     const Connect = setInterval(() => {
@@ -8578,7 +8578,7 @@
             if (button.textContent.trim().includes('Swap submitted')) {
                 //window.location.href = 'https://speedrun.enso.build/categories/de-fi';
                 //window.location.href = 'https://www.360.com';
-                window.location.href = 'https://of.apr.io/dashboard';
+                window.location.href = 'https://dashboard.monadscore.xyz/dashboard';
                 clearInterval(Swapsubmitted); // Stop the interval
             }
         });
